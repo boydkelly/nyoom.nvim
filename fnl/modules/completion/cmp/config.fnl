@@ -123,3 +123,4 @@
 ;; snippets
 
 ((. (autoload :luasnip.loaders.from_vscode) :lazy_load))
+((. (autoload :luasnip.loaders.from_lua) :lazy_load))
