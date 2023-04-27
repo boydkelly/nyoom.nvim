@@ -14,3 +14,6 @@
                                 {:opt true})
                           (pack :LukasPietzschmann/telescope-tabs {:opt true})
                           (pack :jvgrootveld/telescope-zoxide {:opt true})]})
+                          (pack :benfowler/telescope-luasnip.nvim
+                                {:opt true})
+(use-package! :ahmedkhalf/project.nvim)
