@@ -131,4 +131,3 @@
 (lu.lazy_load {:paths (.. (vim.fn.stdpath :config) :/snippets)})
 (vs.lazy_load {:paths (.. (vim.fn.stdpath :config) :/snippets)})
 (vs.lazy_load)
-
