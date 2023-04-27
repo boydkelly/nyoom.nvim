@@ -7,5 +7,7 @@
                       :<leader>v
                       :<leader>f
                       :<leader>d
+                      :<leader>p
                       :<leader>m
                       :<leader>t]})
+
