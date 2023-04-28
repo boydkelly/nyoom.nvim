@@ -58,6 +58,9 @@
     (nyoom-module-p! xml
       (table.insert mason-tools :lemminx))
 
+    (nyoom-module-p! yaml
+      (table.insert mason-tools :yamlls))
+
     (nyoom-module-p! zig
       (table.insert mason-tools :zls))))
 
