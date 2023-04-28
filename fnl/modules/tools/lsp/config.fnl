@@ -134,7 +134,7 @@
                         :format false
                         :schemaStore {:enable false 
                                       :url "https://www.schemastore.org/api/json/catalog.json"}
-                        :schemas {:/path/to/your/custom/strict/schema.json "yet-another.{yml,yaml}"
+                        :schemas {:/home/bkelly/dev/jula/dyu-xdxf/mandenkan/xdxf_strict.json "lexicon.{yml,yaml}"
                                   "http://json.schemastore.org/prettierrc" ".prettierrc.{yml,yaml}"}
                         :validate true}}}))
 
