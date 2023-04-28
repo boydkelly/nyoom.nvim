@@ -13,7 +13,11 @@
         (nyoom +modes +icons); what makes Nyoom look the way it does
         ;; dashboard            ; a nifty splash screen for neovim
         ;;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit. 
+<<<<<<< HEAD
         ;; hydra                ; Discount modality for mythological beast hunters
+=======
+        hydra                ; Discount modality for mythological beast hunters
+>>>>>>> 5b1df8e (selene)
         indent-guides      ; highlighted indent columns
         modeline             ; snazzy, nano-emacs-inspired modeline
         nvimtree           ; a project drawer, like NERDTree for vim
@@ -69,6 +73,7 @@
         java                 ; the poster child for carpal tunnel syndrome
         ;;julia                ; a better, faster MATLAB
         ;;kotlin             ; FIXME: a better, slicker Java(Script)
+        ;;latex                ; writing papers in Neovim has never been so fun
         json
         ;;latex                ; writing papers in Neovim has never been so fun
         lua                  ; one-based indices? one-based indices
