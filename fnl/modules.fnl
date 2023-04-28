@@ -81,19 +81,11 @@
         ;;(org +pretty)      ; WIP: organize your plain life in plain text, the emacs way
         ;;nix                  ; I hereby declare "nix geht mehr!"
         python               ; beautiful is better than ugly
-<<<<<<< HEAD
         ;;rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
         (sh)           ; she sells {ba,z,fi}sh shells on the C xor
         xml
         yaml
         ;;zig                  ; C, but simpler
-=======
-        rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-        (sh +fish)           ; she sells {ba,z,fi}sh shells on the C xor
-        xml                  ; extend my language
-        yaml                 ; yet another markup language to enable
-        zig                  ; C, but simpler
->>>>>>> yaml
 
         :app
         ;;calendar           ; Watch your missed deadlines in real time
