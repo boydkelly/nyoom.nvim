@@ -46,6 +46,12 @@
 
 (nyoom-module-p! default.+bindings
                  (do
+                 (map! [n] :<leader>pp "Telescope project"!
+                                            {:desc "Open project from Telescope"})
+                 (map! [n] :<leader>pz "Telescope zoxide list"!
+                                            {:desc "Open project from Zoxide"})
+                 )
+                 (do
                    (nyoom-module-p! lsp
                                     (do
                                       (local {:lsp_implementations open-impl-float!
