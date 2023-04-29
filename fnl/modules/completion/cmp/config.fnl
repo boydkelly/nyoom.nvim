@@ -13,7 +13,6 @@
 (table.insert cmp-sources {:name :luasnip :group_index 1})
 (table.insert cmp-sources {:name :buffer :group_index 2})
 (table.insert cmp-sources {:name :path :group_index 2})
-(table.insert cmp-sources {:name :path :group_index 2})
 
 (nyoom-module-p! rust (table.insert cmp-sources {:name :crates :group_index 1}))
 (nyoom-module-p! neorg (table.insert cmp-sources {:name :neorg :group_index 1}))
@@ -150,6 +149,14 @@
                                  (set vim.b.copilot_suggestion_hidden false))))
 
 ;; snippets
+            ;             (local context (autoload :cmp.config.context))
+            ;
+            ; (local vs (require :luasnip.loaders.from_vscode))
+            ; (local lu (require :luasnip.loaders.from_lua))
+            ;
+            ; (lu.lazy_load {:paths (.. (vim.fn.stdpath :config) :/snippets)})
+            ; (vs.lazy_load {:paths (.. (vim.fn.stdpath :config) :/snippets)})
 
-((. (autoload :luasnip.loaders.from_vscode) :lazy_load))
-((. (autoload :luasnip.loaders.from_lua) :lazy_load))
+; ((. (autoload :luasnip.loaders.from_lua) :lazy_load {:paths (.. (vim.fn.stdpath :config) :/snippets) }))
+; ((. (autoload :luasnip.loaders.from_vscode) :lazy_load {:paths (.. (vim.fn.stdpath :config) :/snippets)}))
+((. (autoload :luasnip.loaders.from_vscode) :lazy_load ))
