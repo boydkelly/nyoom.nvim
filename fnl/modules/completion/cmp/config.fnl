@@ -121,8 +121,8 @@
 
 ;; snippets
             ;             (local context (autoload :cmp.config.context))
-(local vs (require :luasnip.loaders.from_vscode))
-(local lu (require :luasnip.loaders.from_lua))
-((. (autoload :lu) :lazy_load {:paths (.. (vim.fn.stdpath :config) :/snippets) }))
-((. (autoload :vs) :lazy_load {:paths (.. (vim.fn.stdpath :config) :/snippets)}))
-((. (autoload :vs) :lazy_load ))
+;;(local vs (require :luasnip.loaders.from_vscode))
+;;(local lu (require :luasnip.loaders.from_lua))
+((. (autoload :luasnip.loaders.from_lua) :lazy_load {:paths (.. (vim.fn.stdpath :config) :/snippets)}))
+((. (autoload :luasnip.loaders.from_vscode) :lazy_load {:paths (.. (vim.fn.stdpath :config) :/snippets)}))
+;;((. (autoload :vs) :lazy_load ))
