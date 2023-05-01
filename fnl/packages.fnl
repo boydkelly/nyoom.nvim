@@ -71,6 +71,7 @@
 ;; Put your plugins here
 ;; ---------------------
 
+
 ;; Send plugins to packer
 
 (echo! "Installing Packages")
