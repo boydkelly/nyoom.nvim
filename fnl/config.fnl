@@ -28,3 +28,5 @@
 
 (after :neorg
        {:load {:core.norg.dirman {:config {:workspaces {:main "~/gtd"}}}}})
+
+
