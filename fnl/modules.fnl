@@ -13,7 +13,7 @@
         (nyoom +modes +icons); what makes Nyoom look the way it does
         ;; dashboard            ; a nifty splash screen for neovim
         ;;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit. 
-        hydra                ; Discount modality for mythological beast hunters
+        ;; hydra                ; Discount modality for mythological beast hunters
         indent-guides      ; highlighted indent columns
         modeline             ; snazzy, nano-emacs-inspired modeline
         nvimtree           ; a project drawer, like NERDTree for vim
