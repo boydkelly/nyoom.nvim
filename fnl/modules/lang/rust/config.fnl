@@ -12,4 +12,5 @@
                                            [" " :FloatBorder]
                                            [" " :FloatBorder]]}
                   :crate_graph {:backend :svg}})
+
     (setup :rust-tools {: tools})))
