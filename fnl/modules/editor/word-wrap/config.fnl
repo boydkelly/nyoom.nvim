@@ -7,4 +7,5 @@
           (autocmd! BufWinEnter *.txt `(local-set! wrap))
           (autocmd! BufWinEnter *.norg `(local-set! wrap))
           (autocmd! BufWinEnter *.org `(local-set! wrap))
-          (autocmd! BufWinEnter *.tex `(local-set! wrap)))
+          (autocmd! BufWinEnter *.tex `(local-set! wrap))
+          (autocmd! BufWinEnter *.adoc `(local-set! nowrap)))
