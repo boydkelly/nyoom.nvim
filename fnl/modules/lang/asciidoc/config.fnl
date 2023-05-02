@@ -19,7 +19,7 @@
                "Open pdf"]
           :r [:<cmd>AsciidocOpenRAW<cr>
                "Open raw"]}}}}})
-(set! vim.opt.spell true)
+(set! vim.o.spell true)
 (map! [v] :t":lua require('utils.functions').asciidoctable()<cr>" )
 (set! vim.wo.foldmethod :syntax)
 (set! vim.wo.foldenable false)
