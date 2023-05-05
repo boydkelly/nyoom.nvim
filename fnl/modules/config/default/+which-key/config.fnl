@@ -2,7 +2,10 @@
 
 (setup :which-key {:icons {:breadcrumb "»" :separator "->" :group "+"}
                    :popup_mappings {:scroll_down :<c-d> :scroll_up :<c-u>}
-                   :window {:border :solid}
+                       :window {:border :none
+                                :margin [0 0 1 0]
+                                :padding [0 0 0 0]
+                                :position :bottom}
                    :layout {:spacing 3}
                    :hidden [:<silent> :<cmd> :<Cmd> :<CR> :call :lua "^:" "^ "]
                    :triggers_blacklist {:i [:j :k] :v [:j :k]}

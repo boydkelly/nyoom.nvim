@@ -27,8 +27,4 @@
 ;; this you can use the `after` function
 
 (after :neorg
-<<<<<<< HEAD
        {:load {:core.dirman {:config {:workspaces {:main "~/gtd"}}}}})
-=======
-       {:load {:core.norg.dirman {:config {:workspaces {:main "~/gtd"}}}}})
->>>>>>> 8fbf19bc5623bc6004fe31c0ac1d72ff0e53e36c

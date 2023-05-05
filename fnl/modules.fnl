@@ -12,7 +12,7 @@
         :ui
         (nyoom +modes +icons); what makes Nyoom look the way it does
         ;; dashboard            ; a nifty splash screen for neovim
-        ;;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit. 
+        ;; nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit. 
         ;; hydra                ; Discount modality for mythological beast hunters
         indent-guides      ; highlighted indent columns
         modeline             ; snazzy, nano-emacs-inspired modeline
@@ -28,7 +28,7 @@
         fold                 ; (nigh) universal code folding
         (format +onsave)     ; automated prettiness
         ;;multiple-cursors   ; learn macros you dingus
-        parinfer             ; turn lisp into python, sort of
+        ;; parinfer             ; turn lisp into python, sort of
         (hotpot +reflect)    ; lets get cooking. NOTE: essential module (for now), don't disable
         ;; scratch              ; emacs-like scratch buffer functionality
         word-wrap            ; language-aware smart soft and hard wrapping
