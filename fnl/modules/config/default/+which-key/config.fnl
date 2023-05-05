@@ -32,3 +32,5 @@
 (register {:<leader>m {:name :+localleader}})
 (register {:<leader>d {:name :+debug}})
 (register {:<leader>v {:name :+visual}})
+((. (require :config.whichkey) :menu))
+

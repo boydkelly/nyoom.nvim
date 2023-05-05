@@ -161,3 +161,8 @@
 (vs.lazy_load {:paths (.. (vim.fn.stdpath :config) :/snippets)})
 (vs.lazy_load)
 
+; (local vs (require :luasnip.loaders.from_vscode))
+; (local lu (require :luasnip.loaders.from_lua))
+; ((. (autoload :lu) :lazy_load {:paths (.. (vim.fn.stdpath :config) :/snippets) }))
+; ((. (autoload :vs) :lazy_load {:paths (.. (vim.fn.stdpath :config) :/snippets)}))
+; ((. (autoload :vs) :lazy_load ))
