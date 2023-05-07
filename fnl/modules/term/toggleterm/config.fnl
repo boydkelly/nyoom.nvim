@@ -1,5 +1,4 @@
-(setup :toggleterm
-       {:close_on_exit true
+(setup :toggleterm {:close_on_exit true
        :direction :horizontal
        :hide_numbers true
        :open_mapping "<C-\\>"
