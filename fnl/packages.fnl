@@ -40,7 +40,7 @@
 
 (use-package! :nvim-lua/plenary.nvim {:module :plenary})
 (use-package! :MunifTanjim/nui.nvim {:module :nui})
-(use-package! :nyoom-engineering/oxocarbon.nvim)
+(use-package! :boydkelly/oxocarbon.nvim {:branch :dev})
 
 ;; include modules
 
@@ -70,6 +70,7 @@
 ;; ---------------------
 ;; Put your plugins here
 ;; ---------------------
+
 
 ;; Send plugins to packer
 

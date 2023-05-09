@@ -27,6 +27,8 @@
                                 :vim.lsp.util.stylize_markdown true
                                 :cmp.entry.get_documentation true}}
                :views {:cmdline_popup {:position {:row 0 :col "50%"}
+                                       :border {:padding [1 0]
+                                       :style :none}
                                        :size {:width "98%"}}}
                :presets {:long_message_to_split true :lsp_doc_border true}
                :popupmenu {:backend :cmp}

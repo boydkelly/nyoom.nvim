@@ -1,0 +1,1 @@
+mkspell! ~/.config/nvim/spell/dyu ~/dev/jula/pubs/dyu_CI:mkspell!

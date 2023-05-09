@@ -1,0 +1,2 @@
+;;(import-macros {: autocmd!} :macros)
+
