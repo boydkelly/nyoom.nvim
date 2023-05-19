@@ -27,6 +27,12 @@
                                      {:name :nvim_lsp_signature_help
                                       :group_index 1})))
 
+(nyoom-module-p! ledger
+                 (do
+                   (packadd! hledger-cmp)
+                   (setup :hledger_cmp)
+                   (table.insert cmp-sources {:name :hledger :group_index 2})))
+
 (nyoom-module-p! copilot
                  (do
                    (packadd! copilot-cmp)
