@@ -13,6 +13,7 @@
 (table.insert cmp-sources {:name :luasnip :group_index 1})
 (table.insert cmp-sources {:name :buffer :group_index 2})
 (table.insert cmp-sources {:name :path :group_index 2})
+(table.insert cmp-sources {:name :path :group_index 2})
 
 (nyoom-module-p! rust (table.insert cmp-sources {:name :crates :group_index 1}))
 (nyoom-module-p! neorg (table.insert cmp-sources {:name :neorg :group_index 1}))
