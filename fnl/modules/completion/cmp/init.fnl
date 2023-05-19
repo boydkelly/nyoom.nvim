@@ -20,4 +20,4 @@
                           (pack :L3MON4D3/LuaSnip
                                 {:event [:InsertEnter :CmdLineEnter]
                                  :wants :friendly-snippets
-                                 :requires [(pack : afamadriz/friendly-snippets)]})]})
+                                 :requires [(pack :afamadriz/friendly-snippets)]})]})
