@@ -29,7 +29,7 @@
 (nyoom-module-p! ledger
                  (do
                    (packadd! cmp-hledger)
-                   (table.insert cmp-sources {:name :hledger :group_index 2})))
+                   (table.insert cmp-sources {:name :hledger :group_index 1})))
 
 (nyoom-module-p! copilot
                  (do
@@ -79,7 +79,8 @@
              :window {:documentation {:border :solid}
                       :completion {:col_offset (- 3)
                                    :side_padding 0
-                                   }}
+                                   :winhighlight "Normal:NormalFloat,NormalFloat:Pmenu,Pmenu:NormalFloat"}}
+
              :view {:entries {:name :custom :selection_order :near_cursor}}
              :enabled (fn []
                         (local context (autoload :cmp.config.context))
