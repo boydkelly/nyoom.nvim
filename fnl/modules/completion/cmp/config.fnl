@@ -26,7 +26,6 @@
                        (table.insert cmp-sources
                                      {:name :nvim_lsp_signature_help
                                       :group_index 1})))
-
 (nyoom-module-p! ledger
                  (do
                    (packadd! cmp-hledger)
