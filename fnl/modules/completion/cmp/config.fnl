@@ -40,7 +40,7 @@
 ;; copilot uses lines above/below current text which confuses cmp, fix:
 
 (fn has-words-before []
-  (let [(line col) (unpack (vim.api.nvim_win_get_cursor 0))]
+ ct [(line col) (unpack (vim.api.nvim_win_get_cursor 0))]
     (and (not= col 0) (= (: (: (. (vim.api.nvim_buf_get_lines 0 (- line 1) line
                                                               true)
                                   1) :sub col
