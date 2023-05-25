@@ -28,7 +28,7 @@
         fold                 ; (nigh) universal code folding
         (format +onsave)     ; automated prettiness
         ;;multiple-cursors   ; learn macros you dingus
-        parinfer             ; turn lisp into python, sort of
+        ;;parinfer             ; turn lisp into python, sort of
         (hotpot +reflect)    ; lets get cooking. NOTE: essential module (for now), don't disable
         ;; scratch              ; emacs-like scratch buffer functionality
         word-wrap            ; language-aware smart soft and hard wrapping
@@ -69,6 +69,7 @@
         ;;kotlin             ; FIXME: a better, slicker Java(Script)
         json
         ;;latex                ; writing papers in Neovim has never been so fun
+        ledger             ; be audit you can be
         lua                  ; one-based indices? one-based indices
         markdown             ; writing docs for people to ignore
         ;;nim                  ; python + lisp at the speed of c
@@ -87,8 +88,8 @@
         ;;zig                  ; C, but simpler
         rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
         (sh +fish)           ; she sells {ba,z,fi}sh shells on the C xor
-        ;;xml                ; extend my language
-        ;;yaml               ; yet another markup language to enable
+        ;; xml                ; extend my language
+        yaml               ; yet another markup language to enable
         zig                  ; C, but simpler
 
         :app

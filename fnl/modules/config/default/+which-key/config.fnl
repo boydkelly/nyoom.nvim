@@ -1,13 +1,16 @@
 (local {: register} (autoload :which-key))
 
 (setup :which-key {:icons {:breadcrumb "»" :separator "->" :group "+"}
-                   :popup_mappings {:scroll_down :<c-d> :scroll_up :<c-u>}
-                   :window {:border :solid}
-                   :layout {:spacing 3}
-                   :hidden [:<silent> :<cmd> :<Cmd> :<CR> :call :lua "^:" "^ "]
-                   :triggers_blacklist {:i [:j :k] :v [:j :k]}
-                   :height {:min 0 :max 6}
-                   :align :center})
+       :popup_mappings {:scroll_down :<c-d> :scroll_up :<c-u>}
+       :window {:border :solid
+       :margin [0 0 1 0]
+       :padding [0 0 0 0]
+       :winblend 0}
+       :layout {:spacing 3}
+       :hidden [:<silent> :<cmd> :<Cmd> :<CR> :call :lua "^:" "^ "]
+       :triggers_blacklist {:i [:j :k] :v [:j :k]}
+       :height {:min 0 :max 6}
+       :align :center})
 
 ;; rename groups to mimick doom
 

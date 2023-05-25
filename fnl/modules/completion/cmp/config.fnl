@@ -25,6 +25,10 @@
                        (table.insert cmp-sources
                                      {:name :nvim_lsp_signature_help
                                       :group_index 1})))
+(nyoom-module-p! ledger
+                 (do
+                   (packadd! cmp-hledger)
+                   (table.insert cmp-sources {:name :hledger :group_index 1})))
 
 (nyoom-module-p! copilot
                  (do
@@ -64,7 +68,7 @@
 ;; copilot uses lines above/below current text which confuses cmp, fix:
 
 (fn has-words-before []
-  (let [(line col) (unpack (vim.api.nvim_win_get_cursor 0))]
+ ct [(line col) (unpack (vim.api.nvim_win_get_cursor 0))]
     (and (not= col 0) (= (: (: (. (vim.api.nvim_buf_get_lines 0 (- line 1) line
                                                               true)
                                   1) :sub col
@@ -74,7 +78,8 @@
              :window {:documentation {:border :solid}
                       :completion {:col_offset (- 3)
                                    :side_padding 0
-                                   }}
+                                   :winhighlight "Normal:NormalFloat,NormalFloat:Pmenu,Pmenu:NormalFloat"}}
+
              :view {:entries {:name :custom :selection_order :near_cursor}}
              :enabled (fn []
                         (local context (autoload :cmp.config.context))

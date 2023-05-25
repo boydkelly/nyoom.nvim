@@ -8,6 +8,7 @@
                :event [:InsertEnter :CmdLineEnter]
                :requires [(pack :onsails/lspkind.nvim {:opt true})
                           (pack :zbirenbaum/copilot-cmp {:opt true})
+                          (pack :kirasok/cmp-hledger {:opt true})
                           (pack :hrsh7th/cmp-path {:after :nvim-cmp})
                           (pack :hrsh7th/cmp-buffer {:after :nvim-cmp})
                           (pack :hrsh7th/cmp-cmdline {:after :nvim-cmp})
