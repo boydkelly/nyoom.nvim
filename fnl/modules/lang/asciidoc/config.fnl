@@ -35,12 +35,3 @@
 (tset vim.g :asciidoctor_syntax_indented 1)
 (tset vim.g :asciidoctor_fenced_languages [:css :html :bash :vim])
 (vim.cmd "syntax match normal /^= / conceal")
-
-(import-macros {: autocmd!} :macros)
-
-(setup :orgmode {:org_default_notes_file "~/org/refile.org"
-                 :org_agenda_files ["~/org/**/*"]})
-
-;; Load tablemode on org enter
-
-(autocmd! VimEnter *.org `(vim.cmd.TableModeToggle))
