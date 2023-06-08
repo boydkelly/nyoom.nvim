@@ -15,11 +15,14 @@
         ;;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit. 
         ;; hydra                ; Discount modality for mythological beast hunters
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         hydra                ; Discount modality for mythological beast hunters
 >>>>>>> 5b1df8e (selene)
 =======
 >>>>>>> b388f04 (wip)
+=======
+>>>>>>> 91022fe (rebase squash from main)
         indent-guides      ; highlighted indent columns
         modeline             ; snazzy, nano-emacs-inspired modeline
         nvimtree           ; a project drawer, like NERDTree for vim
@@ -78,6 +81,7 @@
         ;;latex                ; writing papers in Neovim has never been so fun
         json
         ;;latex                ; writing papers in Neovim has never been so fun
+        ledger             ; be audit you can be
         lua                  ; one-based indices? one-based indices
         markdown             ; writing docs for people to ignore
         ;;nim                  ; python + lisp at the speed of c
@@ -94,8 +98,17 @@
         xml
         yaml
         ;;zig                  ; C, but simpler
+<<<<<<< HEAD
+=======
+        rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+        (sh +fish)           ; she sells {ba,z,fi}sh shells on the C xor
+        ;; xml                ; extend my language
+        yaml               ; yet another markup language to enable
+        zig                  ; C, but simpler
+>>>>>>> 91022fe (rebase squash from main)
 
         :app
+        ledger
         ;;calendar           ; Watch your missed deadlines in real time
 
         :config

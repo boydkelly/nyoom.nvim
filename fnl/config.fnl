@@ -29,4 +29,4 @@
 ;; this you can use the `after` function
 
 (after :neorg
-       {:load {:core.norg.dirman {:config {:workspaces {:main "~/gtd"}}}}})
+       {:load {:core.dirman {:config {:workspaces {:main "~/gtd"}}}}})
