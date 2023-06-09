@@ -9,7 +9,8 @@ vim.cmd([[
     echo "Mapped quotes"
   endif
 ]])
+-- only the first line should be uncommented in nyoom once nvim-autopairs is sorted out
+-- require("nvim-autopairs").setup()
 -- require("nvim-autopairs").get_rule('"')
-require("nvim-autopairs").setup()
 
 -- vim.cmd([[ iunmap " ]])

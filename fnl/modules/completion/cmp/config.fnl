@@ -44,7 +44,7 @@
     (and (not= col 0) (= (: (: (. (vim.api.nvim_buf_get_lines 0 (- line 1) line
                                                               true)
                                   1) :sub col
-                               col) :match "%s") nil))))
+                               col) :match "%s") nil)))
 
 (setup :cmp {:experimental {:ghost_text true}
              :window {:documentation {:border :solid}
