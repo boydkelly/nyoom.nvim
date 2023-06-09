@@ -37,35 +37,6 @@
                    (setup :copilot_cmp)
                    (table.insert cmp-sources {:name :copilot :group_index 2})))
 
-;; lsp icons
-
-(local icons {:Text "  "
-              :Method "  "
-              :Function "  "
-              :Constructor "  "
-              :Field "  "
-              :Variable "  "
-              :Class "  "
-              :Interface "  "
-              :Module "  "
-              :Property "  "
-              :Unit "  "
-              :Value "  "
-              :Enum "  "
-              :Keyword "  "
-              :Snippet "  "
-              :Color "  "
-              :File "  "
-              :Reference "  "
-              :Folder "  "
-              :EnumMember "  "
-              :Constant "  "
-              :Struct "  "
-              :Event "  "
-              :Operator "  "
-              :Copilot "  "
-              :TypeParameter "  "})
-
 ;; copilot uses lines above/below current text which confuses cmp, fix:
 
 (fn has-words-before []
@@ -129,7 +100,7 @@
              :formatting {:fields {1 :kind 2 :abbr 3 :menu}
                           :format (fn [_ vim-item]
                                     (set vim-item.menu vim-item.kind)
-                                    (set vim-item.kind (. icons vim-item.kind))
+                                    (set vim-item.kind (. shared.codicons vim-item.kind))
                                     vim-item)}})
 
 ;; Enable command-line completions
