@@ -20,7 +20,6 @@
                    :pickers {:oldfiles {:prompt_title "Recent files"}}})
 
 
-
 ;; Load extensions
 
 (packadd! telescope-ui-select.nvim)
