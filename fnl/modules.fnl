@@ -14,6 +14,18 @@
         ;; dashboard            ; a nifty splash screen for neovim
         ;;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit. 
         ;; hydra                ; Discount modality for mythological beast hunters
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        hydra                ; Discount modality for mythological beast hunters
+>>>>>>> 5b1df8e (selene)
+=======
+>>>>>>> b388f04 (wip)
+=======
+>>>>>>> 91022fe (rebase squash from main)
+=======
+>>>>>>> 9c972c8c163aebca60155debdc691b69b487c12a
         indent-guides      ; highlighted indent columns
         modeline             ; snazzy, nano-emacs-inspired modeline
         nvimtree           ; a project drawer, like NERDTree for vim
@@ -88,11 +100,17 @@
         xml
         yaml
         ;;zig                  ; C, but simpler
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 9c972c8c163aebca60155debdc691b69b487c12a
         rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
         (sh +fish)           ; she sells {ba,z,fi}sh shells on the C xor
         ;; xml                ; extend my language
         yaml               ; yet another markup language to enable
         zig                  ; C, but simpler
+>>>>>>> 91022fe (rebase squash from main)
 
         :app
         ;;calendar           ; Watch your missed deadlines in real time

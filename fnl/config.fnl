@@ -23,6 +23,8 @@
 
 (map! [n] :<esc> :<esc><cmd>noh<cr> {:desc "No highlight escape"})
 
+; (map! [n] :<M-u> :require "uuid" {:desc "Insert uuid"})
+
 ;; sometimes you want to modify a plugin thats loaded from within a module. For 
 ;; this you can use the `after` function
 
