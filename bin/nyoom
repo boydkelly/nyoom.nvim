@@ -59,11 +59,13 @@ function install_nyoom() {
 	# git clone -q -b feat/lockfile --single-branch https://github.com/EdenEast/packer.nvim "${DATA_PATH}/site/pack/packer/opt/packer.nvim"
 
   git clone https://github.com/wbthomason/packer.nvim "${DATA_PATH}/site/pack/packer/opt/packer.nvim"
-  git -C "${DATA_PATH}/site/pack/packer/opt/packer.nvim" checkout $(git rev-list -n 1 --before=${COMMIT_DATE} --first-parent HEAD
+  COMMIT=$(git -C "$nyoom"/config/${NVIM_APPNAME:-nvim} rev-list -n 1 --before=${COMMIT_DATE} --first-parent HEAD)
+  git -C "${DATA_PATH}/site/pack/packer/opt/packer.nvim" checkout ${COMMIT}
 #-b nyoom
   git clone https://github.com/rktjmp/hotpot.nvim.git "${DATA_PATH}/site/pack/packer/start/hotpot.nvim"
+  COMMIT=$(git -C "$nyoom"/config/${NVIM_APPNAME:-nvim} rev-list -n 1 --before=${COMMIT_DATE} --first-parent HEAD)
   # commit feb 14, 2023   No changes till sept
-  git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout $(git rev-list -n 1 --before=${COMMIT_DATE} --first-parent HEAD
+  git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout ${COMMIT}
 #-b nyoom
   ## git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout v0.6.0
 
@@ -116,11 +118,14 @@ sync)
 	# set ulimit to fix packer.sync hanging with --headless: https://github.com/wbthomason/packer.nvim/issues/751
 	ulimit -S -n 4096
 	NYOOM_CLI=true NVIM_APPNAME=$NVIM_APPNAME nvim --headless -c 'autocmd User PackerComplete quitall' -c 'lua require("packer").sync()'
+  COMMIT=$(git -C "$nyoom"/config/${NVIM_APPNAME:-nvim} rev-list -n 1 --before=${COMMIT_DATE} --first-parent HEAD)
 
-  git -C "${DATA_PATH}/site/pack/packer/opt/packer.nvim" checkout $(git rev-list -n 1 --before=${COMMIT_DATE} --first-parent HEAD
+  git -C "${DATA_PATH}/site/pack/packer/opt/packer.nvim" checkout ${COMMIT}
 #-b nyoom
   ## git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout v0.6.0
-  git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout $(git rev-list -n 1 --before=${COMMIT_DATE} --first-parent HEAD
+  COMMIT=$(git -C "$nyoom"/config/${NVIM_APPNAME:-nvim} rev-list -n 1 --before=${COMMIT_DATE} --first-parent HEAD)
+
+  git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout ${COMMIT}
 #-b nyoom
 
 	echo
