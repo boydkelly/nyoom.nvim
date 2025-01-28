@@ -4,6 +4,7 @@ set -o errexit -o pipefail -o nounset
 
 PACKER_COMMIT=90f794d01dd5f50404f8ef6e1d22377ba5180787
 HOTPOT_COMMIT=9fd5d6e341861c776ec9c69a2fc524deae67b541
+git config --global advice.detachedHead false
 
 # people like xdg
 NVIM_APPNAME="${NVIM_APPNAME:-nvim}"
@@ -56,11 +57,11 @@ function install_nyoom() {
 	# git clone -q -b feat/lockfile --single-branch https://github.com/EdenEast/packer.nvim "${DATA_PATH}/site/pack/packer/opt/packer.nvim"
 
   git clone https://github.com/wbthomason/packer.nvim "${DATA_PATH}/site/pack/packer/opt/packer.nvim"
-  git advice.detachedHead=false  -C "${DATA_PATH}/site/pack/packer/opt/packer.nvim" checkout ${PACKER_COMMIT} 
+  git -C "${DATA_PATH}/site/pack/packer/opt/packer.nvim" checkout ${PACKER_COMMIT} 
 #-b nyoom
   git clone https://github.com/rktjmp/hotpot.nvim.git "${DATA_PATH}/site/pack/packer/start/hotpot.nvim"
   # commit feb 14, 2023   No changes till sept
-  git advice.detachedHead=false -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout ${HOTOPT_COMMIT} 
+  git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout ${HOTOPT_COMMIT} 
 #-b nyoom
   ## git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout v0.6.0
 
@@ -116,8 +117,8 @@ sync)
 
   git -C "${DATA_PATH}/site/pack/packer/opt/packer.nvim" checkout ${PACKER_COMMIT} 
 #-b nyoom
-  ## git advice.detachedHead=false  -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout v0.6.0
-  git advice.detachedHead=false  -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout ${HOTPOT_COMMIT} 
+  ## git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout v0.6.0
+  git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout ${HOTPOT_COMMIT} 
 #-b nyoom
 
 	echo
