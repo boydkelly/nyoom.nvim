@@ -2,6 +2,9 @@
 
 set -o errexit -o pipefail -o nounset
 
+PACKER_COMMIT=90f794d01dd5f50404f8ef6e1d22377ba5180787
+HOTPOT_COMMIT=9fd5d6e341861c776ec9c69a2fc524deae67b541
+
 # people like xdg
 NVIM_APPNAME="${NVIM_APPNAME:-nvim}"
 CONFIG_PATH="${XDG_CONFIG_HOME:-${HOME}/.config}/${NVIM_APPNAME}"
@@ -51,8 +54,17 @@ function install_nyoom() {
 	printf "Installing Core Dependencies..."
 	rm -rf "${DATA_PATH}/site/pack"
 	# git clone -q -b feat/lockfile --single-branch https://github.com/EdenEast/packer.nvim "${DATA_PATH}/site/pack/packer/opt/packer.nvim"
-	git clone --depth 1 https://github.com/wbthomason/packer.nvim "${DATA_PATH}/site/pack/packer/opt/packer.nvim"
-	git clone --depth 1 https://github.com/rktjmp/hotpot.nvim.git "${DATA_PATH}/site/pack/packer/start/hotpot.nvim"
+
+  git clone https://github.com/wbthomason/packer.nvim "${DATA_PATH}/site/pack/packer/opt/packer.nvim"
+  git -C "${DATA_PATH}/site/pack/packer/opt/packer.nvim" checkout ${PACKER_COMMIT} -b nyoom
+  git clone https://github.com/rktjmp/hotpot.nvim.git "${DATA_PATH}/site/pack/packer/start/hotpot.nvim"
+  # commit feb 14, 2023   No changes till sept
+  git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout ${HOTOPT_COMMIT} -b nyoom
+  ## git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout v0.6.0
+
+
+	# git clone --depth 1 https://github.com/wbthomason/packer.nvim "${DATA_PATH}/site/pack/packer/opt/packer.nvim"
+	# git clone --depth 1 https://github.com/rktjmp/hotpot.nvim.git "${DATA_PATH}/site/pack/packer/start/hotpot.nvim"
 	printf "\n\033[1m\033[32mSuccessfully Installed Core Dependencies\033[0m\n\n"
 }
 
@@ -96,6 +108,11 @@ sync)
 	# set ulimit to fix packer.sync hanging with --headless: https://github.com/wbthomason/packer.nvim/issues/751
 	ulimit -S -n 4096
 	NYOOM_CLI=true NVIM_APPNAME=$NVIM_APPNAME nvim --headless -c 'autocmd User PackerComplete quitall' -c 'lua require("packer").sync()'
+
+  git -C "${DATA_PATH}/site/pack/packer/opt/packer.nvim" checkout ${PACKER_COMMIT} -b nyoom
+  ## git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout v0.6.0
+  git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout ${HOTPOT_COMMIT} -b nyoom
+
 	echo
 	if [ -d "${DATA_PATH}/site/pack/packer/opt/nvim-treesitter/" ]; then
 		echo
