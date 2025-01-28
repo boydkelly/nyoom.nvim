@@ -87,6 +87,9 @@ help)
 	help
 	;;
 install)
+        # force installl for now
+        rm -rf "${DATA_PATH}/site/pack"
+
 	if [ -d "${DATA_PATH}/site/pack/packer/opt/packer.nvim/" ]; then
 		printf "\n\033[1m\033[32mCore Dependencies are Already Installed\033[0m\n"
 	else
