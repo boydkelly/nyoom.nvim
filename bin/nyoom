@@ -4,7 +4,7 @@ set -o errexit -o pipefail -o nounset
 
 PACKER_COMMIT=90f794d01dd5f50404f8ef6e1d22377ba5180787
 HOTPOT_COMMIT=9fd5d6e341861c776ec9c69a2fc524deae67b541
-COMMIT_DATE=2023-06-01
+COMMIT_DATE="${COMMIT_DATE:-2023-06-01}"
 
 git config --global advice.detachedHead false
 
