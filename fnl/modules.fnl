@@ -12,7 +12,7 @@
         :ui
         (nyoom +modes +icons); what makes Nyoom look the way it does
         dashboard            ; a nifty splash screen for neovim
-        ;;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit. 
+        ;;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit.
         hydra                ; Discount modality for mythological beast hunters
         ;;indent-guides      ; highlighted indent columns
         modeline             ; snazzy, nano-emacs-inspired modeline
@@ -53,12 +53,12 @@
         eval                 ; run code, run (also, repls)
         antifennel           ; for all the fennel haters out there. this ones for you
         pastebin             ; interacting with pastebin platforms
-        lsp                  ; :vscode 
+        lsp                  ; :vscode
         (neogit              ; a git porclain for neovim
           +forge             ; Wield git like a wizard
           +diffview)         ; a git diff view for neovim
         rgb                  ; creating color strings
-        tree-sitter          ; syntax and parsing, sitting in a tree... 
+        tree-sitter          ; syntax and parsing, sitting in a tree...
 
         :lang
         cc                   ; C > C++ == 1
@@ -94,6 +94,6 @@
         :config
         ;;literate           ; FIXME: Disguise your config as poor documentation
         (default             ; Reasonable defaults for reasonable people
-          +bindings 
+          +bindings
           +which-key
           +smartparens))

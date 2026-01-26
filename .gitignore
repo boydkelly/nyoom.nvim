@@ -1,4 +1,5 @@
 # neovim
+.compiled
 lua/
 profile.json
 

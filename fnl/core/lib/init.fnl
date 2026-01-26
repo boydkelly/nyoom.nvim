@@ -301,7 +301,7 @@
 
 (fn stdlib.kv-pairs [t]
   "Returns a list of all key-value pairs in the given table.
-  
+
   Arguments:
   * `t`: the table to get the key-value pairs from
   Example:
@@ -341,7 +341,7 @@
     (->> (stdlib.kv-pairs xs)
          (fun.filter (fn [[n v]]
                        (not= n total)))
-         (fun.map nth 2))))
+         (fun.map fun.nth 2))))
 
 (fn stdlib.rest [xs]
   "Returns a new list containing all items in the list `xs` except for the first item.
@@ -356,7 +356,7 @@
   (->> (stdlib.kv-pairs xs)
        (fun.filter (fn [[n v]]
                      (not= n 1)))
-       (fun.map nth 2)))
+       (fun.map fun.nth 2)))
 
 (fn stdlib.select-keys [t ks]
   "Returns a new table containing the key-value pairs in the table `t` with keys in the list `ks`.
@@ -389,7 +389,7 @@
   (assert (= (get {a: 1, b: 2, c: 3} 'b' 0) 2))
   (assert (= (get {a: 1, b: 2, c: 3} 'd' 0) 0))
   ```"
-  (let [res (when (table? t)
+  (let [res (when (fun.table? t)
               (let [val (. t k)]
                 (when (not (stdlib.nil? val))
                   val)))]
@@ -411,7 +411,7 @@
   (assert (= (get-in {a: {b: {c: 1}}} {'a', 'b', 'd'} 0) 0))
   ```"
   (let [res (fun.reduce (fn [acc k]
-                          (when (table? acc)
+                          (when (fun.table? acc)
                             (stdlib.get acc k))) t ks)]
     (if (stdlib.nil? res)
         d
@@ -437,7 +437,7 @@
     (when (not (stdlib.nil? k))
       (tset t k v))
     (when (> rem 0)
-      (stdlib.assoc t (unpack xs)))
+      (stdlib.assoc t (fun.unpack xs)))
     t))
 
 (fn stdlib.assoc-in [t ks v]
@@ -458,7 +458,7 @@
         t (or t {})]
     (stdlib.assoc (fun.reduce (fn [acc k]
                                 (let [step (stdlib.get acc k)]
-                                  (if (nil? step)
+                                  (if (fun.nil? step)
                                       (stdlib.get (stdlib.assoc acc k {}) k)
                                       step))) t
                               path) final v)

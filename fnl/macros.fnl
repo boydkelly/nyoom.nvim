@@ -402,7 +402,7 @@
   See https://github.com/wbthomason/packer.nvim for information about the
   options.
   Additional to those options are some use-package-isms and custom keys:
-  :defer to defer loading a plugin until a file is loaded 
+  :defer to defer loading a plugin until a file is loaded
   :call-setup to call setup for a plugin using nyoom's setup wrapper
   nyoom-module to load the config for nyoom module"
   (assert-compile (str? identifier) "expected string for identifier" identifier)
@@ -500,7 +500,7 @@
 (lambda pact-use-package! [identifier ?options]
   "use-package inspired package manager for nyoom, using pact.nvim
 
-  Accepts the following arguments: 
+  Accepts the following arguments:
   identifier -> must be a string
   options -> a table of options. Optional
 
@@ -513,7 +513,7 @@
   :after -> either a string or function to run after a plugin is cloned or synced (e.g. \"sleep 2\")
   :opt? -> installs a package into /opt instead of /start, requires you to manually load the package (default false)
 
-  Accepts the following additional options: 
+  Accepts the following additional options:
   :host -> which git forge to download from. Accepts git, github, gitlab, and srht. By default set to github
   :cmd -> cmd(s) to lazy load on. Accepts a string or sequential table
   :event -> vimscript event(s) to lazy load on. Accepts a string or sequential table
@@ -522,7 +522,7 @@
   :init -> code to run before package is loaded
   :config -> code to run after a package is loaded
 
-  TODO: 
+  TODO:
   :keys
   :bind auto-lazy
   "
@@ -566,11 +566,11 @@
         augroup (.. :nyoom-pact- loadname)
         host :github
         autocmds `(do)
-                    
+
         callback `(do)
-                    
+
         result `(do)
-                  
+
         options (or ?options {})
         options (collect [k v (pairs options)]
                   (match k
@@ -844,8 +844,8 @@
 
 (lambda nyoom-module! [name]
   "By default modules should be loaded through use-package!. Of course, not every
-  modules needs a package. Sometimes we just want to load `config.fnl`. In this 
-  case, we can hack onto packer.nvim, give it a fake package, and ask it to load a 
+  modules needs a package. Sometimes we just want to load `config.fnl`. In this
+  case, we can hack onto packer.nvim, give it a fake package, and ask it to load a
   config file.
   Example of use:
   ```fennel
@@ -857,7 +857,7 @@
     (table.insert _G.nyoom/pack (pack (.. :nyoom. hash) {:nyoom-module name}))))
 
 (lambda nyoom-module-p! [name ?config]
-  "Checks if a module is enabled. Return config if given, otherwise return 
+  "Checks if a module is enabled. Return config if given, otherwise return
   true or false based on the state of the module
   Accepts the following arguements:
   name -> a symbol.
@@ -908,20 +908,20 @@
 ;; (tset _G :nyoom/formatters [])
 ;; (tset _G :nyoom/parsers [])
 ;; (tset _G :nyoom/cmp [])
-;; 
+;;
 
 ;; (lambda nyoom-add-language-server! [server ?config]
 ;;   (assert-compile (sym? server) "expected symbol for server" server)
 ;;   (let [server (->str server)
 ;;         config (or ?config)]
 ;;     (tset _G :nyoom/servers server config)))
-;; 
-;; 
+;;
+;;
 ;; (lambda nyoom-load-language-servers! []
 ;;   (let [servers _G.nyoom/servers]
 ;;     (each [server server_config (pairs servers)]
 ;;       ((. (. lsp server) :setup) (deep-merge defaults server_config)))))
-;; 
+;;
 ;; (lambda nyoom-add-linter! [])
 ;; (lambda nyoom-add-formatter! [])
 ;; (lambda nyoom-add-parsers! [])

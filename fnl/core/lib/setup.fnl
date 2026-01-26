@@ -1,3 +1,4 @@
+(local shared (require :core.lib.shared))
 (local {: autoload} (require :core.lib.autoload))
 (local {: deep-merge} (autoload :core.lib.tables))
 
@@ -21,7 +22,7 @@
   Accepts the following arguments:
   * `name`: the name of the plugin to set up
   * `config`: a table of configuration options to merge with the plugin's default configuration
-  
+
   Example of use:
   ```fennel
   (after nvim-telescope {:config-to-merge})
