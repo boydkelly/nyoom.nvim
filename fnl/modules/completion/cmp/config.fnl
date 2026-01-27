@@ -1,3 +1,6 @@
+(local autoload (require :core.lib.autoload))
+(local setup (require :core.lib.setup))
+(local shared (require :core.lib.shared))
 (import-macros {: set! : nyoom-module-p! : packadd!} :macros)
 (local cmp (autoload :cmp))
 (local luasnip (autoload :luasnip))

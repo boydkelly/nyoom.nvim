@@ -1,3 +1,4 @@
+(local setup (require :core.lib.setup))
 (setup :bufferline
        {:options {:numbers :none
                   :diagnostics :nvim_lsp

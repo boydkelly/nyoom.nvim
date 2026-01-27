@@ -1,13 +1,15 @@
+(local autoload (require :core.lib.autoload))
 (import-macros {: nyoom-module-p! : map! : buf-map! : let! : augroup! : clear! : autocmd!} :macros)
 (local {: nightly?} (autoload :core.lib))
 (local leap (autoload :leap))
+(local profile (require :core.lib.profile))
 
 ;; Set leader to space by default
 
 (let! mapleader " ")
 (leap.add_default_mappings)
 
-;; easier command line mode + 
+;; easier command line mode +
 
 (map! [n] ";" ":" {:desc :vim-ex})
 ;;; z
@@ -132,7 +134,7 @@
 (map! [n] :<leader>bK "<cmd>%bd<CR>" {:desc "Kill all buffers"})
 
 ;; m Set bookmark
-;; M Delete bookmark 
+;; M Delete bookmark
 
 (map! [n] :<leader>bK :<cmd>enew<CR> {:desc "New empty buffer"})
 (map! [n] :<leader>bO "<cmd>%bd|e#<CR>" {:desc "Kill other buffers"})
@@ -250,7 +252,7 @@
 
 ;;; -- g +git (hydra)
 
-;;; h +help 
+;;; h +help
 
 (map! [n] :<leader>h<CR> :<cmd>help<CR> {:desc "Vim Help"})
 (map! [n] "<leader>h'" :<cmd>ascii<CR> {:desc "Descibe Char (ascii)"})
@@ -303,10 +305,11 @@
                  (map! [n] :<leader>ht "<cmd>Telescope colorscheme<CR>"
                        {:desc "Load theme"}))
 
-(map! [n] :<leader>hT `(profile.toggle) {:desc "Toggle profiler"})
+;; (map! [n] :<leader>hT `(profile.toggle) {:desc "Toggle profiler"})
+(map! [n] :<leader>hT profile.toggle {:desc "Toggle profiler"})
 
 ;; u help autodefs
-;; v describe-variable 
+;; v describe-variable
 ;; w where is
 ;; W man or women
 
@@ -324,7 +327,7 @@
 ;; * search notes for symbol
 ;; a Agenda
 ;; b Bibliographic notes
-;; c Toggle last clock 
+;; c Toggle last clock
 ;; C Cancel current clock
 ;; d Open deft
 ;; e Noter
@@ -339,7 +342,7 @@
 ;; s Search notes
 ;; S Search agenda headlines
 ;; t Todo list
-;; v View search 
+;; v View search
 ;; y Export note to clipboard
 ;; Y Export note to clipboard as
 
@@ -406,7 +409,7 @@
 (map! [n] :<leader>oT :<cmd>term<CR> {:desc "Open term buffer"})
 ;;; p +project
 
-;;; q +quit/session 
+;;; q +quit/session
 
 ;;; r +remote
 

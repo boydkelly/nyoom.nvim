@@ -1,3 +1,5 @@
+(local setup (require :core.lib.setup))
+(local autoload (require :core.lib.autoload))
 (import-macros {: packadd! : set! : map! : nyoom-module-ensure!} :macros)
 
 (nyoom-module-ensure! tree-sitter)

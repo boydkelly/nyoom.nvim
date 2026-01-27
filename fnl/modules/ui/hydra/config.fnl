@@ -1,3 +1,4 @@
+(local autoload (require :core.lib.autoload))
 (import-macros {: set! : colorscheme : nyoom-module-p! : augroup! : autocmd!}
                :macros)
 
@@ -18,9 +19,9 @@
                           (autoload :gitsigns))
                    (local git-hint "
                     Git
-  
+
     _J_: next hunk     _d_: show deleted
-    _K_: prev hunk     _u_: undo last stage  
+    _K_: prev hunk     _u_: undo last stage
     _s_: stage hunk    _/_: show base file
     _p_: preview hunk  _S_: stage buffer
     _b_: blame line    _B_: blame show full
@@ -112,7 +113,7 @@
     ^ ^        Options
     ^
     _v_ %{ve} virtual edit
-    _i_ %{list} invisible characters  
+    _i_ %{list} invisible characters
     _s_ %{spell} spell
     _w_ %{wrap} wrap
     _c_ %{cul} cursor line
@@ -189,7 +190,7 @@
            _r_: resume      _f_: find files
    ▁
            _h_: vim help    _c_: execute command
-           _k_: keymaps     _;_: commands history  
+           _k_: keymaps     _;_: commands history
            _O_: options     _?_: search history
   ^
   _<Esc>_         _<Enter>_: NvimTree
@@ -261,9 +262,9 @@
                  Debug
 
       ^ ^Step^ ^ ^     ^ ^     Action
-      ^ ^ ^ ^ ^ ^      ^ ^  
-      ^ ^back^ ^ ^     ^_t_ toggle breakpoint  
-      ^ ^ _K_^ ^        _T_ clear breakpoints  
+      ^ ^ ^ ^ ^ ^      ^ ^
+      ^ ^back^ ^ ^     ^_t_ toggle breakpoint
+      ^ ^ _K_^ ^        _T_ clear breakpoints
   out _H_ ^ ^ _L_ into  _c_ continue
       ^ ^ _J_ ^ ^       _x_ terminate
       ^ ^over ^ ^     ^^_r_ open repl
@@ -307,7 +308,7 @@
   _d_: debugabbles    _c_: open cargo
   _s_: rustssr        _p_: parent module
   _h_: hover actions  _w_: reload workspace
-  _D_: open docs      _g_: view create graph  
+  _D_: open docs      _g_: view create graph
 ^
   _i_: Toggle Inlay Hints   _<Esc>_: Exit
     ")
@@ -370,13 +371,13 @@
                  (do
                    (fn latex-hydra []
                      (local vimtex-hint "
-    ^                     VimTex                      
-    ^                                                 
+    ^                     VimTex
+    ^
     _ll_: Continuous Compile    _ss_: Snapshot Compile
     _lC_: Clean Up Files        _lt_: Table of Content
-    _cw_: Count Words           _cl_: Count Letters   
-    _le_: Errors                _lq_: Log             
-    ^                                                 
+    _cw_: Count Words           _cl_: Count Letters
+    _le_: Errors                _lq_: Log
+    ^
     ^_h_: Default Maps                      _<Esc>_^^^
        ")
                      (Hydra {:name :+latex

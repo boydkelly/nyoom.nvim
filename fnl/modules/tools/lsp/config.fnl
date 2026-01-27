@@ -1,3 +1,4 @@
+(local autoload (require :core.lib.autoload))
 (import-macros {: nyoom-module-p!} :macros)
 (local lsp (autoload :lspconfig))
 (local lsp-servers {})
@@ -33,14 +34,14 @@
                      (buf-map! [n] :gt goto-type-definition!)
                      (buf-map! [n] :<leader>gr goto-references!)
                      (buf-map! [n] :gr goto-references!)))
-  ;; Enable lsp formatting if available 
+  ;; Enable lsp formatting if available
   (nyoom-module-p! format.+onsave
     (when (client.supports_method "textDocument/formatting")
       (augroup! format-before-saving
         (clear! {:buffer bufnr})
         (autocmd! BufWritePre <buffer> #(when (not vim.g.lsp_autoformat_disable)
                                            (vim.lsp.buf.format {: bufnr}
-                                                              :filter #(not (contains? [:jsonls :tsserver] $.name)))) 
+                                                              :filter #(not (contains? [:jsonls :tsserver] $.name))))
                                        {:buffer bufnr})))))
 
 ;; What should the lsp be demanded of?
@@ -88,8 +89,8 @@
 
 (nyoom-module-p! julia (tset lsp-servers :julials {}))
 
-(nyoom-module-p! json 
-                 (tset lsp-servers :jsonls 
+(nyoom-module-p! json
+                 (tset lsp-servers :jsonls
                   {:format {:enabled false}
                    :schemas [{:description "ESLint config"
                               :fileMatch [:.eslintrc.json :.eslintrc]
@@ -100,7 +101,7 @@
                              {:description "Packer config"
                               :fileMatch [:packer.json]
                               :url "https://json.schemastore.org/packer"}]}))
-                   
+
 
 (nyoom-module-p! kotlin (tset lsp-servers :kotlin_langage_server {}))
 
@@ -128,7 +129,7 @@
 (nyoom-module-p! yaml
                  (tset lsp-servers :yamlls
                        {:settings {:yaml {
-                                          :schemaStore {:enable false 
+                                          :schemaStore {:enable false
                                                         :url "https://www.schemastore.org/api/json/catalog.json"}
                                           :schemas {:/path/to/your/custom/strict/schema.json "yet-another.{yml,yaml}"
                                                     "http://json.schemastore.org/prettierrc" ".prettierrc.{yml,yaml}"}

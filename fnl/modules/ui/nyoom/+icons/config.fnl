@@ -1,3 +1,5 @@
+(local autoload (require :core.lib.autoload))
+(local setup (require :core.lib.setup))
 (import-macros {: packadd!} :macros)
 
 (packadd! nvim-material-icon)

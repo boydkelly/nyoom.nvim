@@ -1,5 +1,6 @@
 ;; heavily modified version of https://github.com/gpanders/fennel-repl.nvim to function as a shell
 
+(local autoload (require :core.lib.autoload))
 (local fennel (autoload :fennel))
 
 (local state {:n 1})

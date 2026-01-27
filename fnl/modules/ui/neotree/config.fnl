@@ -1,3 +1,4 @@
+(local setup (require :core.lib.setup))
 (import-macros {: let!} :macros)
 
 (let! neo_tree_remove_legacy_commands 1)

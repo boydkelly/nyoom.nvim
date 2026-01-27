@@ -1,3 +1,5 @@
+(local setup (require :core.lib.setup))
+(local autoload (require :core.lib.autoload))
 (import-macros {: packadd! : map! : nyoom-module-p! : augroup! : clear! : autocmd!} :macros)
 (local {: load_extension} (autoload :telescope))
 (local {: executable?} (autoload :core.lib))
@@ -18,8 +20,6 @@
                                               :height 0.8
                                               :preview_cutoff 120} true}
                    :pickers {:oldfiles {:prompt_title "Recent files"}}})
-
-
 
 ;; Load extensions
 

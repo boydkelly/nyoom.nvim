@@ -1,3 +1,5 @@
+(local autoload (require :core.lib.autoload))
+(local setup (require :core.lib.setup))
 (local {: register} (autoload :which-key))
 
 (setup :which-key {:icons {:breadcrumb "»" :separator "->" :group "+"}

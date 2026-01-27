@@ -1,3 +1,4 @@
+(local autoload (require :core.lib.autoload))
 (import-macros {: packadd! : nyoom-module-p!} :macros)
 (local dap (autoload :dap))
 
@@ -29,14 +30,14 @@
          :program (fn []
                     (vim.fn.input "Path to executable: "
                                   (.. (vim.fn.getcwd) "/bin/Debug/" :file)))}])
-       
+
 
 (nyoom-module-p! cc
                  (do
                    (set dap.configurations.c lldb-configs)
                    (set dap.configurations.c dap.configurations.cpp)))
 
-(nyoom-module-p! csharp 
+(nyoom-module-p! csharp
                  (do
                    (set dap.configurations.cs coreclr-configs)
                    (set dap.adapters.coreclr {:type :executable

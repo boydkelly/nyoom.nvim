@@ -1,3 +1,5 @@
+(local setup (require :core.lib.setup))
+(local autoload (require :core.lib.autoload))
 (import-macros {: packadd! : nyoom-module-p! : map! : custom-set-face!} :macros)
 
 ;; Conditionally enable leap-ast
@@ -100,7 +102,7 @@
 (packadd! nvim-ts-rainbow2)
 (packadd! nvim-ts-refactor)
 (packadd! nvim-treesitter-textobjects)
-(packadd! nvim-ts-context-commentstring) 
+(packadd! nvim-ts-context-commentstring)
 
 ;; setup hl groups for ts-rainbow
 
@@ -125,8 +127,8 @@
                        :use_virtual_text true
                        :lint_events ["BufWrite" "CursorHold"]}
         :rainbow {:enable true
-                  :query {1 :rainbow-parens 
-                          :html :rainbow-tags 
+                  :query {1 :rainbow-parens
+                          :html :rainbow-tags
                           :latex :rainbow-blocks
                           :tsx :rainbow-tags
                           :vue :rainbow-tags}}

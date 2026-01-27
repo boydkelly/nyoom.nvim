@@ -1,3 +1,4 @@
+(local setup (require :core.lib.setup))
 (import-macros {: nyoom-module-p!} :macros)
 
 ;; Init mason
@@ -81,7 +82,7 @@
     (nyoom-module-p! markdown
       (table.insert mason-tools :markdownlint))
 
-    (nyoom-module-p! python 
+    (nyoom-module-p! python
       (do
         (table.insert mason-tools :black)
         (table.insert mason-tools :isort)))

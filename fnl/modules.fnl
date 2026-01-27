@@ -31,7 +31,7 @@
         (format +onsave)     ; automated prettiness
         ;;multiple-cursors   ; learn macros you dingus
         parinfer             ; turn lisp into python, sort of
-        (hotpot +reflect)    ; lets get cooking. NOTE: essential module (for now), don't disable
+        ;; (hotpot +reflect)    ; lets get cooking. NOTE: essential module (for now), don't disable
         scratch              ; emacs-like scratch buffer functionality
         word-wrap            ; language-aware smart soft and hard wrapping
 

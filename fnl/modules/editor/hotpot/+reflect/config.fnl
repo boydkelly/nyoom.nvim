@@ -1,3 +1,4 @@
+(local autoload (require :core.lib.autoload))
 (import-macros {: map! : nyoom-module-p!} :macros)
 
 (local reflect-session {:id nil :mode :compile})
