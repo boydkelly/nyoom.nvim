@@ -1,4 +1,3 @@
-(local shared (require :core.lib.shared))
 (local {: autoload} (require :core.lib.autoload))
 (local {: deep-merge} (autoload :core.lib.tables))
 
@@ -14,7 +13,7 @@
   ```"
   (let [config (or ?config)]
     (local {: setup} (autoload name))
-    (setup (deep-merge (?. shared.userconfigs name) config))))
+    (setup (deep-merge (?. _G.shared.userconfigs name) config))))
 
 (fn after [name config]
   "Recreation of the `after!` macro for Nyoom.
@@ -27,6 +26,6 @@
   ```fennel
   (after nvim-telescope {:config-to-merge})
   ```"
-  (tset shared.userconfigs name config))
+  (tset _G.shared.userconfigs name config))
 
 {: setup : after}

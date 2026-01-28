@@ -1,4 +1,3 @@
-(local autoload (require :core.lib.autoload))
 (import-macros {: packadd!
                 : pack
                 : rock
@@ -46,12 +45,12 @@
 ;; include modules
 
 (echo! "Initializing Module System")
-(include :modules)
+(include :fnl.modules)
 (nyoom-init-modules!)
 
 ;; To install a package with Nyoom you must declare them here and run 'nyoom sync'
 ;; on the command line, then restart nvim for the changes to take effect
-;; The syntax is as follows:
+;; The syntax is as follows: 
 
 ;; (use-package! :username/repo {:opt true
 ;;                               :defer reponame-to-defer
@@ -77,7 +76,7 @@
 (echo! "Installing Packages")
 (unpack!)
 
-;; Compile modules
+;; Compile modules 
 
 (echo! "Compiling Nyoom Modules")
 (nyoom-compile-modules!)

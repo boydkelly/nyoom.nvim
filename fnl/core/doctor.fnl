@@ -1,4 +1,3 @@
-(local {: nil? : executable?} (require :core.lib))
 (local config (require :lspconfig))
 (local {:report_start report-start!
         :report_info report-info!
