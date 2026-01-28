@@ -46,73 +46,73 @@ vim.pack.add({
 })
 vim.cmd.packadd("tangerine.nvim")
 
+-- 1. Setup Tangerine and the compiler's search path
+local tangerine = require("tangerine")
 local api = require("tangerine.api")
+local fennel = require("tangerine.fennel")
 
--- paths
+-- Add this before you call api.compile.dir
+-- This tells the compiler "Don't worry, these will exist at runtime"
+fennel["allowed-globals"] = { "vim", "autoload", "setup", "_G" }
+
+-- This tells the Fennel COMPILER where to look for macros.fnl and other deps
 local fnl_dir = vim.fn.stdpath("config") .. "/fnl"
-local lua_dir = vim.fn.stdpath("config") .. "/.compiled"
+-- 2. Define our clean Lua target
+local lua_dir = vim.fn.stdpath("config") .. "/lua"
+require("tangerine.fennel").path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl"
 
--- compiled Lua first in package.path
+-- 3. Update Neovim's package.path (LUA ONLY)
+-- We remove the .fnl entry to stop the ')' expected error
 package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
--- allow raw fennel require for macros etc
-package.path = fnl_dir .. "/?.fnl;" .. package.path
 
--- helper to compile a single file
-local function compile_file(src, out)
-	api.compile.file(src, out, { verbose = true })
+-- 4. Compile the core libs first so we can use them in _G
+local lib_path = fnl_dir .. "/core/lib"
+local files = vim.fn.readdir(lib_path)
+
+-- 2. Compile every .fnl file in that directory first
+for _, filename in ipairs(files) do
+	if filename:match("%.fnl$") then
+		local name = filename:gsub("%.fnl$", "")
+		api.compile.file(lib_path .. "/" .. filename, lua_dir .. "/core/lib/" .. name .. ".lua", { verbose = true })
+	end
 end
 
--- compile core/lib in dependency order
-local core_lib = {
-	"shared", -- needed by setup
-	"fun", -- no deps
-	"tables", -- no deps
-	"setup",
-	"p",
-	"profile",
-	"io",
-	"color",
-	"autoload",
-	"init", -- compile init last
-}
+-- 3. NOW it is safe to inject globals because the whole lib is there
+_G.autoload = require("core.lib.autoload").autoload
+_G.setup = require("core.lib.setup").setup
+-- Add any other common Nyoom globals here if they appear
+_G.shared = require("core.lib.shared")
 
-for _, f in ipairs(core_lib) do
-	local src = fnl_dir .. "/core/lib/" .. f .. ".fnl"
-	local out = lua_dir .. "/core/lib/" .. f .. ".lua"
-	compile_file(src, out)
+-- Force compile the entry point specifically
+api.compile.file(fnl_dir .. "/nyoom.fnl", lua_dir .. "/nyoom.lua", { verbose = true })
+-- Set the macro path explicitly for the compiler
+-- Safely set macro-path
+local current_mpath = fennel["macro-path"] or ""
+fennel["macro-path"] = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. current_mpath
+
+-- 6. Compile everything else with error tracking
+print("NYOOM: Starting full compilation...")
+
+-- Explicitly compile the root files first to ensure they exist
+local root_fnl_files = { "nyoom", "packages", "modules", "config" }
+for _, f in ipairs(root_fnl_files) do
+	local src = fnl_dir .. "/" .. f .. ".fnl"
+	local out = lua_dir .. "/" .. f .. ".lua"
+	if vim.loop.fs_stat(src) then
+		api.compile.file(src, out, { verbose = true })
+	end
 end
 
--- compile root init.fnl
-compile_file(fnl_dir .. "/init.fnl", lua_dir .. "/init.lua")
-
--- compile the rest (modules, packages, config)
+-- Now compile all subdirectories (modules, core, etc.)
 api.compile.dir(fnl_dir, lua_dir, {
-	clean = false,
-	float = false,
-	verbose = false,
+	recursive = true,
+	verbose = true,
 })
 
--- Hotpot-style global helpers (intentional)
-local autoload_mod = require("core.lib.autoload")
-local setup_mod = require("core.lib.setup")
-
-_G.autoload = autoload_mod.autoload or autoload_mod
-_G.setup = setup_mod
-
--- 2. expose compiled modules to Lua
-package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
-
--- 3. DEBUG — confirm files
-print("NYOOM: .compiled contents:")
-local handle = vim.loop.fs_scandir(lua_dir)
-while handle do
-	local name = vim.loop.fs_scandir_next(handle)
-	if not name then
-		break
-	end
-	print("  ", name)
+-- 7. HANDOFF
+print("NYOOM: Attempting handoff to nyoom.lua")
+local ok, err = pcall(require, "nyoom")
+if not ok then
+	print("NYOOM: Handoff failed!")
+	print(err)
 end
-
--- 4. HANDOFF — load Nyoom Fennel runtime
-print("NYOOM: Requiring init.lua (compiled from init.fnl)")
-require("init")

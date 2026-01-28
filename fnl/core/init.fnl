@@ -1,6 +1,3 @@
-(local autoload (require :core.lib.autoload))
-(local {: err!} (require :core.lib.p))
-
 (import-macros {: let! : set!} :macros)
 (local {: executable?} (autoload :core.lib))
 
