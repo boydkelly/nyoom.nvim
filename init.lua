@@ -1,5 +1,5 @@
 -- ========================================
--- Nyoom Tangerine Bootstrap (correct)
+-- Nyoom Tangerine Bootstrap (safe)
 -- ========================================
 
 -- 0. Disable builtin plugins/providers (unchanged from Nyoom)
@@ -40,20 +40,22 @@ for _, p in ipairs(default_providers) do
 	vim.g["loaded_" .. p .. "_provider"] = 0
 end
 
--- 1. bootstrap pack
+-- 1. bootstrap tangerine.nvim
 vim.pack.add({
 	{ src = "https://github.com/udayvir-singh/tangerine.nvim" },
 })
 vim.cmd.packadd("tangerine.nvim")
 
--- 2. compile fennel
 local api = require("tangerine.api")
 
+-- paths
 local fnl_dir = vim.fn.stdpath("config") .. "/fnl"
 local lua_dir = vim.fn.stdpath("config") .. "/.compiled"
 
--- Add compiled root so require("core.lib") resolves to compiled/core/lib/init.lua
+-- compiled Lua first in package.path
 package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
+-- allow raw fennel require for macros etc
+package.path = fnl_dir .. "/?.fnl;" .. package.path
 
 -- helper to compile a single file
 local function compile_file(src, out)
@@ -65,32 +67,52 @@ local core_lib = {
 	"shared", -- needed by setup
 	"fun", -- no deps
 	"tables", -- no deps
-	"init",
 	"setup",
 	"p",
 	"profile",
 	"io",
 	"color",
 	"autoload",
+	"init", -- compile init last
 }
 
 for _, f in ipairs(core_lib) do
 	local src = fnl_dir .. "/core/lib/" .. f .. ".fnl"
 	local out = lua_dir .. "/core/lib/" .. f .. ".lua"
 	compile_file(src, out)
-	-- update package.path so subsequent requires work
-	package.path = lua_dir .. "/core/lib/?.lua;" .. lua_dir .. "/core/lib/?/init.lua;" .. package.path
 end
 
--- 2. Compile the rest of fnl
+-- compile root init.fnl
+compile_file(fnl_dir .. "/init.fnl", lua_dir .. "/init.lua")
+
+-- compile the rest (modules, packages, config)
 api.compile.dir(fnl_dir, lua_dir, {
 	clean = false,
-	float = true,
-	verbose = true,
+	float = false,
+	verbose = false,
 })
 
--- 3. expose compiled modules to Lua
+-- Hotpot-style global helpers (intentional)
+local autoload_mod = require("core.lib.autoload")
+local setup_mod = require("core.lib.setup")
+
+_G.autoload = autoload_mod.autoload or autoload_mod
+_G.setup = setup_mod
+
+-- 2. expose compiled modules to Lua
 package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
 
--- 4. HANDOFF — stop here
--- require("init") -- <-- this is a Fennel module
+-- 3. DEBUG — confirm files
+print("NYOOM: .compiled contents:")
+local handle = vim.loop.fs_scandir(lua_dir)
+while handle do
+	local name = vim.loop.fs_scandir_next(handle)
+	if not name then
+		break
+	end
+	print("  ", name)
+end
+
+-- 4. HANDOFF — load Nyoom Fennel runtime
+print("NYOOM: Requiring init.lua (compiled from init.fnl)")
+require("init")

@@ -1,3 +1,4 @@
+(local setup (require :core.lib.setup))
 (import-macros {: augroup! : autocmd! : local-set!} :macros)
 
 (setup :neogit {:disable_signs false

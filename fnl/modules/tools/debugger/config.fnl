@@ -1,4 +1,5 @@
 (local autoload (require :core.lib.autoload))
+(local setup (require :core.lib.setup))
 (import-macros {: packadd! : nyoom-module-p!} :macros)
 (local dap (autoload :dap))
 
@@ -30,7 +31,6 @@
          :program (fn []
                     (vim.fn.input "Path to executable: "
                                   (.. (vim.fn.getcwd) "/bin/Debug/" :file)))}])
-
 
 (nyoom-module-p! cc
                  (do

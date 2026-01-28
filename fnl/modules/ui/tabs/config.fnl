@@ -1,4 +1,5 @@
 (local setup (require :core.lib.setup))
+(local shared (require :core.lib.shared))
 (setup :bufferline
        {:options {:numbers :none
                   :diagnostics :nvim_lsp

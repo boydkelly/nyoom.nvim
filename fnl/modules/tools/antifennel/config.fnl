@@ -1,4 +1,5 @@
 (import-macros {: command!} :macros)
+(local {: tmpfile : slurp : get-clipboard} (require :core.lib.io))
 
 (fn split [s pat]
   "Split the given string into a sequential table using the pattern."

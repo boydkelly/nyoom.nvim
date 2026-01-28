@@ -781,12 +781,12 @@
         (set moduletag name)
         (if (sym? name)
             (let [name (->str name)
-                  include-path (.. :fnl.modules. moduletag "." name)
+                  include-path (.. :modules. moduletag "." name)
                   config-path (.. :modules. moduletag "." name :.config)]
               (tset registry name
                     {:include-paths [include-path] :config-paths [config-path]}))
             (let [modulename (->str (car name))
-                  include-path (.. :fnl.modules. moduletag "." modulename)
+                  include-path (.. :modules. moduletag "." modulename)
                   config-path (.. :modules. moduletag "." modulename :.config)
                   [_ & flags] name]
               (var includes [include-path])
