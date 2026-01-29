@@ -119,7 +119,7 @@ _G.shared = shared
 _G.tables = tables
 _G.fun = fun
 _G.nth = fun.nth
-_G.table = fun.table
+-- _G.table = fun.table
 _G.deep_merge = tables.deep_merge
 
 -- Inject into Fennel compiler_env for compile-time
