@@ -28,11 +28,6 @@
 
 ;; lazy load crypt/colorutils/profile/package
 
-(tset stdlib :crypt (autoload.autoload :core.lib.crypt))
-(tset stdlib :colorutils (autoload.autoload :core.lib.color))
-(tset stdlib :profile (autoload.autoload :core.lib.profile))
-(tset stdlib :alpaca (autoload.autoload :core.lib.alpaca))
-
 (fn stdlib.nil? [x]
   "Returns true if the given value is nil, false otherwise.
   Arguments:
@@ -437,7 +432,7 @@
     (when (not (stdlib.nil? k))
       (tset t k v))
     (when (> rem 0)
-      (stdlib.assoc t (fun.unpack xs)))
+      (stdlib.assoc t (unpack xs)))
     t))
 
 (fn stdlib.assoc-in [t ks v]

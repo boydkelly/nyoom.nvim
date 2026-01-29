@@ -1,27 +1,20 @@
-(import-macros {: packadd!
-                : pack
-                : rock
-                : use-package!
-                : rock!
-                : nyoom-init-modules!
-                : nyoom-compile-modules!
-                : unpack!
-                : autocmd!} :macros)
+(import-macros {: packadd! : pack : rock : use-package!
+                : rock! : nyoom-init-modules!
+                : nyoom-compile-modules! : unpack! : autocmd!} :macros)
 
-(packadd! packer.nvim)
-(local {: build} (autoload :hotpot.api.make))
-(local {: init} (autoload :packer))
-(local {: echo!} (autoload :core.lib.io))
+(packadd! "packer.nvim")
 
-;; Load packer
+;; defer autoload calls to runtime
+(fn get-init  [] (_G.autoload :packer))
+(fn get-echo! [] (_G.autoload :core.lib.io))
 
-(echo! "Loading Packer")
-(local headless (= 0 (length (vim.api.nvim_list_uis))))
-(init {;; :lockfile {:enable true
-       ;;            :path (.. (vim.fn.stdpath :config) :/lockfile.lua)}
-       :compile_path (.. (vim.fn.stdpath :config) :/lua/packer_compiled.lua)
-       :auto_reload_compiled false
-       :display {:non_interactive headless}})
+(get-echo!) "Loading Packer"
+(get-init) {}
+  :compile_path (.. (vim.fn.stdpath :config) :/lua/packer_compiled.lua)
+  :auto_reload_compiled false
+  :display {:non_interactive (= 0 (length (vim.api.nvim_list_uis)))}
+
+;; ...rest unchanged
 
 ;; compile healthchecks
 
@@ -50,7 +43,7 @@
 
 ;; To install a package with Nyoom you must declare them here and run 'nyoom sync'
 ;; on the command line, then restart nvim for the changes to take effect
-;; The syntax is as follows: 
+;; The syntax is as follows:
 
 ;; (use-package! :username/repo {:opt true
 ;;                               :defer reponame-to-defer
@@ -76,7 +69,7 @@
 (echo! "Installing Packages")
 (unpack!)
 
-;; Compile modules 
+;; Compile modules
 
 (echo! "Compiling Nyoom Modules")
 (nyoom-compile-modules!)

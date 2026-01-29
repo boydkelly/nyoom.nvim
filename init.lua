@@ -46,118 +46,152 @@ vim.pack.add({
 })
 vim.cmd.packadd("tangerine.nvim")
 
--- 1. Setup Tangerine and the compiler's search path
+-- ========================================
+-- init.lua: Nyoom Fennel Bootstrap
+-- ========================================
+
+-- 0. Tangerine/Fennel setup
 local tangerine = require("tangerine")
 local api = require("tangerine.api")
 local fennel = require("tangerine.fennel")
 
--- This is the "Secret Sauce":
--- We inject the actual modules into Fennel's own compiler environment
 fennel["compiler-env"] = _G
--- Add this before you call api.compile.dir
--- This tells the compiler "Don't worry, these will exist at runtime"
 
--- Add 'shared' and 'deep-merge' (if it's also a global) to the list
-fennel["allowed-globals"] = {
-	"vim",
-	"autoload",
-	"setup",
-	"_G",
-	"nth",
-	"fun",
-	"shared",
-	"deep-merge",
-	"tables",
-}
+-- Type helpers
+local function table_q(x)
+	return type(x) == "table"
+end
+local function nil_q(x)
+	return x == nil
+end
+local function string_q(x)
+	return type(x) == "string"
+end
+local function number_q(x)
+	return type(x) == "number"
+end
+local function boolean_q(x)
+	return type(x) == "boolean"
+end
 
--- This tells the Fennel COMPILER where to look for macros.fnl and other deps
+-- Inject into runtime and compile-time environment BEFORE bootstrapping core/lib
+for name, fn in pairs({
+	["table?"] = table_q,
+	["nil?"] = nil_q,
+	["string?"] = string_q,
+	["number?"] = number_q,
+	["boolean?"] = boolean_q,
+}) do
+	_G[name] = fn
+	fennel["compiler-env"][name] = fn
+end
+_G.table = table
+fennel["compiler-env"].table = table
+
+-- 1. Paths
 local fnl_dir = vim.fn.stdpath("config") .. "/fnl"
--- 2. Define our clean Lua target
 local lua_dir = vim.fn.stdpath("config") .. "/lua"
-require("tangerine.fennel").path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl"
-
--- 3. Update Neovim's package.path (LUA ONLY)
--- We remove the .fnl entry to stop the ')' expected error
+fennel.path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl"
 package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
 
--- 4. Compile and Inject core libs in dependency order
-local lib_path = fnl_dir .. "/core/lib"
+vim.fn.mkdir(lua_dir .. "/core/lib", "p")
 
--- Function to compile and immediately make available to the compiler/runtime
-local function bootstrap_lib(name, is_global)
-	local src = lib_path .. "/" .. name .. ".fnl"
+-- 2. Bootstrap core/lib essentials
+local function bootstrap_lib(name)
+	local src = fnl_dir .. "/core/lib/" .. name .. ".fnl"
 	local dest = lua_dir .. "/core/lib/" .. name .. ".lua"
-
 	api.compile.file(src, dest, { verbose = true })
-
-	if is_global then
-		-- This makes it available for both the rest of init.lua
-		-- AND the Fennel compiler's environment
-		_G[name] = require("core.lib." .. name)
+	package.loaded["core.lib." .. name] = nil
+	local ok, module = pcall(require, "core.lib." .. name)
+	if not ok then
+		error("Failed to load core.lib." .. name .. ": " .. tostring(module))
 	end
+	return module
 end
 
--- Order matters here!
-bootstrap_lib("shared", true) -- Compile shared.fnl -> set _G.shared
-bootstrap_lib("tables", true) -- Compile tables.fnl -> set _G.tables (for deep-merge)
-bootstrap_lib("fun", true) -- Compile fun.fnl    -> set _G.fun (for nth)
+print("NYOOM: Bootstrapping core/lib essentials...")
+local shared = bootstrap_lib("shared")
+local tables = bootstrap_lib("tables")
+local fun = bootstrap_lib("fun")
 
--- Now that the "Big Three" are in _G, compile the rest of the lib
-local files = vim.fn.readdir(lib_path)
-for _, filename in ipairs(files) do
-	if filename:match("%.fnl$") then
-		local name = filename:gsub("%.fnl$", "")
-		if not _G[name] then -- Skip the ones we already bootstrapped
-			api.compile.file(lib_path .. "/" .. filename, lua_dir .. "/core/lib/" .. name .. ".lua")
-		end
-	end
+-- Inject runtime globals from bootstrapped libs
+_G.shared = shared
+_G.tables = tables
+_G.fun = fun
+_G.nth = fun.nth
+_G.table = fun.table
+_G.deep_merge = tables.deep_merge
+
+-- Inject into Fennel compiler_env for compile-time
+fennel["compiler-env"].shared = shared
+fennel["compiler-env"].tables = tables
+fennel["compiler-env"].fun = fun
+fennel["compiler-env"].nth = fun.nth
+fennel["compiler-env"].table = fun.table
+fennel["compiler-env"].deep_merge = tables.deep_merge
+fennel["compiler-env"].table = table
+fennel["compiler-env"]["nil?"] = function(v)
+	return v == nil
 end
 
--- 5. Inject globals
--- Note: we use pcall here because core.lib.init might still be grumpy
-local ok, lib = pcall(require, "core.lib")
-if ok then
-	_G.autoload = lib.autoload
-	_G.setup = lib.setup
-	_G.nth = lib.nth -- Add this!
-else
-	print("NYOOM: Warning - core.lib load failed, some globals may be missing")
+-- ========================================
+-- 2. Compile Macros (before core/*.fnl)
+-- ========================================
+print("NYOOM: Compiling macros...")
+api.compile.dir(fnl_dir .. "/macros", lua_dir .. "/macros", { verbose = true })
+
+-- ========================================
+-- 3. Compile remaining core/lib modules
+-- ========================================
+local remaining_libs = { "autoload", "setup", "p", "profile", "io", "color", "crypt", "init" }
+for _, name in ipairs(remaining_libs) do
+	print(name)
+	local module = bootstrap_lib(name)
+	-- _G[name] = module
 end
 
--- Force compile the entry point specifically
-api.compile.file(fnl_dir .. "/nyoom.fnl", lua_dir .. "/nyoom.lua", { verbose = true })
--- Set the macro path explicitly for the compiler
--- Safely set macro-path
-local current_mpath = fennel["macro-path"] or ""
-fennel["macro-path"] = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. current_mpath
-
--- 6. Explicitly Compile the "Big Three" and Directories
-print("NYOOM: Compiling Core and Modules...")
-
--- A helper to catch specific file errors
+-- ========================================
+-- 4. Compile core/*.fnl files individually
+-- ========================================
 local function safe_compile(src, dest)
 	local ok, err = pcall(function()
-		api.compile.file(src, dest, { verbose = true })
+		api.compile.file(src, dest, { force = true, verbose = true })
 	end)
 	if not ok then
 		print("COMPILE ERROR [" .. src .. "]: " .. tostring(err))
 	end
 end
 
--- 1. Root Files
-safe_compile(fnl_dir .. "/nyoom.fnl", lua_dir .. "/nyoom.lua")
-safe_compile(fnl_dir .. "/modules.fnl", lua_dir .. "/modules.lua")
-safe_compile(fnl_dir .. "/packages.fnl", lua_dir .. "/packages.lua")
-safe_compile(fnl_dir .. "/config.fnl", lua_dir .. "/config.lua")
+print("NYOOM: Compiling core logic...")
+local core_path = fnl_dir .. "/core"
+local core_files = { "doctor.fnl", "init.fnl", "repl.fnl" }
+for _, filename in ipairs(core_files) do
+	safe_compile(core_path .. "/" .. filename, lua_dir .. "/core/" .. filename:gsub("%.fnl$", ".lua"))
+end
 
--- 2. The Core Entry Point (Crucial!)
-safe_compile(fnl_dir .. "/core/init.fnl", lua_dir .. "/core/init.lua")
+-- ========================================
+-- 5. Compile user config & modules individually
+-- ========================================
+print("NYOOM: Compiling user configuration...")
 
--- 3. The rest of the subdirectories (modules/*, etc)
+local user_files = {
+	{ fnl_dir .. "/nyoom.fnl", lua_dir .. "/nyoom.lua" },
+	{ fnl_dir .. "/modules.fnl", lua_dir .. "/modules.lua" },
+	{ fnl_dir .. "/config.fnl", lua_dir .. "/config.lua" },
+	{ fnl_dir .. "/packages.fnl", lua_dir .. "/packages.lua" },
+}
+
+for _, pair in ipairs(user_files) do
+	safe_compile(pair[1], pair[2])
+end
+
+-- Finally, compile any remaining .fnl recursively
 api.compile.dir(fnl_dir, lua_dir, { recursive = true, verbose = true })
 
--- 7. HANDOFF
-print("NYOOM: Attempting handoff to nyoom.lua")
+-- ========================================
+-- 6. Handoff to main entrypoint
+-- ========================================
+print("NYOOM: Handoff to nyoom.lua")
 local ok, err = pcall(require, "nyoom")
 if not ok then
 	print("NYOOM: Handoff failed!")

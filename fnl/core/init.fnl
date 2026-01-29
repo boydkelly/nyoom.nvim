@@ -1,9 +1,9 @@
 (import-macros {: let! : set!} :macros)
-(local {: executable?} (autoload :core.lib))
+(local {: executable?} (_G.autoload :core.lib))
 
 ;; load constants
 
-(autoload :core.shared)
+(_G.autoload :core.shared)
 
 ;; add userconfig to runtimepath
 
@@ -14,9 +14,9 @@
 (set vim.env.PATH (.. vim.env.PATH ":" (vim.fn.stdpath :data) :/mason/bin))
 (set vim.env.PATH (.. vim.env.PATH ":" (vim.fn.stdpath :config) :/bin))
 
-(let! python3_host_prog (if (executable? "python") (vim.fn.exepath "python")
-                          (executable? "python3") (vim.fn.exepath "python3")
-                          nil))
+(let! _G.python3_host_prog (if (executable? "python") (vim.fn.exepath "python")
+                             (executable? "python3") (vim.fn.exepath "python3")
+                             nil))
 
 ;; check for cli
 
@@ -69,7 +69,7 @@
       (set! diffopt+ "linematch:60")
       (set! splitkeep :screen)
       ;; nightly only options
-      (local {: nightly?} (autoload :core.lib))
+      (local {: nightly?} (_G.autoload :core.lib))
       (if (nightly?)
           (do))
       ;; gui options
@@ -106,7 +106,7 @@
         (local packer-command (.. :Packer (first-to-upper command)))
         (vim.api.nvim_create_user_command packer-command
                                           (fn []
-                                            (err! (.. "Please use the `nyoom` cli")))
+                                            (_G.err! (.. "Please use the `nyoom` cli")))
                                           {}))
 
       (let [packer-commands [:install :update :compile :sync :status :lockfile]]

@@ -15,10 +15,10 @@
           "expected number for max-name-length")
   (let [command (?. config name :cmd 1)
         spaces (spaces (- max-name-length (name:len)))]
-    (if (nil? command)
+    (if (_G.nil? command)
         (report-warn! (string.format "%s %sthe command is not defined." spaces
                                      name))
-        (executable? command)
+        (_G.executable? command)
         (report-ok! (string.format "%s %s`%s` is executable." name spaces
                                    command))
         (report-error! (string.format "%s %s`%s` is not executable." name
