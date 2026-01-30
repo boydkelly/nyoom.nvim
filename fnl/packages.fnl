@@ -5,19 +5,6 @@
 
 (set _G.nyoom/pack [])
 
-;; defer autoload calls to runtime
-; (fn get-echo! [] (_G.autoload :core.lib.io))
-;
-; (get-echo!) "Loading Packer"
-;
-;; compile healthchecks
-
-(_G.echo! "Compiling Nyoom Doctor")
-(_G.build (vim.fn.stdpath :config) {:verbosity 0}
-       (.. (vim.fn.stdpath :config) :/fnl/core/doctor.fnl)
-       (fn []
-         (.. (vim.fn.stdpath :config) :/lua/health.lua)))
-;
 ;; libraries
 ; (print "NYOOM: packages.fnl - START")
 
@@ -26,7 +13,7 @@
 (vim-pack-spec! :nyoom-engineering/oxocarbon.nvim)
 
 ;; BREADCRUMB 2
-(print (.. "NYOOM: Staged " (length _G.nyoom/pack) " specs. Calling vim-pack-add!"))
+; (print (.. "NYOOM: Staged " (length _G.nyoom/pack) " specs. Calling vim-pack-add!"))
 ; (_G.echo! "Test Installing Packages")
 (vim-pack-add!)
 

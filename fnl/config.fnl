@@ -4,7 +4,7 @@
 ;; You can use the `colorscheme` macro to load a custom theme, or load it manually
 ;; via require. This is the default:
 
-(print "CONFIG: colorscheme")
+; (print "CONFIG: colorscheme")
 (set! background :dark)
 (packadd! oxocarbon.nvim)
 (colorscheme oxocarbon)

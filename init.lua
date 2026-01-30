@@ -94,7 +94,7 @@ local function bootstrap_lib(name)
 	return module
 end
 
-print("NYOOM: Bootstrapping core/lib essentials...")
+-- print("NYOOM: Bootstrapping core/lib essentials...")
 _G.shared = bootstrap_lib("shared")
 _G.tables = bootstrap_lib("tables")
 _G.fun = bootstrap_lib("fun")
@@ -104,7 +104,7 @@ _G.deep_merge = tables.deep_merge
 -- ========================================
 -- 2. Compile Macros (before core/*.fnl)
 -- ========================================
-print("NYOOM: Compiling macros...")
+-- print("NYOOM: Compiling macros...")
 api.compile.dir(fnl_dir .. "/macros", lua_dir .. "/macros", { verbose = true })
 -- Load macros into the compiler env so they can be used
 
@@ -121,7 +121,7 @@ local runtime_globals = {
 local loaded_libs = {}
 
 for _, name in ipairs(remaining_libs) do
-	print("Bootstrapping " .. name)
+	-- print("Bootstrapping " .. name)
 	local module = bootstrap_lib(name)
 	loaded_libs[name] = module
 
@@ -152,7 +152,7 @@ local function safe_compile(src, dest)
 	end
 end
 
-print("NYOOM: Compiling core logic...")
+-- print("NYOOM: Compiling core logic...")
 local core_path = fnl_dir .. "/core"
 -- local core_files = { "doctor.fnl", "init.fnl", "repl.fnl" } doctor is compiled in packages.fnl
 local core_files = { "init.fnl", "repl.fnl" }
@@ -160,7 +160,14 @@ for _, filename in ipairs(core_files) do
 	safe_compile(core_path .. "/" .. filename, lua_dir .. "/core/" .. filename:gsub("%.fnl$", ".lua"))
 end
 
-print("NYOOM: Compiling entry point...")
+-- Compiling the Doctor into the Health system
+-- print("NYOOM: Compiling Health Checks...")
+safe_compile(
+	fnl_dir .. "/core/doctor.fnl",
+	lua_dir .. "/health.lua" -- Hardcoded to health.lua so :checkhealth finds it
+)
+
+-- print("NYOOM: Compiling entry point...")
 local user_files = {
 	{ fnl_dir .. "/nyoom.fnl", lua_dir .. "/nyoom.lua" },
 	{ fnl_dir .. "/modules.fnl", lua_dir .. "/modules.lua" },
@@ -179,7 +186,7 @@ end
 -- ========================================
 -- 6. Handoff to main entrypoint
 -- ========================================
-print("NYOOM: Handoff to nyoom.fnl")
+-- print("NYOOM: Handoff to nyoom.fnl")
 local ok, err = pcall(require, "nyoom")
 if not ok then
 	print("NYOOM: Handoff failed!")

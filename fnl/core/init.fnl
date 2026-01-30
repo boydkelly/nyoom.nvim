@@ -25,7 +25,7 @@
 ;; If its a regular instance, load defaults, userconfig and plugins
 
 (require :packages)
-(print "Required packages END")
+; (print "Required packages END")
 
 (require :config)
 (if cli
