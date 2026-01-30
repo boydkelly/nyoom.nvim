@@ -11,7 +11,6 @@
 
 ;; add python provider and mason binaries
 
-(set vim.env.PATH (.. vim.env.PATH ":" (vim.fn.stdpath :data) :/mason/bin))
 (set vim.env.PATH (.. vim.env.PATH ":" (vim.fn.stdpath :config) :/bin))
 
 (let! _G.python3_host_prog (if (executable? "python") (vim.fn.exepath "python")
@@ -25,8 +24,11 @@
 ;; If its a cli instance, load package management
 ;; If its a regular instance, load defaults, userconfig and plugins
 
+(require :packages)
+(print "Required packages END")
+
+(require :config)
 (if cli
-    (require :packages)
     (do
       ;; set opinionated defaults. TODO this should be in a module?
       (import-macros {: command! : let! : set!} :macros)
@@ -94,21 +96,4 @@
       (let! neovide_padding_right 38)
       (let! neovide_padding_bottom 20)
       ;; load userconfig
-      (require :config)
-      (require :packer_compiled)
-      ;; (require :pacttesting)
-      ;; disable packer commands
-
-      (fn disable-packer [command]
-        (fn first-to-upper [str]
-          (str:gsub "^%l" string.upper))
-
-        (local packer-command (.. :Packer (first-to-upper command)))
-        (vim.api.nvim_create_user_command packer-command
-                                          (fn []
-                                            (_G.err! (.. "Please use the `nyoom` cli")))
-                                          {}))
-
-      (let [packer-commands [:install :update :compile :sync :status :lockfile]]
-        (each [_ v (ipairs packer-commands)]
-          (disable-packer v)))))
+      (require :config)))

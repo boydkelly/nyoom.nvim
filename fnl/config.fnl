@@ -1,9 +1,12 @@
 (require-macros :macros)
+(import-macros {: packadd! : use-package!} :macros)
 
 ;; You can use the `colorscheme` macro to load a custom theme, or load it manually
 ;; via require. This is the default:
 
+(print "CONFIG: colorscheme")
 (set! background :dark)
+(packadd! oxocarbon.nvim)
 (colorscheme oxocarbon)
 
 ;; The set! macro sets vim.opt options. By default it sets the option to true
@@ -16,7 +19,7 @@
 ;; The let option sets global, or `vim.g` options.
 ;; Heres an example with localleader, setting it to <space>m
 
-(let! maplocalleader " m")
+(let! maplocalleader " ")
 
 ;; map! is used for mappings
 ;; Heres an example, preseing esc should also remove search highlights
@@ -26,5 +29,5 @@
 ;; sometimes you want to modify a plugin thats loaded from within a module. For
 ;; this you can use the `after` function
 
-(_G.after :neorg
-       {:load {:core.dirman {:config {:workspaces {:main "~/neorg"}}}}})
+; (_G.after :neorg
+;        {:load {:core.dirman {:config {:workspaces {:main "~/neorg"}}}}})

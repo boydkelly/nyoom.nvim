@@ -34,8 +34,6 @@
 (each [_ provider (ipairs default-providers)]
   (tset vim.g (.. :loaded_ provider :_provider) 0))
 
-(vim.notify "NYOOM: Fennel runtime reached" vim.log.levels.INFO)
-
 ;; If NYOOM_PROFILE is set, enable profiling
 (when (os.getenv :NYOOM_PROFILE)
   (vim.notify "NYOOM: Enabling profiler" vim.log.levels.WARN)
@@ -53,5 +51,6 @@
 
 ;; Finally load Nyoom core
 (require :core)
+(print "CORE: END")
 
 (vim.notify "NYOOM: core loaded successfully" vim.log.levels.INFO)

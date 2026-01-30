@@ -2,44 +2,6 @@
 -- Nyoom Tangerine Bootstrap (safe)
 -- ========================================
 
--- 0. Disable builtin plugins/providers (unchanged from Nyoom)
-local default_plugins = {
-	"2html_plugin",
-	"getscript",
-	"getscriptPlugin",
-	"gzip",
-	"logipat",
-	"netrw",
-	"netrwPlugin",
-	"netrwSettings",
-	"netrwFileHandlers",
-	"matchit",
-	"tar",
-	"tarPlugin",
-	"rrhelper",
-	"spellfile_plugin",
-	"vimball",
-	"vimballPlugin",
-	"zip",
-	"zipPlugin",
-	"tutor",
-	"rplugin",
-	"syntax",
-	"synmenu",
-	"optwin",
-	"compiler",
-	"bugreport",
-	"ftplugin",
-}
-local default_providers = { "node", "perl", "ruby" }
-
-for _, p in ipairs(default_plugins) do
-	vim.g["loaded_" .. p] = 1
-end
-for _, p in ipairs(default_providers) do
-	vim.g["loaded_" .. p .. "_provider"] = 0
-end
-
 vim.pack.add({
 	{ src = "https://github.com/udayvir-singh/tangerine.nvim" },
 })
@@ -75,10 +37,10 @@ local nyoom_globals = {
 	"autocmd!",
 }
 
-require("tangerine")
+-- require("tangerine")
 local api = require("tangerine.api")
 local fennel = require("tangerine.fennel")
-fennel["compiler-env"] = _G
+-- fennel["compiler-env"] = _G
 -- 1. Define EVERY symbol that Nyoom uses as a global
 -- This list needs to be comprehensive to satisfy the strict compiler
 -- fennel["allowed-globals"] = nyoom_globals
@@ -211,8 +173,9 @@ for _, pair in ipairs(user_files) do
 end
 
 -- Finally, compile any remaining .fnl recursively
-api.compile.dir(fnl_dir, lua_dir, { recursive = true, verbose = true })
+-- api.compile.dir(fnl_dir, lua_dir, { recursive = true, verbose = true })
 
+-- At the very end of init.lua, before handoff or after handoff:
 -- ========================================
 -- 6. Handoff to main entrypoint
 -- ========================================

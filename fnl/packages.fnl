@@ -1,21 +1,15 @@
 (import-macros {: packadd! : pack : rock : use-package!
+                : vim-pack-add! : vim-pack-spec!
                 : rock! : nyoom-init-modules!
                 : nyoom-compile-modules! : unpack! : autocmd!} :macros)
 
-; (packadd! "packer.nvim")
+(set _G.nyoom/pack [])
 
 ;; defer autoload calls to runtime
-(fn get-init  [] (_G.autoload :packer))
-(fn get-echo! [] (_G.autoload :core.lib.io))
-
-(get-echo!) "Loading Packer"
-(get-init) {}
-  :compile_path (.. (vim.fn.stdpath :config) :/lua/packer_compiled.lua)
-  :auto_reload_compiled false
-  :display {:non_interactive (= 0 (length (vim.api.nvim_list_uis)))}
-
-;; ...rest unchanged
-
+; (fn get-echo! [] (_G.autoload :core.lib.io))
+;
+; (get-echo!) "Loading Packer"
+;
 ;; compile healthchecks
 
 (_G.echo! "Compiling Nyoom Doctor")
@@ -23,23 +17,25 @@
        (.. (vim.fn.stdpath :config) :/fnl/core/doctor.fnl)
        (fn []
          (.. (vim.fn.stdpath :config) :/lua/health.lua)))
-
-;; packer can manage itself
-
-;; (use-package! :EdenEast/packer.nvim {:opt true :branch :feat/lockfile})
-;(use-package! :wbthomason/packer.nvim {:opt true})
-
+;
 ;; libraries
+; (print "NYOOM: packages.fnl - START")
 
-(use-package! :nvim-lua/plenary.nvim {:module :plenary})
-(use-package! :MunifTanjim/nui.nvim {:module :nui})
-(use-package! :nyoom-engineering/oxocarbon.nvim)
+(vim-pack-spec! :nvim-lua/plenary.nvim {:module :plenary})
+(vim-pack-spec! :MunifTanjim/nui.nvim {:module :nui})
+(vim-pack-spec! :nyoom-engineering/oxocarbon.nvim)
 
+;; BREADCRUMB 2
+(print (.. "NYOOM: Staged " (length _G.nyoom/pack) " specs. Calling vim-pack-add!"))
+; (_G.echo! "Test Installing Packages")
+(vim-pack-add!)
+
+; (print "NYOOM: packages.fnl - END")
 ;; include modules
 
-(echo! "Initializing Module System")
-(include :fnl.modules)
-(nyoom-init-modules!)
+; (_G.echo! "Initializing Module System")
+; (include :fnl.modules)
+; (nyoom-init-modules!)
 
 ;; To install a package with Nyoom you must declare them here and run 'nyoom sync'
 ;; on the command line, then restart nvim for the changes to take effect
@@ -66,10 +62,10 @@
 
 ;; Send plugins to packer
 
-(_G.echo! "Installing Packages")
-(unpack!)
+; (_G.echo! "Installing Packages")
+; (unpack!)
 
 ;; Compile modules
 
-(_G.echo! "Compiling Nyoom Modules")
-(nyoom-compile-modules!)
+; (_G.echo! "Compiling Nyoom Modules")
+; (nyoom-compile-modules!)

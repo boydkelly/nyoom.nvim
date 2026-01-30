@@ -458,6 +458,33 @@
       (assert-compile (table? ?options) "expected table for options" ?options))
   (table.insert _G.nyoom/pack (pack identifier ?options)))
 
+;; Macro: vim-pack-spec!
+(lambda vim-pack-spec! [identifier ?options]
+  "Strictly legal spec for nvim 0.10+ native packages."
+  (let [name (identifier:match ".*/(.*)")
+        spec {:src (.. "https://github.com/" identifier)
+              :name name}]
+    ;; Only add version if explicitly provided as a branch
+    (when (table? ?options)
+      (if ?options.branch
+          (set spec.version ?options.branch)))
+    `(table.insert _G.nyoom/pack ,spec)))
+
+;; Macro: unpack!
+(lambda vim-pack-add! []
+  "Native C-layer install and RTP load."
+  `(let [pack-list# _G.nyoom/pack]
+     (when (and pack-list# (> (length pack-list#) 0))
+       ;; 1. The Download/Sync (Native API)
+       (vim.pack.add pack-list# {:load (fn [])})
+
+       ;; 2. The Activation (packadd)
+       (each [_# spec# (ipairs pack-list#)]
+         (pcall vim.cmd.packadd spec#.name))
+
+       ;; 3. Wipe the staging table
+       (tset _G :nyoom/pack {}))))
+
 (lambda rock! [identifier ?options]
   "Declares a rock with its options. This macro addssh it to the nyoom/rock
   global table to later be used in the `unpack!` macro.
@@ -947,6 +974,8 @@
  : packadd!
  : pact-use-package!
  : verify-dependencies!
+ : vim-pack-add!
+ : vim-pack-spec!
  : nyoom!
  : nyoom-init-modules!
  : nyoom-compile-modules!
