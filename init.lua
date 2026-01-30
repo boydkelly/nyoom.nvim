@@ -50,10 +50,39 @@ vim.cmd.packadd("tangerine.nvim")
 -- ========================================
 
 -- 0. Tangerine/Fennel setup
-local tangerine = require("tangerine")
+local nyoom_globals = {
+	"vim",
+	"shared",
+	"tables",
+	"fun",
+	"nth",
+	"deep-merge",
+	"echo!",
+	"err!",
+	"warn!",
+	"build",
+	"setup",
+	"autoload",
+	"packadd!",
+	"nyoom!",
+	"use-package!",
+	"rock!",
+	"pack",
+	"rock",
+	"nyoom-init-modules!",
+	"nyoom-compile-modules!",
+	"unpack!",
+	"autocmd!",
+}
+
+require("tangerine")
 local api = require("tangerine.api")
 local fennel = require("tangerine.fennel")
 fennel["compiler-env"] = _G
+-- 1. Define EVERY symbol that Nyoom uses as a global
+-- This list needs to be comprehensive to satisfy the strict compiler
+-- fennel["allowed-globals"] = nyoom_globals
+fennel["allowed-globals"] = nyoom_globals
 
 -- Type helpers
 local function table_q(x)
@@ -81,20 +110,14 @@ for name, fn in pairs({
 	["boolean?"] = boolean_q,
 }) do
 	_G[name] = fn
-	fennel["compiler-env"][name] = fn
 end
-_G.table = table
-fennel["compiler-env"].table = table
 
 -- 1. Paths
 local fnl_dir = vim.fn.stdpath("config") .. "/fnl"
 local lua_dir = vim.fn.stdpath("config") .. "/lua"
-fennel.path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl"
+fennel.path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. (fennel.path or "")
 fennel["macro-path"] = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/macros-macros/?.fnl;" .. (fennel["macro-path"] or "")
 package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
-
--- This tells the compiler where to find the SOURCE files for (include) or (require)
-fennel.path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. (fennel.path or "")
 
 -- 2. Bootstrap core/lib essentials
 local function bootstrap_lib(name)
@@ -110,26 +133,11 @@ local function bootstrap_lib(name)
 end
 
 print("NYOOM: Bootstrapping core/lib essentials...")
-local shared = bootstrap_lib("shared")
-local tables = bootstrap_lib("tables")
-local fun = bootstrap_lib("fun")
-
--- Inject runtime globals from bootstrapped libs
-_G.shared = shared
-_G.tables = tables
-_G.fun = fun
+_G.shared = bootstrap_lib("shared")
+_G.tables = bootstrap_lib("tables")
+_G.fun = bootstrap_lib("fun")
 _G.nth = fun.nth
 _G.deep_merge = tables.deep_merge
-
--- Inject into Fennel compiler_env for compile-time
-fennel["compiler-env"].shared = shared
-fennel["compiler-env"].tables = tables
-fennel["compiler-env"].fun = fun
-fennel["compiler-env"].nth = fun.nth
-fennel["compiler-env"].deep_merge = tables.deep_merge
-fennel["compiler-env"]["nil?"] = function(v)
-	return v == nil
-end
 
 -- ========================================
 -- 2. Compile Macros (before core/*.fnl)
@@ -138,99 +146,42 @@ print("NYOOM: Compiling macros...")
 api.compile.dir(fnl_dir .. "/macros", lua_dir .. "/macros", { verbose = true })
 -- Load macros into the compiler env so they can be used
 
--- Example, after compiling macros
--- Any macro functions you want available for core/*.fnl or packages.fnl
--- These names must match what your macros define
-fennel["compiler-env"]["echo!"] = function(msg)
-	print(msg)
-end
-
-fennel["compiler-env"]["packadd!"] = function(plugin)
-	vim.cmd.packadd(plugin)
-end
-
 -- ========================================
 -- 3. Compile remaining core/lib modules
 -- ========================================
--- Bootstrap remaining core/lib modules
 local remaining_libs = { "autoload", "setup", "p", "profile", "io", "color", "crypt", "init" }
+
+local runtime_globals = {
+	autoload = true,
+	setup = true,
+}
+
 local loaded_libs = {}
+
 for _, name in ipairs(remaining_libs) do
 	print("Bootstrapping " .. name)
 	local module = bootstrap_lib(name)
 	loaded_libs[name] = module
-	-- _G[name] = module  -- inject into _G for runtime
-end
 
--- After bootstrapping remaining_libs (where io is loaded)
-local io_lib = loaded_libs["io"]
-
--- Nyoom's io.fnl exports a table. We need to grab the functions correctly.
-local echo_fn = io_lib["echo!"]
-local err_fn = io_lib["err!"]
-
--- 1. Inject into Runtime Global (for compiled lua to use)
-_G["echo!"] = echo_fn
-_G["err!"] = err_fn
-
--- 2. Inject into Compiler Env (for Fennel compiler to see during compilation)
-fennel["compiler-env"]["echo!"] = echo_fn
-fennel["compiler-env"]["err!"] = err_fn
-
--- 3. Double Check: If those were nil, use a fallback so compilation doesn't break
-if not echo_fn then
-	local fallback = function(msg)
-		print(tostring(msg))
+	if runtime_globals[name] then
+		_G[name] = module
 	end
-	fennel["compiler-env"]["echo!"] = fallback
-	_G["echo!"] = fallback
 end
 
--- Allow Fennel compiler to see these globals
+-- Export io helpers for runtime Lua
+local io_lib = loaded_libs.io
+_G["echo!"] = io_lib["echo!"]
+_G["err!"] = io_lib["err!"]
+
 -- ========================================
 -- 4. Compile core/*.fnl files individually
 -- ========================================
-
 local function safe_compile(src, dest)
-	-- 1. Define EVERY symbol that Nyoom uses as a global
-	-- This list needs to be comprehensive to satisfy the strict compiler
-	local nyoom_globals = {
-		"vim",
-		"shared",
-		"tables",
-		"fun",
-		"nth",
-		"deep-merge",
-		"echo!",
-		"err!",
-		"warn!",
-		"build",
-		"setup",
-		"autoload",
-		"packadd!",
-		"nyoom!",
-		"use-package!",
-		"rock!",
-		"pack",
-		"rock",
-		"nyoom-init-modules!",
-		"nyoom-compile-modules!",
-		"unpack!",
-		"autocmd!",
-	}
-
-	-- 2. Inject these into both the Fennel module and the Tangerine API
-	fennel["allowed-globals"] = nyoom_globals
-
 	-- 3. Run the standard Tangerine compile
 	local ok, err = pcall(function()
 		api.compile.file(src, dest, {
 			force = true,
 			verbose = true,
-			-- Try both possible naming conventions
-			compilerEnv = _G,
-			env = _G,
-			allowedGlobals = false, -- Setting to false DISBABLES the strict check in some versions
 		})
 	end)
 
@@ -241,57 +192,19 @@ end
 
 print("NYOOM: Compiling core logic...")
 local core_path = fnl_dir .. "/core"
--- local core_files = { "doctor.fnl", "init.fnl", "repl.fnl" }
+-- local core_files = { "doctor.fnl", "init.fnl", "repl.fnl" } doctor is compiled in packages.fnl
 local core_files = { "init.fnl", "repl.fnl" }
 for _, filename in ipairs(core_files) do
 	safe_compile(core_path .. "/" .. filename, lua_dir .. "/core/" .. filename:gsub("%.fnl$", ".lua"))
 end
 
-print("NYOOM: Compiling user configuration...")
-
+print("NYOOM: Compiling entry point...")
 local user_files = {
 	{ fnl_dir .. "/nyoom.fnl", lua_dir .. "/nyoom.lua" },
 	{ fnl_dir .. "/modules.fnl", lua_dir .. "/modules.lua" },
 	{ fnl_dir .. "/config.fnl", lua_dir .. "/config.lua" },
 	{ fnl_dir .. "/packages.fnl", lua_dir .. "/packages.lua" },
 }
-
-fennel["allowed-globals"] = {
-	"vim",
-	"shared",
-	"tables",
-	"fun",
-	"nth",
-	"deep-merge",
-	"echo!",
-	"err!",
-	"packadd!",
-	"nyoom!",
-	"setup",
-	"autoload",
-}
-
--- Add this right before the user_files loop
-local fennel_compiler = require("tangerine.fennel")
-
--- Some versions of Fennel require globals to be in the 'metadata' or 'env'
-fennel_compiler["allowed-globals"] = {
-	"vim",
-	"shared",
-	"tables",
-	"fun",
-	"nth",
-	"deep-merge",
-	"echo!",
-	"err!",
-	"packadd!",
-	"nyoom!",
-	"setup",
-	"autoload",
-}
-
--- Force the compiler to see the runtime _G
-fennel_compiler["compiler-env"] = _G
 
 for _, pair in ipairs(user_files) do
 	safe_compile(pair[1], pair[2])
@@ -303,7 +216,7 @@ api.compile.dir(fnl_dir, lua_dir, { recursive = true, verbose = true })
 -- ========================================
 -- 6. Handoff to main entrypoint
 -- ========================================
-print("NYOOM: Handoff to nyoom.lua")
+print("NYOOM: Handoff to nyoom.fnl")
 local ok, err = pcall(require, "nyoom")
 if not ok then
 	print("NYOOM: Handoff failed!")
