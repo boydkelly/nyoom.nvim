@@ -3,8 +3,11 @@
 -- ========================================
 
 vim.pack.add({
+	{ src = "https://github.com/nvim-neorocks/lz.n" },
 	{ src = "https://github.com/udayvir-singh/tangerine.nvim" },
 })
+
+vim.cmd.packadd("lz.n")
 vim.cmd.packadd("tangerine.nvim")
 
 -- ========================================
@@ -75,6 +78,7 @@ for name, fn in pairs({
 end
 
 -- 1. Paths
+vim.cmd.cd(vim.fn.stdpath("config")) -- absolutely needed for include fnl.modules in packages.fnl
 local fnl_dir = vim.fn.stdpath("config") .. "/fnl"
 local lua_dir = vim.fn.stdpath("config") .. "/lua"
 fennel.path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. (fennel.path or "")
@@ -153,19 +157,20 @@ local function safe_compile(src, dest)
 end
 
 -- print("NYOOM: Compiling core logic...")
-local core_path = fnl_dir .. "/core"
--- local core_files = { "doctor.fnl", "init.fnl", "repl.fnl" } doctor is compiled in packages.fnl
-local core_files = { "init.fnl", "repl.fnl" }
-for _, filename in ipairs(core_files) do
-	safe_compile(core_path .. "/" .. filename, lua_dir .. "/core/" .. filename:gsub("%.fnl$", ".lua"))
-end
 
--- Compiling the Doctor into the Health system
--- print("NYOOM: Compiling Health Checks...")
-safe_compile(
-	fnl_dir .. "/core/doctor.fnl",
-	lua_dir .. "/health.lua" -- Hardcoded to health.lua so :checkhealth finds it
-)
+local core_files = {
+	-- core runtime
+	{ fnl_dir .. "/core/init.fnl", lua_dir .. "/core/init.lua" },
+	{ fnl_dir .. "/core/repl.fnl", lua_dir .. "/core/repl.lua" },
+
+	-- Compiling the Doctor into the Health system
+	-- health check (must land in lua/health.lua)
+	{ fnl_dir .. "/core/doctor.fnl", lua_dir .. "/health.lua" },
+}
+
+for _, pair in ipairs(core_files) do
+	safe_compile(pair[1], pair[2])
+end
 
 -- print("NYOOM: Compiling entry point...")
 local user_files = {
@@ -179,10 +184,6 @@ for _, pair in ipairs(user_files) do
 	safe_compile(pair[1], pair[2])
 end
 
--- Finally, compile any remaining .fnl recursively
--- api.compile.dir(fnl_dir, lua_dir, { recursive = true, verbose = true })
-
--- At the very end of init.lua, before handoff or after handoff:
 -- ========================================
 -- 6. Handoff to main entrypoint
 -- ========================================

@@ -58,7 +58,7 @@
           +forge             ; Wield git like a wizard
           +diffview)         ; a git diff view for neovim
         rgb                  ; creating color strings
-        tree-sitter          ; syntax and parsing, sitting in a tree...
+        ;;tree-sitter          ; syntax and parsing, sitting in a tree...
 
         :lang
         cc                   ; C > C++ == 1

@@ -21,8 +21,8 @@
 ;; include modules
 
 ; (_G.echo! "Initializing Module System")
-; (include :fnl.modules)
-; (nyoom-init-modules!)
+(include :fnl.modules)
+(nyoom-init-modules!)
 
 ;; To install a package with Nyoom you must declare them here and run 'nyoom sync'
 ;; on the command line, then restart nvim for the changes to take effect
