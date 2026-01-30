@@ -2,7 +2,7 @@
                 : rock! : nyoom-init-modules!
                 : nyoom-compile-modules! : unpack! : autocmd!} :macros)
 
-(packadd! "packer.nvim")
+; (packadd! "packer.nvim")
 
 ;; defer autoload calls to runtime
 (fn get-init  [] (_G.autoload :packer))
@@ -18,8 +18,8 @@
 
 ;; compile healthchecks
 
-(echo! "Compiling Nyoom Doctor")
-(build (vim.fn.stdpath :config) {:verbosity 0}
+(_G.echo! "Compiling Nyoom Doctor")
+(_G.build (vim.fn.stdpath :config) {:verbosity 0}
        (.. (vim.fn.stdpath :config) :/fnl/core/doctor.fnl)
        (fn []
          (.. (vim.fn.stdpath :config) :/lua/health.lua)))
@@ -27,7 +27,7 @@
 ;; packer can manage itself
 
 ;; (use-package! :EdenEast/packer.nvim {:opt true :branch :feat/lockfile})
-(use-package! :wbthomason/packer.nvim {:opt true})
+;(use-package! :wbthomason/packer.nvim {:opt true})
 
 ;; libraries
 
@@ -66,10 +66,10 @@
 
 ;; Send plugins to packer
 
-(echo! "Installing Packages")
+(_G.echo! "Installing Packages")
 (unpack!)
 
 ;; Compile modules
 
-(echo! "Compiling Nyoom Modules")
+(_G.echo! "Compiling Nyoom Modules")
 (nyoom-compile-modules!)
