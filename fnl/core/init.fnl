@@ -1,4 +1,5 @@
-(import-macros {: let! : set!} :macros)
+;; (import-macros {: let! : set!} :macros)
+(import-macros {: command! : let! : set!} :macros)
 (local {: executable?} (_G.autoload :core.lib))
 
 ;; load constants
@@ -27,6 +28,7 @@
 (require :packages)
 (if (not cli)
     (do
+      ; (print "set options")
       ;; set opinionated defaults. TODO this should be in a module?
       (import-macros {: command! : let! : set!} :macros)
       (set! cmdheight 0)

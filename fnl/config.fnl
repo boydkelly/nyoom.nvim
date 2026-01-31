@@ -6,7 +6,6 @@
 
 ; (print "CONFIG: colorscheme")
 (set! background :dark)
-(packadd! oxocarbon.nvim)
 (colorscheme oxocarbon)
 
 ;; The set! macro sets vim.opt options. By default it sets the option to true

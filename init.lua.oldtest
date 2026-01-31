@@ -100,18 +100,19 @@ end
 
 -- print("NYOOM: Bootstrapping core/lib essentials...")
 _G.shared = bootstrap_lib("shared")
+_G.crypt = bootstrap_lib("crypt")
 _G.tables = bootstrap_lib("tables")
 _G.fun = bootstrap_lib("fun")
-_G.crypt = bootstrap_lib("crypt")
-_G.autoload = bootstrap_lib("autoload")
-local p_lib = bootstrap_lib("p")
-
-_G.p = p_lib
 _G.nth = fun.nth
 _G.deep_merge = tables.deep_merge
-_G["getfenv"] = p_lib["getfenv"]
-_G["setfenv"] = p_lib["setfenv"]
 
+-- Inject these into compiler-env so macros see them
+fennel["compiler-env"] = _G
+fennel["compiler-env"].tables = _G.tables
+fennel["compiler-env"].fun = _G.fun
+fennel["compiler-env"].nth = _G.nth
+fennel["compiler-env"].deep_merge = _G.deep_merge
+fennel["compiler-env"].crypt = _G.crypt
 -- ========================================
 -- 2. Compile Macros (before core/*.fnl)
 -- ========================================
@@ -122,7 +123,7 @@ api.compile.dir(fnl_dir .. "/macros", lua_dir .. "/macros", { verbose = true })
 -- ========================================
 -- 3. Compile remaining core/lib modules
 -- ========================================
-local remaining_libs = { "setup", "profile", "io", "color", "init" }
+local remaining_libs = { "autoload", "setup", "p", "profile", "io", "color", "crypt", "init" }
 
 local runtime_globals = {
 	autoload = true,
@@ -130,7 +131,6 @@ local runtime_globals = {
 }
 
 local loaded_libs = {}
-
 for _, name in ipairs(remaining_libs) do
 	-- print("Bootstrapping " .. name)
 	local module = bootstrap_lib(name)
@@ -146,6 +146,9 @@ local io_lib = loaded_libs.io
 _G["echo!"] = io_lib["echo!"]
 _G["err!"] = io_lib["err!"]
 
+local p_lib = loaded_libs.p
+_G["getfenv"] = p_lib["getfenv"]
+_G["setfenv"] = p_lib["setfenv"]
 -- ========================================
 -- 4. Compile core/*.fnl files individually
 -- ========================================

@@ -2,11 +2,11 @@
 -- Nyoom Tangerine Bootstrap (safe)
 -- ========================================
 
+-- 0. Add Tangerine + dependencies
 vim.pack.add({
 	{ src = "https://github.com/nvim-neorocks/lz.n" },
 	{ src = "https://github.com/udayvir-singh/tangerine.nvim" },
 })
-
 vim.cmd.packadd("lz.n")
 vim.cmd.packadd("tangerine.nvim")
 
@@ -14,7 +14,11 @@ vim.cmd.packadd("tangerine.nvim")
 -- init.lua: Nyoom Fennel Bootstrap
 -- ========================================
 
--- 0. Tangerine/Fennel setup
+require("tangerine")
+local api = require("tangerine.api")
+local fennel = require("tangerine.fennel")
+
+-- Define allowed globals for Nyoom compiler
 local nyoom_globals = {
 	"vim",
 	"shared",
@@ -39,57 +43,45 @@ local nyoom_globals = {
 	"unpack!",
 	"autocmd!",
 }
-
--- require("tangerine")
-local api = require("tangerine.api")
-local fennel = require("tangerine.fennel")
--- fennel["compiler-env"] = _G
--- 1. Define EVERY symbol that Nyoom uses as a global
--- This list needs to be comprehensive to satisfy the strict compiler
--- fennel["allowed-globals"] = nyoom_globals
 fennel["allowed-globals"] = nyoom_globals
 
 -- Type helpers
-local function table_q(x)
-	return type(x) == "table"
-end
-local function nil_q(x)
-	return x == nil
-end
-local function string_q(x)
-	return type(x) == "string"
-end
-local function number_q(x)
-	return type(x) == "number"
-end
-local function boolean_q(x)
-	return type(x) == "boolean"
-end
-
--- Inject into runtime and compile-time environment BEFORE bootstrapping core/lib
 for name, fn in pairs({
-	["table?"] = table_q,
-	["nil?"] = nil_q,
-	["string?"] = string_q,
-	["number?"] = number_q,
-	["boolean?"] = boolean_q,
+	["table?"] = function(x)
+		return type(x) == "table"
+	end,
+	["nil?"] = function(x)
+		return x == nil
+	end,
+	["string?"] = function(x)
+		return type(x) == "string"
+	end,
+	["number?"] = function(x)
+		return type(x) == "number"
+	end,
+	["boolean?"] = function(x)
+		return type(x) == "boolean"
+	end,
 }) do
 	_G[name] = fn
 end
 
--- 1. Paths
-vim.cmd.cd(vim.fn.stdpath("config")) -- absolutely needed for include fnl.modules in packages.fnl
+-- Paths
+vim.cmd.cd(vim.fn.stdpath("config")) -- needed for include :fnl.modules
 local fnl_dir = vim.fn.stdpath("config") .. "/fnl"
 local lua_dir = vim.fn.stdpath("config") .. "/lua"
 fennel.path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. (fennel.path or "")
 fennel["macro-path"] = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/macros-macros/?.fnl;" .. (fennel["macro-path"] or "")
 package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
 
--- 2. Bootstrap core/lib essentials
+-- ========================================
+-- 2. Bootstrap minimal core libs for macros
+-- ========================================
+
 local function bootstrap_lib(name)
 	local src = fnl_dir .. "/core/lib/" .. name .. ".fnl"
 	local dest = lua_dir .. "/core/lib/" .. name .. ".lua"
-	api.compile.file(src, dest, { verbose = true })
+	api.compile.file(src, dest, { float = true, verbose = true })
 	package.loaded["core.lib." .. name] = nil
 	local ok, module = pcall(require, "core.lib." .. name)
 	if not ok then
@@ -98,41 +90,29 @@ local function bootstrap_lib(name)
 	return module
 end
 
--- print("NYOOM: Bootstrapping core/lib essentials...")
+-- Minimal set required for macro compilation
 _G.shared = bootstrap_lib("shared")
 _G.tables = bootstrap_lib("tables")
 _G.fun = bootstrap_lib("fun")
-_G.crypt = bootstrap_lib("crypt")
-_G.autoload = bootstrap_lib("autoload")
-local p_lib = bootstrap_lib("p")
+_G.crypt = bootstrap_lib("crypt") -- critical for macros
+_G.nth = _G.fun.nth
+_G.deep_merge = _G.tables.deep_merge
 
-_G.p = p_lib
-_G.nth = fun.nth
-_G.deep_merge = tables.deep_merge
-_G["getfenv"] = p_lib["getfenv"]
-_G["setfenv"] = p_lib["setfenv"]
+-- Inject these into compiler-env so macros see them
+fennel["compiler-env"] = fennel["compiler-env"] or {}
+fennel["macro-env"] = fennel["macro-env"] or {}
 
--- ========================================
--- 2. Compile Macros (before core/*.fnl)
--- ========================================
--- print("NYOOM: Compiling macros...")
-api.compile.dir(fnl_dir .. "/macros", lua_dir .. "/macros", { verbose = true })
--- Load macros into the compiler env so they can be used
-
--- ========================================
--- 3. Compile remaining core/lib modules
--- ========================================
-local remaining_libs = { "setup", "profile", "io", "color", "init" }
+-- inject core libs needed for macros
+local remaining_libs = { "tables", "fun", "nth", "deep_merge", "echo!", "err!" }
 
 local runtime_globals = {
 	autoload = true,
 	setup = true,
 }
-
 local loaded_libs = {}
 
 for _, name in ipairs(remaining_libs) do
-	-- print("Bootstrapping " .. name)
+	print("Bootstrapping " .. name)
 	local module = bootstrap_lib(name)
 	loaded_libs[name] = module
 
@@ -141,37 +121,60 @@ for _, name in ipairs(remaining_libs) do
 	end
 end
 
+fennel["macro-env"].crypt = loaded_libs.crypt
+
+fennel["compiler-env"].tables = _G.tables
+fennel["compiler-env"].fun = _G.fun
+fennel["compiler-env"].nth = _G.nth
+fennel["compiler-env"].deep_merge = _G.deep_merge
+fennel["compiler-env"].crypt = _G.crypt
+
+-- Inject runtime helpers explicitly used by macros
+_G["echo!"] = bootstrap_lib("io")["echo!"]
+_G["err!"] = bootstrap_lib("io")["err!"]
+fennel["compiler-env"]["echo!"] = _G["echo!"]
+fennel["compiler-env"]["err!"] = _G["err!"]
+
+-- ========================================
+-- 3. Compile macros
+-- ========================================
+api.compile.dir(fnl_dir .. "/macros", lua_dir .. "/macros", { float = true, verbose = true })
+
+-- ========================================
+-- 4. Bootstrap remaining core/lib modules (runtime globals)
+-- ========================================
+
+-- Also inject remaining loaded libs into compiler-env if macros touch them
+for name, lib in pairs(loaded_libs) do
+	fennel["compiler-env"][name] = lib
+end
+
+-- Helpers from p module
+_G["getfenv"] = loaded_libs.p["getfenv"]
+_G["setfenv"] = loaded_libs.p["setfenv"]
+fennel["compiler-env"]["getfenv"] = _G["getfenv"]
+fennel["compiler-env"]["setfenv"] = _G["setfenv"]
+--
 -- Export io helpers for runtime Lua
 local io_lib = loaded_libs.io
 _G["echo!"] = io_lib["echo!"]
 _G["err!"] = io_lib["err!"]
 
 -- ========================================
--- 4. Compile core/*.fnl files individually
+-- 5. Compile core/*.fnl individually
 -- ========================================
 local function safe_compile(src, dest)
-	-- 3. Run the standard Tangerine compile
 	local ok, err = pcall(function()
-		api.compile.file(src, dest, {
-			force = true,
-			verbose = true,
-		})
+		api.compile.file(src, dest, { float = true, force = true, verbose = true })
 	end)
-
 	if not ok then
 		print("COMPILE ERROR [" .. src .. "]: " .. tostring(err))
 	end
 end
 
--- print("NYOOM: Compiling core logic...")
-
 local core_files = {
-	-- core runtime
 	{ fnl_dir .. "/core/init.fnl", lua_dir .. "/core/init.lua" },
 	{ fnl_dir .. "/core/repl.fnl", lua_dir .. "/core/repl.lua" },
-
-	-- Compiling the Doctor into the Health system
-	-- health check (must land in lua/health.lua)
 	{ fnl_dir .. "/core/doctor.fnl", lua_dir .. "/health.lua" },
 }
 
@@ -179,22 +182,23 @@ for _, pair in ipairs(core_files) do
 	safe_compile(pair[1], pair[2])
 end
 
--- print("NYOOM: Compiling entry point...")
-local user_files = {
+-- ========================================
+-- 6. Compile user entry points
+-- ========================================
+local base_files = {
 	{ fnl_dir .. "/nyoom.fnl", lua_dir .. "/nyoom.lua" },
 	{ fnl_dir .. "/modules.fnl", lua_dir .. "/modules.lua" },
 	{ fnl_dir .. "/config.fnl", lua_dir .. "/config.lua" },
 	{ fnl_dir .. "/packages.fnl", lua_dir .. "/packages.lua" },
 }
 
-for _, pair in ipairs(user_files) do
+for _, pair in ipairs(base_files) do
 	safe_compile(pair[1], pair[2])
 end
 
 -- ========================================
--- 6. Handoff to main entrypoint
+-- 7. Handoff to main entrypoint
 -- ========================================
--- print("NYOOM: Handoff to nyoom.fnl")
 local ok, err = pcall(require, "nyoom")
 if not ok then
 	print("NYOOM: Handoff failed!")

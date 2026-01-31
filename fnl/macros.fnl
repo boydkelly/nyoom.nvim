@@ -1,6 +1,6 @@
 ;; fennel-ls: macro-file
 
-(local {: nil? : str? : bool? : num? : ->str : begins-with? : all : crypt : car} (require :core.lib))
+(local {: nil? : str? : bool? : num? : ->str : begins-with? : all : car} (require :core.lib))
 
 (lambda expr->str [expr]
   `(-> (macrodebug ,expr nil
@@ -485,6 +485,60 @@
        ;; 3. Wipe the staging table
        (tset _G :nyoom/pack {}))))
 
+;; 1. The Dependency Agent
+(lambda required [identifier ?options]
+  (let [options (or ?options {})
+        name (or options.as (identifier:match ".*/(.*)") identifier)]
+    ;; Register for native C-installation
+    (vim-pack-spec! identifier options)
+    ;; Return the name string to the parent's :requires list
+    name))
+
+;; 2. The Main Orchestrator
+(lambda lz-package! [identifier ?options]
+  (let [options (or ?options {})
+        name (or options.as (identifier:match ".*/(.*)") identifier)
+        deps (or options.requires [])
+
+        ;; Map the list of names to lz.n trigger calls
+        dep-triggers (icollect [_ d-name (ipairs deps)]
+                       `(let [lz# (require :lz.n)]
+                          (lz#.trigger_load ,d-name)))
+
+        ;; Build the before-load hook
+        before-hook `(fn []
+                       (do ,(unpack dep-triggers))
+                       ,(if options.setup `(,options.setup) nil))
+
+        ;; Build the after-load hook (configs)
+        after-hook (if options.nyoom-module
+                       `(fn [] (require ,(.. :modules. options.nyoom-module :.config)))
+                       options.call-setup
+                       `(fn [] ((. (require ,(tostring options.call-setup)) :setup)))
+                       options.config)]
+    `(do
+       ;; Register parent for installation
+       (vim-pack-spec! ,identifier ,options)
+
+       ;; Register for lz.n staging
+       (table.insert _G.nyoom.specs
+         {1 ,name
+          :lazy true
+          :cmd ,options.cmd
+          :event ,options.event
+          :ft ,options.ft
+          :keys ,options.keys
+          :before ,before-hook
+          :after ,after-hook}))))
+
+(lambda fake-module! [name]
+  "Directly requires a module's config without involving a plugin manager.
+   Used for modules that only contain settings, autocommands, or keymaps."
+  (assert-compile (sym? name) "expected symbol for name" name)
+  (let [name-str (tostring name)
+        config-path (.. "modules." name-str ".config")]
+    `(pcall require ,config-path)))
+
 (lambda rock! [identifier ?options]
   "Declares a rock with its options. This macro addssh it to the nyoom/rock
   global table to later be used in the `unpack!` macro.
@@ -852,7 +906,7 @@
 (lambda nyoom-compile-modules! []
   "Compiles and caches module files.
   ```fennel
-  (nyoom-compile-modules!)
+  (nyoom-compile-modulesx!)
   ```"
   (fn compile-module [module-name module-decl]
     (icollect [_ config-path (ipairs (or module-decl.config-paths []))]

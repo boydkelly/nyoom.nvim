@@ -17,12 +17,16 @@
 ; (_G.echo! "Test Installing Packages")
 (vim-pack-add!)
 
+(packadd! :plenary.nvim)
+(packadd! :nui.nvim)
+(packadd! :oxocarbon.nvim)
+
 ; (print "NYOOM: packages.fnl - END")
-;; include modules
+; include modules
 
 ; (_G.echo! "Initializing Module System")
-; (include :fnl.modules)
-; (nyoom-init-modules!)
+(include :fnl.modules)
+(nyoom-init-modules!)
 
 ;; To install a package with Nyoom you must declare them here and run 'nyoom sync'
 ;; on the command line, then restart nvim for the changes to take effect
@@ -55,4 +59,4 @@
 ;; Compile modules
 
 ; (_G.echo! "Compiling Nyoom Modules")
-; (nyoom-compile-modules!)
+;; (nyoom-compile-modules!)
