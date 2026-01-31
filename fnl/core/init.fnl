@@ -11,11 +11,12 @@
 
 ;; add python provider and mason binaries
 
+(set vim.env.PATH (.. vim.env.PATH ":" (vim.fn.stdpath :data) :/mason/bin))
 (set vim.env.PATH (.. vim.env.PATH ":" (vim.fn.stdpath :config) :/bin))
 
-(let! _G.python3_host_prog (if (executable? "python") (vim.fn.exepath "python")
-                             (executable? "python3") (vim.fn.exepath "python3")
-                             nil))
+(let! python3_host_prog (if (executable? "python") (vim.fn.exepath "python")
+                          (executable? "python3") (vim.fn.exepath "python3")
+                          nil))
 
 ;; check for cli
 
@@ -23,15 +24,12 @@
 
 ;; If its a cli instance, load package management
 ;; If its a regular instance, load defaults, userconfig and plugins
-
 (require :packages)
-; (print "Required packages END")
-
-(require :config)
-(if cli
+(if (not cli)
     (do
       ;; set opinionated defaults. TODO this should be in a module?
       (import-macros {: command! : let! : set!} :macros)
+      (set! cmdheight 0)
       ;; speedups
       (set! updatetime 250)
       (set! timeoutlen 400)
@@ -97,3 +95,4 @@
       (let! neovide_padding_bottom 20)
       ;; load userconfig
       (require :config)))
+      ;; (require :pacttesting)

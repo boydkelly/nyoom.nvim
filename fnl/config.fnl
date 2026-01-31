@@ -31,3 +31,5 @@
 
 ; (_G.after :neorg
 ;        {:load {:core.dirman {:config {:workspaces {:main "~/neorg"}}}}})
+((. (require :vim._extui) :enable) {:enable true
+                                    :msg {:target :msg :timeout 4000}})

@@ -139,6 +139,9 @@ local io_lib = loaded_libs.io
 _G["echo!"] = io_lib["echo!"]
 _G["err!"] = io_lib["err!"]
 
+local p_lib = loaded_libs.p
+_G["getfenv"] = p_lib["getfenv"]
+_G["setfenv"] = p_lib["setfenv"]
 -- ========================================
 -- 4. Compile core/*.fnl files individually
 -- ========================================
