@@ -1,62 +1,28 @@
 (import-macros {: packadd! : pack : rock : use-package!
-                : vim-pack-add! : vim-pack-spec!
+                : lz-package! : fake-module! : vim-pack-spec!
+                : vim-pack-add! : vim-pack-spec! : lz-load!
                 : rock! : nyoom-init-modules!
-                : nyoom-compile-modules! : unpack! : autocmd!} :macros)
+                : nyoom-compile-modules! : autocmd!} :macros)
 
-(set _G.nyoom/pack [])
-
-;; libraries
 ; (print "NYOOM: packages.fnl - START")
+;; 1. Initialize the global registries
+(set _G.nyoom/pack [])
+(set _G.nyoom/specs [])
 
 (vim-pack-spec! :nvim-lua/plenary.nvim {:module :plenary})
 (vim-pack-spec! :MunifTanjim/nui.nvim {:module :nui})
 (vim-pack-spec! :nyoom-engineering/oxocarbon.nvim)
 
-;; BREADCRUMB 2
-; (print (.. "NYOOM: Staged " (length _G.nyoom/pack) " specs. Calling vim-pack-add!"))
-; (_G.echo! "Test Installing Packages")
+(include :fnl.modules)
+(nyoom-init-modules!)
+
 (vim-pack-add!)
 
 (packadd! :plenary.nvim)
 (packadd! :nui.nvim)
 (packadd! :oxocarbon.nvim)
 
-; (print "NYOOM: packages.fnl - END")
-; include modules
-
-; (_G.echo! "Initializing Module System")
-(include :fnl.modules)
-(nyoom-init-modules!)
-
-;; To install a package with Nyoom you must declare them here and run 'nyoom sync'
-;; on the command line, then restart nvim for the changes to take effect
-;; The syntax is as follows:
-
-;; (use-package! :username/repo {:opt true
-;;                               :defer reponame-to-defer
-;;                               :call-setup pluginname-to-setup
-;;                               :cmd [:cmds :to :lazyload]
-;;                               :event [:events :to :lazyload]
-;;                               :ft [:ft :to :load :on]
-;;                               :requires [(pack :plugin/dependency)]
-;;                               :run :commandtorun
-;;                               :as :nametoloadas
-;;                               :branch :repobranch
-;;                               :setup (fn [])
-;;                                        ;; same as setup with packer.nvim)})
-;;                               :config (fn [])})
-;;                                        ;; same as config with packer.nvim)})
-
-;; ---------------------
-;; Put your plugins here
-;; ---------------------
-
-;; Send plugins to packer
-
-; (_G.echo! "Installing Packages")
-; (unpack!)
-
 ;; Compile modules
+(nyoom-compile-modules!)
 
-; (_G.echo! "Compiling Nyoom Modules")
-;; (nyoom-compile-modules!)
+(lz-load!)

@@ -1,3 +1,3 @@
-(import-macros {: use-package! : nyoom-module!} :macros)
+(import-macros {: use-package! : fake-module!} :macros)
 
-(nyoom-module! ui.modeline)
+(fake-module! ui.modeline)

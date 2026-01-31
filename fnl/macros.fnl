@@ -2,6 +2,14 @@
 
 (local {: nil? : str? : bool? : num? : ->str : begins-with? : all : car} (require :core.lib))
 
+(lambda fake-module! [name]
+  "Directly requires a module's config without involving a plugin manager.
+   Used for modules that only contain settings, autocommands, or keymaps."
+  (assert-compile (sym? name) "expected symbol for name" name)
+  (let [name-str (tostring name)
+        config-path (.. "modules." name-str ".config")]
+    `(pcall require ,config-path)))
+
 (lambda expr->str [expr]
   `(-> (macrodebug ,expr nil
         (string.gsub "{}" "[]")
@@ -460,10 +468,15 @@
 
 ;; Macro: vim-pack-spec!
 (lambda vim-pack-spec! [identifier ?options]
-  "Strictly legal spec for nvim 0.10+ native packages."
-  (let [name (identifier:match ".*/(.*)")
-        spec {:src (.. "https://github.com/" identifier)
-              :name name}]
+  "Strictly legal spec for nvim 0.10+ native packages.
+   Supports GitHub shortcuts or full URLs."
+  (let [;; If it starts with http, use it. Otherwise, prepend github.
+        url (if (identifier:match "^http")
+                identifier
+                (.. "https://github.com/" identifier))
+        ;; Extract the name (the part after the last slash)
+        name (url:match ".*/(.*)$")
+        spec {:src url :name name}]
     ;; Only add version if explicitly provided as a branch
     (when (table? ?options)
       (if ?options.branch
@@ -486,7 +499,7 @@
        (tset _G :nyoom/pack {}))))
 
 ;; 1. The Dependency Agent
-(lambda required [identifier ?options]
+(lambda lz-pack! [identifier ?options]
   (let [options (or ?options {})
         name (or options.as (identifier:match ".*/(.*)") identifier)]
     ;; Register for native C-installation
@@ -500,44 +513,42 @@
         name (or options.as (identifier:match ".*/(.*)") identifier)
         deps (or options.requires [])
 
-        ;; Map the list of names to lz.n trigger calls
+        ;; 1. Build the Hooks
+        ;; We use (include) instead of (require) to bake the config
+        ;; directly into the compiled packages.lua file.
+        after-hook (if options.after
+                       `(fn [] (include ,(.. :fnl.modules. (tostring options.after) :.config)))
+                       options.config)
+
         dep-triggers (icollect [_ d-name (ipairs deps)]
-                       `(let [lz# (require :lz.n)]
-                          (lz#.trigger_load ,d-name)))
+                       `(let [lz# (require :lz.n)] (lz#.trigger_load ,d-name)))
 
-        ;; Build the before-load hook
-        before-hook `(fn []
-                       (do ,(unpack dep-triggers))
-                       ,(if options.setup `(,options.setup) nil))
+        before-hook (if (or (> (length dep-triggers) 0) options.setup)
+                        `(fn []
+                           (do ,(unpack dep-triggers))
+                           ,(if options.setup `(,options.setup) nil)))
 
-        ;; Build the after-load hook (configs)
-        after-hook (if options.nyoom-module
-                       `(fn [] (require ,(.. :modules. options.nyoom-module :.config)))
-                       options.call-setup
-                       `(fn [] ((. (require ,(tostring options.call-setup)) :setup)))
-                       options.config)]
+        ;; 2. Build the lz.n table literal at compile-time
+        spec-kv {1 name :lazy true}]
+
+    ;; Fill the KV table only with keys that exist
+    (if options.cmd (tset spec-kv :cmd options.cmd))
+    (if options.event (tset spec-kv :event options.event))
+    (if options.ft (tset spec-kv :ft options.ft))
+    (if options.keys (tset spec-kv :keys options.keys))
+    (if before-hook (tset spec-kv :before before-hook))
+    (if after-hook (tset spec-kv :after after-hook))
+
     `(do
-       ;; Register parent for installation
        (vim-pack-spec! ,identifier ,options)
+       (table.insert _G.nyoom/specs ,spec-kv))))
 
-       ;; Register for lz.n staging
-       (table.insert _G.nyoom.specs
-         {1 ,name
-          :lazy true
-          :cmd ,options.cmd
-          :event ,options.event
-          :ft ,options.ft
-          :keys ,options.keys
-          :before ,before-hook
-          :after ,after-hook}))))
-
-(lambda fake-module! [name]
-  "Directly requires a module's config without involving a plugin manager.
-   Used for modules that only contain settings, autocommands, or keymaps."
-  (assert-compile (sym? name) "expected symbol for name" name)
-  (let [name-str (tostring name)
-        config-path (.. "modules." name-str ".config")]
-    `(pcall require ,config-path)))
+(lambda lz-load! []
+  "Finalizes the plugin setup by handing the specs to lz.n"
+  `(let [(ok?# lz#) (pcall require :lz.n)]
+     (if ok?#
+         (lz#.load _G.nyoom/specs)
+         (print "NYOOM: lz.n loader not found!"))))
 
 (lambda rock! [identifier ?options]
   "Declares a rock with its options. This macro addssh it to the nyoom/rock
@@ -906,7 +917,7 @@
 (lambda nyoom-compile-modules! []
   "Compiles and caches module files.
   ```fennel
-  (nyoom-compile-modulesx!)
+  (nyoom-compile-modules!)
   ```"
   (fn compile-module [module-name module-decl]
     (icollect [_ config-path (ipairs (or module-decl.config-paths []))]
@@ -971,20 +982,18 @@
       `(vim.notify ,msg vim.log.levels.WARN))))
 
 (lambda nyoom-package-count! []
-  "Return number of installed packages"
-  (let [package-length (length _G.nyoom/pack)]
-    `,package-length))
+  "Returns code to calculate number of packages at runtime"
+  `(length (or _G.nyoom/pack [])))
 
 (lambda nyoom-module-count! []
-  "Return number of installed modules"
-  (let [module-length (length _G.nyoom/modules)]
-    `,module-length))
+  "Returns code to calculate number of modules at runtime"
+  `(length (or _G.nyoom/modules [])))
 
-;; (tset _G :nyoom/servers [])
-;; (tset _G :nyoom/lintesr [])
-;; (tset _G :nyoom/formatters [])
-;; (tset _G :nyoom/parsers [])
-;; (tset _G :nyoom/cmp [])
+; (tset _G :nyoom/servers [])
+; (tset _G :nyoom/lintesr [])
+; (tset _G :nyoom/formatters [])
+; (tset _G :nyoom/parsers [])
+; (tset _G :nyoom/cmp [])
 ;;
 
 ;; (lambda nyoom-add-language-server! [server ?config]
@@ -1028,8 +1037,12 @@
  : packadd!
  : pact-use-package!
  : verify-dependencies!
- : vim-pack-add!
+ : lz-package!
  : vim-pack-spec!
+ : vim-pack-add!
+ : lz-pack!
+ : lz-load!
+ : fake-module!
  : nyoom!
  : nyoom-init-modules!
  : nyoom-compile-modules!

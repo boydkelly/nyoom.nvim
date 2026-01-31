@@ -1,8 +1,8 @@
-(import-macros {: use-package!} :macros)
+(import-macros {: lz-package! : vim-pack-spec! : lz-pack!} :macros)
 
 ;; view bindings
 
-(use-package! :ggandor/leap.nvim
-              {:nyoom-module config.default.+bindings
-               :requires [(pack :tpope/vim-repeat)
-                          (pack :ggandor/leap-ast.nvim {:opt true})]})
+(lz-package! :https://codeberg.org/andyg/leap.nvim
+              {:after config.default.+bindings
+               :requires [(lz-pack! :tpope/vim-repeat)
+                          (lz-pack! :ggandor/leap-ast.nvim {:opt true})]})

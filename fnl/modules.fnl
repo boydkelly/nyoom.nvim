@@ -11,11 +11,11 @@
 
         :ui
         ; (nyoom +modes +icons); what makes Nyoom look the way it does
-        ; dashboard            ; a nifty splash screen for neovim
+        dashboard            ; a nifty splash screen for neovim
         ;;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit.
         ; hydra                ; Discount modality for mythological beast hunters
         ;;indent-guides      ; highlighted indent columns
-        ; modeline             ; snazzy, nano-emacs-inspired modeline
+        modeline             ; snazzy, nano-emacs-inspired modeline
         ;;nvimtree           ; a project drawer, like NERDTree for vim
         ; neotree              ; tree-like structures for neovim
         ; quickfix             ; enhancements to vim's builtin quickfix functionality
@@ -24,7 +24,7 @@
         ; vc-gutter            ; Get your diff out of the gutter
         ; window-select        ; Visually switch windows
         ; zen                  ; distraction-free coding or writing TODO +twilight
-        ; noice                ; noice ui
+        noice                ; noice ui
 
         :editor
         ; fold                 ; (nigh) universal code folding

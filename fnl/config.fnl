@@ -18,7 +18,8 @@
 ;; The let option sets global, or `vim.g` options.
 ;; Heres an example with localleader, setting it to <space>m
 
-(let! maplocalleader " ")
+(let! mapleader " ")
+(let! maplocalleader ",")
 
 ;; map! is used for mappings
 ;; Heres an example, preseing esc should also remove search highlights

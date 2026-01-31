@@ -1,6 +1,6 @@
-(import-macros {: use-package!} :macros)
+(import-macros {: lz-package! : fake-module! : vim-pack-spec!} :macros)
 
-(use-package! :folke/which-key.nvim
-              {:nyoom-module config.default.+which-key
+(lz-package! :folke/which-key.nvim
+              {:after config.default.+which-key
                :module :which-key
-               :keys [:<leader> "\"" "'" "`"]})
+               :event :UIEnter})

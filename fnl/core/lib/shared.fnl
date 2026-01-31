@@ -35,7 +35,15 @@
                  :Copilot "  "
                  :TypeParameter "  "})
 
-(tset _G :shared {: userconfigs
-                  : databases-folder
-                  : icons
-                  : codicons})
+;; ... (rest of the file remains the same)
+
+(local shared-table {: userconfigs
+                     : databases-folder
+                     : icons
+                     : codicons})
+
+;; 1. Set the global for legacy code
+(tset _G :shared shared-table)
+
+;; 2. Return the table for the bootstrap function
+shared-table
