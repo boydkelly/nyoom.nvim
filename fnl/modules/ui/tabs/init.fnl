@@ -1,6 +1,6 @@
 (import-macros {: lz-package! : vim-pack-spec!} :macros)
 
-(use-package! :akinsho/bufferline.nvim
+(lz-package! :akinsho/bufferline.nvim
               {:after ui.tabs
                :opt true
                :setup (fn []

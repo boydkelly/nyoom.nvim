@@ -1,6 +1,6 @@
 (import-macros {: lz-package! : vim-pack-spec!} :macros)
 
-(use-package! :guns/vim-sexp
+(lz-package! :guns/vim-sexp
               {:ft [:fennel :clojure :lisp :racket :scheme :janet :guile]
                :config (tset vim.g :sexp_filetypes
                              "clojure,scheme,lisp,timl,fennel,janet,hy")

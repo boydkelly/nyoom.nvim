@@ -16,10 +16,10 @@
         ; hydra                ; Discount modality for mythological beast hunters
         ;indent-guides      ; highlighted indent columns
         modeline             ; snazzy, nano-emacs-inspired modeline
-        ;;nvimtree           ; a project drawer, like NERDTree for vim
-        ; neotree              ; tree-like structures for neovim
+        nvimtree           ; a project drawer, like NERDTree for vim
+        neotree              ; tree-like structures for neovim
         ; quickfix             ; enhancements to vim's builtin quickfix functionality
-        ; trouble              ; view your diagnostics, now with icons! (i knew u were trouble when you walked iiiinnn)
+         trouble              ; view your diagnostics, now with icons! (i knew u were trouble when you walked iiiinnn)
         ;;tabs               ; keep tabs on your buffers, literally
         ; vc-gutter            ; Get your diff out of the gutter
         ; window-select        ; Visually switch windows
@@ -36,7 +36,7 @@
 
         :term
         ;;fshell             ; WIP: the fennel shell that works everywhere
-        ;toggleterm           ; persistant/floating terminal wrapper for :term
+        toggleterm           ; persistant/floating terminal wrapper for :term
 
         :checkers
         ; diagnostics          ; tasing you for every semicolon you forget

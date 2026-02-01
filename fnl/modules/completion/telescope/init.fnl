@@ -1,6 +1,6 @@
 (import-macros {: lz-package! : vim-pack-spec! : pack} :macros)
 
-(use-package! :nvim-lua/telescope.nvim
+(lz-package! :nvim-lua/telescope.nvim
               {:after completion.telescope
                :module [:telescope]
                :cmd :Telescope

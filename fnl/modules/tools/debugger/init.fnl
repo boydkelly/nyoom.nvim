@@ -1,6 +1,6 @@
 (import-macros {: lz-package! : vim-pack-spec! : pack} :macros)
 
-(use-package! :rcarriga/nvim-dap
+(lz-package! :rcarriga/nvim-dap
               {:after tools.debugger
                :opt true
                :defer nvim-dap

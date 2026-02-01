@@ -1,7 +1,7 @@
 (import-macros {: lz-package! : vim-pack-spec! : pack} :macros)
 ;; standard completion for neovim
 
-(use-package! :hrsh7th/nvim-cmp
+(lz-package! :hrsh7th/nvim-cmp
               {:after completion.cmp
                :module :cmp
                :wants :LuaSnip

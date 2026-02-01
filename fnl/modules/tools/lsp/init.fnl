@@ -2,7 +2,7 @@
 
 ; easy to use configurations for language servers
 
-(use-package! :neovim/nvim-lspconfig
+(lz-package! :neovim/nvim-lspconfig
               {:after tools.lsp
                :opt true
                :defer nvim-lspconfig})

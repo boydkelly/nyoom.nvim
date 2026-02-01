@@ -1,7 +1,7 @@
 (import-macros {: lz-package! : vim-pack-spec!} :macros)
 
-(use-package! :eraserhd/parinfer-rust {:opt true :run "cargo build --release"})
+(lz-package! :eraserhd/parinfer-rust {:opt true :run "cargo build --release"})
 
-(use-package! :harrygallagher4/nvim-parinfer-rust
+(lz-package! :harrygallagher4/nvim-parinfer-rust
               {:after editor.parinfer
                :ft [:fennel :clojure :lisp :racket :scheme :janet :guile]})

@@ -1,8 +1,8 @@
 (import-macros {: lz-package! : vim-pack-spec!} :macros)
 
-(use-package! :jose-elias-alvarez/null-ls.nvim
+(lz-package! :jose-elias-alvarez/null-ls.nvim
               {:after checkers.diagnostics :after :nvim-lspconfig})
 
 ;; floating diagnostics as lines instead
-(use-package! "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
+(lz-package! "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
               {:call-setup lsp_lines :after :nvim-lspconfig})
