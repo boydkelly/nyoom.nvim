@@ -1,5 +1,5 @@
 (import-macros {: packadd!} :macros)
-(local setup (require :core.lib.setup))
+(local {: setup} (require :core.lib.setup))
 (packadd! org-bullets.nvim)
 
 (setup :headlines {:org {:headline_highlights false}})

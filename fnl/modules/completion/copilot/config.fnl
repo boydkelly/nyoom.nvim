@@ -1,4 +1,4 @@
-(local setup (require :core.lib.setup))
+(local {: setup} (require :core.lib.setup))
 (import-macros {: nyoom-module-ensure!} :macros)
 
 (nyoom-module-ensure! cmp)

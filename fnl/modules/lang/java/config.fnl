@@ -1,4 +1,4 @@
-(local autoload (require :core.lib.autoload))
+(local {: autoload} (require :core.lib.autoload))
 (import-macros {: nyoom-module-p! : nyoom-module-ensure!} :macros)
 
 ;; debugging

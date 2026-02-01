@@ -14,7 +14,7 @@
         dashboard            ; a nifty splash screen for neovim
         ;;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit.
         ; hydra                ; Discount modality for mythological beast hunters
-        indent-guides      ; highlighted indent columns
+        ;indent-guides      ; highlighted indent columns
         modeline             ; snazzy, nano-emacs-inspired modeline
         ;;nvimtree           ; a project drawer, like NERDTree for vim
         ; neotree              ; tree-like structures for neovim
@@ -31,13 +31,12 @@
         ; (format +onsave)     ; automated prettiness
         ;;multiple-cursors   ; learn macros you dingus
         ; parinfer             ; turn lisp into python, sort of
-        ;; (hotpot +reflect)    ; lets get cooking. NOTE: essential module (for now), don't disable
         ; scratch              ; emacs-like scratch buffer functionality
         ; word-wrap            ; language-aware smart soft and hard wrapping
 
         :term
         ;;fshell             ; WIP: the fennel shell that works everywhere
-        toggleterm           ; persistant/floating terminal wrapper for :term
+        ;toggleterm           ; persistant/floating terminal wrapper for :term
 
         :checkers
         ; diagnostics          ; tasing you for every semicolon you forget
@@ -58,7 +57,7 @@
         ;   +forge             ; Wield git like a wizard
         ;   +diffview)         ; a git diff view for neovim
         ; rgb                  ; creating color strings
-        ;;tree-sitter          ; syntax and parsing, sitting in a tree...
+        tree-sitter          ; syntax and parsing, sitting in a tree...
 
         :lang
         ; cc                   ; C > C++ == 1
@@ -71,7 +70,7 @@
         ;;json               ; { "dʒeɪsən":  "Javascript Object Notation" }
         ; latex                ; writing papers in Neovim has never been so fun
         ;;ledger             ; be audit you can be
-        ; lua                  ; one-based indices? one-based indices
+        lua                  ; one-based indices? one-based indices
         ; markdown             ; writing docs for people to ignore
         ; nim                  ; python + lisp at the speed of c
         ; (neorg               ; organize your plain life in plain text, the neovim way

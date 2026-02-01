@@ -1,4 +1,4 @@
-(local autoload (require :core.lib.autoload))
+(local {: autoload} (require :core.lib.autoload))
 (import-macros {: nyoom-module-p! : map! : buf-map! : let! : augroup! : clear! : autocmd!} :macros)
 (local {: nightly?} (autoload :core.lib))
 (local leap (autoload :leap))

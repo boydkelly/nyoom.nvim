@@ -1,6 +1,6 @@
 (import-macros {: packadd! : pack : rock : use-package!
                 : lz-package! : fake-module! : vim-pack-spec!
-                : vim-pack-add! : vim-pack-spec! : lz-load!
+                : lz-unpack! : lz-load!
                 : rock! : nyoom-init-modules!
                 : nyoom-compile-modules! : autocmd!} :macros)
 
@@ -15,8 +15,9 @@
 
 (include :fnl.modules)
 (nyoom-init-modules!)
+(nyoom-compile-modules!)
 
-(vim-pack-add!)
+(lz-unpack!)
 
 (packadd! :plenary.nvim)
 (packadd! :nui.nvim)

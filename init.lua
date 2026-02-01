@@ -124,10 +124,10 @@ api.compile.dir(fnl_dir .. "/macros", lua_dir .. "/macros", { verbose = true })
 -- ========================================
 local remaining_libs = { "setup", "profile", "io", "color", "init" }
 
--- local runtime_globals = {
--- 	autoload = true,
--- 	setup = true,
--- }
+local runtime_globals = {
+	autoload = true,
+	setup = true,
+}
 
 local loaded_libs = {}
 
@@ -136,9 +136,9 @@ for _, name in ipairs(remaining_libs) do
 	local module = bootstrap_lib(name)
 	loaded_libs[name] = module
 
-	-- if runtime_globals[name] then
-	-- 	_G[name] = module
-	-- end
+	if runtime_globals[name] then
+		_G[name] = module
+	end
 end
 
 -- Export io helpers for runtime Lua

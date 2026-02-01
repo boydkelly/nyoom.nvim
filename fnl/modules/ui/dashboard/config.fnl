@@ -1,4 +1,4 @@
-(local setup (require :core.lib.setup))
+(local {: setup} (require :core.lib.setup))
 (local {: truncate} (require :core.lib.fun))
 
 (import-macros {: nyoom-package-count! : nyoom-module-count!} :macros)

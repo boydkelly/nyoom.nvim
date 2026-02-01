@@ -1,7 +1,7 @@
-(import-macros {: use-package! : pack} :macros)
+(import-macros {: lz-package! : vim-pack-spec! : lz-pack! : pack} :macros)
 
-(use-package! :nvim-treesitter/nvim-treesitter
-              {:nyoom-module tools.tree-sitter
+(lz-package! :nvim-treesitter/nvim-treesitter
+              {:after tools.tree-sitter
                :cmd [:TSInstall
                      :TSUpdate
                      :TSInstallSync
@@ -11,12 +11,11 @@
                      :TSEnable
                      :TSDisable
                      :TSModuleInfo]
-               :requires [(pack :nvim-treesitter/playground
-                                {:cmd :TSPlayground})
-                          (pack :HiPhish/nvim-ts-rainbow2 {:opt true})
-                          (pack :JoosepAlviste/nvim-ts-context-commentstring {:opt true})
-                          (pack :nvim-treesitter/nvim-treesitter-refactor {:opt true})
-                          (pack :nvim-treesitter/nvim-treesitter-textobjects
+               :requires [
+                          (lz-pack! :HiPhish/nvim-ts-rainbow2 {:opt true})
+                          (lz-pack! :JoosepAlviste/nvim-ts-context-commentstring {:opt true})
+                          (lz-pack! :nvim-treesitter/nvim-treesitter-refactor {:opt true})
+                          (lz-pack! :nvim-treesitter/nvim-treesitter-textobjects
                                 {:opt true})]
                :setup (fn []
                         (vim.api.nvim_create_autocmd [:BufRead]
@@ -33,5 +32,5 @@
                                                                                (not= file
                                                                                      "")))
                                                                     (vim.api.nvim_del_augroup_by_name :nvim-treesitter)
-                                                                    ((. (autoload :packer)
+                                                                    ((. (_G.autoload :packer)
                                                                         :loader) :nvim-treesitter)))}))})

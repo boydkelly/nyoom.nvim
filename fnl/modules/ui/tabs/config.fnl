@@ -1,4 +1,4 @@
-(local setup (require :core.lib.setup))
+(local {: setup} (require :core.lib.setup))
 (local shared (require :core.lib.shared))
 (setup :bufferline
        {:options {:numbers :none

@@ -1,4 +1,4 @@
-(local autoload (require :core.lib.autoload))
+(local {: autoload} (require :core.lib.autoload))
 (import-macros {: set! : colorscheme : nyoom-module-p! : augroup! : autocmd!}
                :macros)
 

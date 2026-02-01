@@ -1,7 +1,7 @@
-(import-macros {: lz-package! : fake-module! : vim-pack-spec!} :macros)
+(import-macros {: lz-package! : vim-pack-spec!} :macros)
 
 ;; Simple parenthesis matching
-(lz-package! :windwp/nvim-autopairs {:fake-module config.default.+smartparens
+(lz-package! :windwp/nvim-autopairs {:after config.default.+smartparens
                                      :event :InsertEnter})
 
 ; lua-based matchparen alternative

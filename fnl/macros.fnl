@@ -485,7 +485,7 @@
     `(table.insert _G.nyoom/pack ,spec)))
 
 ;; Macro: unpack!
-(lambda vim-pack-add! []
+(lambda lz-unpack! []
   "Native C-layer install and RTP load."
   `(let [pack-list# _G.nyoom/pack]
      (when (and pack-list# (> (length pack-list#) 0))
@@ -508,18 +508,23 @@
     ;; Return the name string to the parent's :requires list
     name))
 
-;; 2. The Main Orchestrator
 (lambda lz-package! [identifier ?options]
   (let [options (or ?options {})
         name (or options.as (identifier:match ".*/(.*)") identifier)
         deps (or options.requires [])
 
-        ;; 1. Build the Hooks
-        ;; We use (include) instead of (require) to bake the config
-        ;; directly into the compiled packages.lua file.
-        after-hook (if options.after
-                       `(fn [] (include ,(.. :fnl.modules. (tostring options.after) :.config)))
-                       options.config)
+        ;; 1. Handle the 'after' hook (Config files or call-setup)
+        after-hook (if
+                     ;; Priority 1: User provided an 'after' config path
+                     options.after
+                     `(fn [] (include ,(.. :fnl.modules. (tostring options.after) :.config)))
+
+                     ;; Priority 2: User used 'call-setup'
+                     options.call-setup
+                     `(fn [] ((. (require ,(tostring options.call-setup)) :setup)))
+
+                     ;; Priority 3: Raw config table/fn
+                     options.config)
 
         dep-triggers (icollect [_ d-name (ipairs deps)]
                        `(let [lz# (require :lz.n)] (lz#.trigger_load ,d-name)))
@@ -529,21 +534,28 @@
                            (do ,(unpack dep-triggers))
                            ,(if options.setup `(,options.setup) nil)))
 
-        ;; 2. Build the lz.n table literal at compile-time
-        spec-kv {1 name :lazy true}]
+        spec-kv {1 name}]
 
-    ;; Fill the KV table only with keys that exist
-    (if options.cmd (tset spec-kv :cmd options.cmd))
-    (if options.event (tset spec-kv :event options.event))
-    (if options.ft (tset spec-kv :ft options.ft))
-    (if options.keys (tset spec-kv :keys options.keys))
-    (if before-hook (tset spec-kv :before before-hook))
+    ;; 2. Merge options (Filtering out our custom macro-only keys)
+    (each [k v (pairs options)]
+      (let [k-str (tostring k)]
+        (when (and (not= k-str :after)
+                   (not= k-str :setup)
+                   (not= k-str :requires)
+                   (not= k-str :config)
+                   (not= k-str :call-setup) ;; Skip this, we handled it in after-hook
+                   (not= k-str :defer)      ;; Skip packer-specific defer
+                   (not= k-str :as))
+          (tset spec-kv k v))))
+
     (if after-hook (tset spec-kv :after after-hook))
+    (if before-hook (tset spec-kv :before before-hook))
 
     `(do
-       (vim-pack-spec! ,identifier ,options)
+       ,(vim-pack-spec! identifier options)
        (table.insert _G.nyoom/specs ,spec-kv))))
 
+;; 2. The Main Orchestrator (Refined)
 (lambda lz-load! []
   "Finalizes the plugin setup by handing the specs to lz.n"
   `(let [(ok?# lz#) (pcall require :lz.n)]
@@ -1040,7 +1052,7 @@
  : verify-dependencies!
  : lz-package!
  : vim-pack-spec!
- : vim-pack-add!
+ : lz-unpack!
  : lz-pack!
  : lz-load!
  : fake-module!

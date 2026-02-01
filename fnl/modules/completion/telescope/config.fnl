@@ -1,5 +1,5 @@
-(local setup (require :core.lib.setup))
-(local autoload (require :core.lib.autoload))
+(local {: setup} (require :core.lib.setup))
+(local {: autoload} (require :core.lib.autoload))
 (import-macros {: packadd! : map! : nyoom-module-p! : augroup! : clear! : autocmd!} :macros)
 (local {: load_extension} (autoload :telescope))
 (local {: executable?} (autoload :core.lib))

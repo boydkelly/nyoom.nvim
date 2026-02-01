@@ -1,4 +1,4 @@
-(local setup (require :core.lib.setup))
+(local {: setup} (require :core.lib.setup))
 (import-macros {: autocmd!} :macros)
 
 (setup :orgmode {:org_default_notes_file "~/org/refile.org"

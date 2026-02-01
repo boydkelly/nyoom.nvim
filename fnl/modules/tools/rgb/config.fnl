@@ -1,4 +1,4 @@
-(local setup (require :core.lib.setup))
+(local {: setup} (require :core.lib.setup))
 (setup :ccc {:bar_char "■"
              :point_char "◇"
              :win_opts {:border :solid

@@ -1,5 +1,5 @@
-(local autoload (require :core.lib.autoload))
-(local setup (require :core.lib.setup))
+(local {: autoload} (require :core.lib.autoload))
+(local {: setup} (require :core.lib.setup))
 (import-macros {: packadd! : nyoom-module-p!} :macros)
 (local dap (autoload :dap))
 

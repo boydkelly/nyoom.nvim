@@ -1,4 +1,4 @@
-(local setup (require :core.lib.setup))
+(local {: setup} (require :core.lib.setup))
 (setup :nvim-tree
        {:view {:side :left
                :width 25

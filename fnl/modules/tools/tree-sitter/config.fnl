@@ -1,5 +1,5 @@
-(local setup (require :core.lib.setup))
-(local autoload (require :core.lib.autoload))
+(local {: setup} (require :core.lib.setup))
+(local {: autoload} (require :core.lib.autoload))
 (import-macros {: packadd! : nyoom-module-p! : map! : custom-set-face!} :macros)
 
 ;; Conditionally enable leap-ast
@@ -116,40 +116,40 @@
 
 ;; the usual
 
-(setup :nvim-treesitter.configs
-       {:ensure_installed treesitter-filetypes
-        :highlight {:enable true :use_languagetree true}
-        :indent {:enable true}
-        :context_commentstring {:enable true}
-        :refactor {:enable true
-                   :keymaps {:smart_rename "<localleader>rn"}}
-        :query_linter {:enable true
-                       :use_virtual_text true
-                       :lint_events ["BufWrite" "CursorHold"]}
-        :rainbow {:enable true
-                  :query {1 :rainbow-parens
-                          :html :rainbow-tags
-                          :latex :rainbow-blocks
-                          :tsx :rainbow-tags
-                          :vue :rainbow-tags}}
-        :incremental_selection {:enable true
-                                :keymaps {:init_selection :gnn
-                                          :node_incremental :grn
-                                          :scope_incremental :grc
-                                          :node_decremental :grm}}
-        :textobjects {:select {:enable true}
-                      :lookahead true
-                      :keymaps {:af "@function.outer"
-                                :if "@function.inner"
-                                :ac "@class.outer"
-                                :ic "@class.inner"}
-                      :move {:enable true
-                             :set_jumps true
-                             :goto_next_start {"]m" "@function.outer"
-                                               "]]" "@class.outer"}
-                             :goto_next_end {"]M" "@function.outer"
-                                             "][" "@class.outer"}
-                             :goto_previous_start {"[m" "@function.outer"
-                                                   "[[" "@class.outer"}
-                             :goto_previous_end {"[M" "@function.outer"
-                                                 "[]" "@class.outer"}}}})
+; (setup :nvim-treesitter.configs
+;        {:ensure_installed treesitter-filetypes
+;         :highlight {:enable true :use_languagetree true}
+;         :indent {:enable true}
+;         :context_commentstring {:enable true}
+;         :refactor {:enable true
+;                    :keymaps {:smart_rename "<localleader>rn"}}
+;         :query_linter {:enable true
+;                        :use_virtual_text true
+;                        :lint_events ["BufWrite" "CursorHold"]}
+;         :rainbow {:enable true
+;                   :query {1 :rainbow-parens
+;                           :html :rainbow-tags
+;                           :latex :rainbow-blocks
+;                           :tsx :rainbow-tags
+;                           :vue :rainbow-tags}}
+;         :incremental_selection {:enable true
+;                                 :keymaps {:init_selection :gnn
+;                                           :node_incremental :grn
+;                                           :scope_incremental :grc
+;                                           :node_decremental :grm}}
+;         :textobjects {:select {:enable true}
+;                       :lookahead true
+;                       :keymaps {:af "@function.outer"
+;                                 :if "@function.inner"
+;                                 :ac "@class.outer"
+;                                 :ic "@class.inner"}
+;                       :move {:enable true
+;                              :set_jumps true
+;                              :goto_next_start {"]m" "@function.outer"
+;                                                "]]" "@class.outer"}
+;                              :goto_next_end {"]M" "@function.outer"
+;                                              "][" "@class.outer"}
+;                              :goto_previous_start {"[m" "@function.outer"
+;                                                    "[[" "@class.outer"}
+;                              :goto_previous_end {"[M" "@function.outer"
+;                                                  "[]" "@class.outer"}}}})

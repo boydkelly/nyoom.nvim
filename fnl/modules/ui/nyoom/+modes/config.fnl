@@ -1,4 +1,4 @@
-(local setup (require :core.lib.setup))
+(local {: setup} (require :core.lib.setup))
 (setup :modes {:colors {:insert "#be95ff"
                         :delete "#ff7eb6"
                         :visual "#82cfff"

@@ -1,4 +1,4 @@
-(local setup (require :core.lib.setup))
+(local {: setup} (require :core.lib.setup))
 (setup :indent_blankline
        {:buftype_exclude [:terminal]
         :filetype_exclude [:help

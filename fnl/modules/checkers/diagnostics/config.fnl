@@ -1,4 +1,4 @@
-(local autoload (require :core.lib.autoload))
+(local {: autoload} (require :core.lib.autoload))
 (local shared (require :core.lib.shared))
 (import-macros {: nyoom-module-p! : nyoom-module-ensure!} :macros)
 (local {: on-attach} (autoload :modules.tools.lsp.config))
