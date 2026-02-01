@@ -14,7 +14,7 @@
         dashboard            ; a nifty splash screen for neovim
         ;;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit.
         ; hydra                ; Discount modality for mythological beast hunters
-        ;;indent-guides      ; highlighted indent columns
+        indent-guides      ; highlighted indent columns
         modeline             ; snazzy, nano-emacs-inspired modeline
         ;;nvimtree           ; a project drawer, like NERDTree for vim
         ; neotree              ; tree-like structures for neovim
@@ -24,7 +24,7 @@
         ; vc-gutter            ; Get your diff out of the gutter
         ; window-select        ; Visually switch windows
         ; zen                  ; distraction-free coding or writing TODO +twilight
-        noice                ; noice ui
+        ;;noice                ; noice ui
 
         :editor
         ; fold                 ; (nigh) universal code folding
@@ -37,7 +37,7 @@
 
         :term
         ;;fshell             ; WIP: the fennel shell that works everywhere
-        ; toggleterm           ; persistant/floating terminal wrapper for :term
+        toggleterm           ; persistant/floating terminal wrapper for :term
 
         :checkers
         ; diagnostics          ; tasing you for every semicolon you forget

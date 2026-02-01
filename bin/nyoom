@@ -57,15 +57,18 @@ function install_nyoom() {
   printf "Installing Core Dependencies..."
   rm -rf "${DATA_PATH}/site/pack"
   # git clone -q -b feat/lockfile --single-branch https://github.com/EdenEast/packer.nvim "${DATA_PATH}/site/pack/packer/opt/packer.nvim"
+  nvim --headless -c 'lua vim.pack.add({"https://github.com/udayvir-singh/tangerine.nvim"})' +qa,
+  # 2. Add lz.n and Treesitter (without immediate start)
+  #nvim --headless -c 'lua vim.pack.add({"https://github.com/nvim-neorocks/lz.n", "https://github.com/nvim-treesitter/nvim-treesitter"})' +qa
 
-  git clone https://github.com/wbthomason/packer.nvim "${DATA_PATH}/site/pack/packer/opt/packer.nvim"
-  COMMIT=$(git -C "$nyoom"/config/${NVIM_APPNAME:-nvim} rev-list -n 1 --before=${COMMIT_DATE} --first-parent HEAD)
-  git -C "${DATA_PATH}/site/pack/packer/opt/packer.nvim" checkout ${COMMIT}
-  #-b nyoom
-  git clone https://github.com/rktjmp/hotpot.nvim.git "${DATA_PATH}/site/pack/packer/start/hotpot.nvim"
-  COMMIT=$(git -C "$nyoom"/config/${NVIM_APPNAME:-nvim} rev-list -n 1 --before=${COMMIT_DATE} --first-parent HEAD)
-  # commit feb 14, 2023   No changes till sept
-  git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout ${COMMIT}
+  # git clone https://github.com/wbthomason/packer.nvim "${DATA_PATH}/site/pack/packer/opt/packer.nvim"
+  # COMMIT=$(git -C "$nyoom"/config/${NVIM_APPNAME:-nvim} rev-list -n 1 --before=${COMMIT_DATE} --first-parent HEAD)
+  # git -C "${DATA_PATH}/site/pack/packer/opt/packer.nvim" checkout ${COMMIT}
+  # #-b nyoom
+  # git clone https://github.com/rktjmp/hotpot.nvim.git "${DATA_PATH}/site/pack/packer/start/hotpot.nvim"
+  # COMMIT=$(git -C "$nyoom"/config/${NVIM_APPNAME:-nvim} rev-list -n 1 --before=${COMMIT_DATE} --first-parent HEAD)
+  # # commit feb 14, 2023   No changes till sept
+  # git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout ${COMMIT}
   #-b nyoom
   ## git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout v0.6.0
 

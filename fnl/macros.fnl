@@ -3,12 +3,13 @@
 (local {: nil? : str? : bool? : num? : ->str : begins-with? : all : car} (require :core.lib))
 
 (lambda fake-module! [name]
-  "Directly requires a module's config without involving a plugin manager.
+  "Directly includes a module's config file at compile-time.
    Used for modules that only contain settings, autocommands, or keymaps."
   (assert-compile (sym? name) "expected symbol for name" name)
   (let [name-str (tostring name)
-        config-path (.. "modules." name-str ".config")]
-    `(pcall require ,config-path)))
+        ;; We use the same path structure as lz-package!
+        config-path (.. :fnl.modules. name-str :.config)]
+    `(include ,config-path)))
 
 (lambda expr->str [expr]
   `(-> (macrodebug ,expr nil
