@@ -1,4 +1,4 @@
-(import-macros {: use-package! : autocmd!} :macros)
+(import-macros {: lz-package! : vim-pack-spec! : autocmd!} :macros)
 
 (use-package! :lewis6991/gitsigns.nvim
               {:after ui.vc-gutter

@@ -1,3 +1,3 @@
-(import-macros {: use-package!} :macros)
+(import-macros {: lz-package! : vim-pack-spec!} :macros)
 
 (use-package! :alaviss/nim.nvim {:ft :nim})

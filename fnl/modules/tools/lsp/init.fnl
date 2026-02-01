@@ -1,4 +1,4 @@
-(import-macros {: use-package!} :macros)
+(import-macros {: lz-package! : vim-pack-spec!} :macros)
 
 ; easy to use configurations for language servers
 

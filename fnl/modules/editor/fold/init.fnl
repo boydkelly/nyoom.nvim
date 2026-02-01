@@ -1,4 +1,4 @@
-(import-macros {: use-package! : pack} :macros)
+(import-macros {: lz-package! : vim-pack-spec! : pack} :macros)
 
 (use-package! :kevinhwang91/nvim-ufo
               {:after editor.fold

@@ -1,4 +1,4 @@
-(import-macros {: use-package!} :macros)
+(import-macros {: lz-package! : vim-pack-spec!} :macros)
 
 ;; standard completion for neovim
 (use-package! :zbirenbaum/copilot.lua

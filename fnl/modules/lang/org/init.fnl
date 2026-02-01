@@ -1,4 +1,4 @@
-(import-macros {: use-package!} :macros)
+(import-macros {: lz-package! : vim-pack-spec!} :macros)
 
 (use-package! :nvim-orgmode/orgmode {:after lang.org
                                      :ft :org

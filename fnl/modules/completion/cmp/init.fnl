@@ -1,4 +1,4 @@
-(import-macros {: use-package! : pack} :macros)
+(import-macros {: lz-package! : vim-pack-spec! : pack} :macros)
 ;; standard completion for neovim
 
 (use-package! :hrsh7th/nvim-cmp

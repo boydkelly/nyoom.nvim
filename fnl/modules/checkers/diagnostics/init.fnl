@@ -1,4 +1,4 @@
-(import-macros {: use-package!} :macros)
+(import-macros {: lz-package! : vim-pack-spec!} :macros)
 
 (use-package! :jose-elias-alvarez/null-ls.nvim
               {:after checkers.diagnostics :after :nvim-lspconfig})

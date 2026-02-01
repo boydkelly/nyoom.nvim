@@ -1,4 +1,4 @@
-(import-macros {: use-package!} :macros)
+(import-macros {: lz-package! : vim-pack-spec!} :macros)
 
 (use-package! :guns/vim-sexp
               {:ft [:fennel :clojure :lisp :racket :scheme :janet :guile]
