@@ -103,7 +103,7 @@ _G.shared = bootstrap_lib("shared")
 _G.tables = bootstrap_lib("tables")
 _G.fun = bootstrap_lib("fun")
 _G.crypt = bootstrap_lib("crypt")
--- _G.autoload = bootstrap_lib("autoload")
+_G.autoload = bootstrap_lib("autoload") --will not compile without this
 local p_lib = bootstrap_lib("p")
 
 _G.p = p_lib

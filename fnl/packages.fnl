@@ -8,6 +8,7 @@
 ;; 1. Initialize the global registries
 (set _G.nyoom/pack [])
 (set _G.nyoom/specs [])
+(set _G.nyoom/modules [])
 
 (vim-pack-spec! :nvim-lua/plenary.nvim {:module :plenary})
 (vim-pack-spec! :MunifTanjim/nui.nvim {:module :nui})
@@ -15,7 +16,6 @@
 
 (include :fnl.modules)
 (nyoom-init-modules!)
-(nyoom-compile-modules!)
 
 (lz-unpack!)
 
