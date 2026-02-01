@@ -1,7 +1,7 @@
 (import-macros {: use-package!} :macros)
 
 ; Install language servers and such
-(use-package! :williamboman/mason.nvim {:nyoom-module tools.mason
+(use-package! :williamboman/mason.nvim {:after tools.mason
                                         :cmd [:Mason
                                               :MasonLog]})
 

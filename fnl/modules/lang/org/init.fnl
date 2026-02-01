@@ -1,6 +1,6 @@
 (import-macros {: use-package!} :macros)
 
-(use-package! :nvim-orgmode/orgmode {:nyoom-module lang.org
+(use-package! :nvim-orgmode/orgmode {:after lang.org
                                      :ft :org
                                      :after :nvim-treesitter})
 

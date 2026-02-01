@@ -1,7 +1,7 @@
 (import-macros {: use-package! : autocmd!} :macros)
 
 (use-package! :lewis6991/gitsigns.nvim
-              {:nyoom-module ui.vc-gutter
+              {:after ui.vc-gutter
                :ft :gitcommit
                :module :gitsigns
                :setup (fn []

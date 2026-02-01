@@ -1,4 +1,4 @@
 (import-macros {: use-package!} :macros)
 
-(use-package! :kyazdani42/nvim-tree.lua {:nyoom-module ui.nvimtree
+(use-package! :kyazdani42/nvim-tree.lua {:after ui.nvimtree
                                          :cmd :NvimTreeToggle})

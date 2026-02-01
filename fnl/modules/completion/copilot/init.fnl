@@ -2,4 +2,4 @@
 
 ;; standard completion for neovim
 (use-package! :zbirenbaum/copilot.lua
-              {:nyoom-module completion.copilot :event :InsertEnter})
+              {:after completion.copilot :event :InsertEnter})

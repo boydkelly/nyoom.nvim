@@ -1,7 +1,7 @@
 (import-macros {: use-package! : pack} :macros)
 
 (use-package! :rcarriga/nvim-dap
-              {:nyoom-module tools.debugger
+              {:after tools.debugger
                :opt true
                :defer nvim-dap
                :requires [(pack :rcarriga/nvim-dap-ui {:opt true})
