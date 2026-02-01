@@ -1,5 +1,5 @@
 (local {: setup} (require :core.lib.setup))
-(local {: truncate} (require :core.lib.fun))
+(local {: truncate} (require :core.lib))
 
 (import-macros {: nyoom-package-count! : nyoom-module-count!} :macros)
 
@@ -99,7 +99,6 @@
                                (os.execute "xdg-open https://github.com/nyoom-engineering/nyoom.nvim")))}})
 
 (setup :alpha {:layout [{:type :padding :val 4}
-                        sections.header
                         {:type :padding :val 2}
                         sections.buttons
                         {:type :padding :val 2}

@@ -1,9 +1,24 @@
 (local {: setup} (require :core.lib.setup))
 
-(local opts {:icons {:rules false}
+(local opts {;; 1. New Icon System
+             :icons {:breadcrumb "»"
+                     ; :separator "->"
+                     :group "+"
+                     :rules false}
+             :win {:border :solid
+                   :padding [1 0]}
+             :layout {:spacing 3
+                      :align :center}
+             :filter (fn [mapping]
+                       (let [mode mapping.mode
+                             key mapping.lhs]
+                         (not (and (or (= mode :i) (= mode :v))
+                                   (or (= key :j) (= key :k))))))
              :plugins {:presets {:g true :windows true :z true}
                        :spelling {:enabled false}}
-             :win {:padding [1 0]}})
+             :replace {:desc [[:<silent> ""] [:<cmd> ""] [:<Cmd> ""]
+                              [:<CR> ""] [:call ""] [:lua ""]
+                              ["^:" ""] ["^ " ""]]}})
 
 (setup :which-key opts)
 

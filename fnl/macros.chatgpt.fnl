@@ -468,16 +468,18 @@
   (table.insert _G.nyoom/pack (pack identifier ?options)))
 
 ;; Macro: vim-pack-spec!
+
 (lambda vim-pack-spec! [identifier ?options]
   "Strictly legal spec for nvim 0.10+ native packages.
-   Supports GitHub shortcuts or full URLs."
+   Supports GitHub shortcuts or full URLs. Forces name to lowercase for FS consistency."
   (let [;; If it starts with http, use it. Otherwise, prepend github.
         url (if (identifier:match "^http")
                 identifier
                 (.. "https://github.com/" identifier))
-        ;; Extract the name (the part after the last slash)
-        name (url:match ".*/(.*)$")
-        spec {:src url :name name}]
+        ;; Extract the name and force to lowercase
+        name (let [raw-name (url:match ".*/(.*)$")]
+               (raw-name:lower))
+        spec {:name name :src url}]
     ;; Only add version if explicitly provided as a branch
     (when (table? ?options)
       (if ?options.branch
@@ -486,7 +488,7 @@
 
 ;; Macro: unpack!
 (lambda lz-unpack! []
-  "Native C-layer install and RTP load. No longer wipes the table to preserve counts."
+  "Native C-layer install and RTP load."
   `(let [pack-list# _G.nyoom/pack]
      (when (and pack-list# (> (length pack-list#) 0))
        ;; 1. The Download/Sync (Native API)
@@ -494,7 +496,10 @@
 
        ;; 2. The Activation (packadd)
        (each [_# spec# (ipairs pack-list#)]
-         (pcall vim.cmd.packadd spec#.name)))))
+         (pcall vim.cmd.packadd spec#.name))
+
+       ;; 3. Wipe the staging table
+       (tset _G :nyoom/pack {}))))
 
 ;; 1. The Dependency Agent
 (lambda lz-pack! [identifier ?options]
@@ -507,40 +512,54 @@
 
 (lambda lz-package! [identifier ?options]
   (let [options (or ?options {})
-        ;; 1. Coerce everything to strings to prevent compiler crashes
+
+        ;; -------------------------------
+        ;; 1. Normalize identifiers
+        ;; -------------------------------
         id-str (->str identifier)
         module-name (if (or options.after options.nyoom-module)
                         (->str (or options.after options.nyoom-module))
                         nil)
-        setup-plugin (if options.call-setup (->str options.call-setup) nil)
+        setup-name (if options.call-setup
+                       (tostring options.call-setup)
+                       nil)
 
-        ;; 2. Name normalization for lz.n
-        raw-name (or options.as (id-str:match ".*/(.*)") id-str)
-        name (raw-name:lower)
+        ;; -------------------------------
+        ;; 2. Process dependencies (before hook)
+        ;; -------------------------------
+        deps (or options.requires [])
+        dep-triggers (icollect [_ d-name (ipairs deps)]
+                       `(let [lz# (require :lz.n)]
+                          (lz#.trigger_load ,d-name)))
 
-        ;; 3. After Hook Construction (Include -> Autoload Setup -> Config)
-        after-parts (let [p []]
-                      (when module-name
-                        (table.insert p `(include ,(.. :fnl.modules. module-name :.config))))
-                      (when setup-plugin
-                        ;; Pattern: autoload(core.lib.setup).setup(plugin, {})
-                        (table.insert p `(let [al# (require :core.lib.autoload)
-                                               setup-lib# (al#.autoload :core.lib.setup)]
-                                           (setup-lib#.setup ,setup-plugin {}))))
-                      (when options.config
-                        (table.insert p options.config))
-                      p)
+        before-hook (if (or (> (length dep-triggers) 0) options.setup)
+                      `(fn []
+                         (do ,(unpack dep-triggers))
+                         ,(if options.setup `(,options.setup) nil)))
+
+        ;; -------------------------------
+        ;; 3. Build after hook
+        ;; -------------------------------
+        after-parts (icollect [_ p (ipairs)
+                                   [(if module-name
+                                        `(include ,(.. :fnl.modules. module-name :.config)))
+                                    (if setup-name
+                                        `((_G.autoload ,setup-name)))   ; double parens
+                                    options.config]]
+                      (when p p))
 
         after-hook (if (> (length after-parts) 0)
-                       `(fn [] ,(unpack after-parts)))
+                     `(fn []
+                        ,(unpack after-parts)))
 
-        ;; 4. Build the spec table for lz.n
-        spec-kv {1 name}]
+        ;; -------------------------------
+        ;; 4. Build spec table
+        ;; -------------------------------
+        spec-kv {1 id-str}]
 
-    ;; Filter options and coerce symbol values to strings
+    ;; Copy over any additional unknown keys
     (each [k v (pairs options)]
-      (let [k-str (tostring k)
-            v-safe (if (= (type v) :table) (->str v) v)]
+      (let [k-str (tostring k)]
         (when (and (not= k-str :after)
                    (not= k-str :nyoom-module)
                    (not= k-str :setup)
@@ -548,26 +567,23 @@
                    (not= k-str :config)
                    (not= k-str :call-setup)
                    (not= k-str :as))
-          (tset spec-kv k v-safe))))
+          (tset spec-kv k v))))
 
+    ;; Attach hooks if present
     (if after-hook (tset spec-kv :after after-hook))
+    (if before-hook (tset spec-kv :before before-hook))
 
-    ;; 5. The Generated Code Block
+    ;; -------------------------------
+    ;; 5. Optional system registration
+    ;; -------------------------------
     `(do
-       ;; Double Registration: satisfy both length (array) and lookup (dict)
        ,(when module-name
-          `(let [m-def# {:config-paths [,(.. :fnl.modules. module-name :.config)]}]
-             ;; String key for nyoom-module-p!
-             (tset _G.nyoom/modules ,module-name m-def#)
-             ;; Array entry for nyoom-module-count! (length)
-             (table.insert _G.nyoom/modules m-def#)))
+          `(tset _G.nyoom/modules ,module-name {:config-paths [,(.. :fnl.modules. module-name :.config)]}))
 
-       ;; Native registration
-       ,(vim-pack-spec! identifier options)
+       ,(vim-pack-spec! id-str options)
 
-       ;; Lz.n registration
        (table.insert _G.nyoom/specs ,spec-kv))))
-;;
+
 ;; 2. The Main Orchestrator (Refined)
 (lambda lz-load! []
   "Finalizes the plugin setup by handing the specs to lz.n"
