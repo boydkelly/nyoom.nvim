@@ -484,31 +484,30 @@
           (set spec.version ?options.branch)))
     `(table.insert _G.nyoom/pack ,spec)))
 
-;; Macro: unpack!
-(lambda lz-unpack! []
-  "Native C-layer install and RTP load. No longer wipes the table to preserve counts."
-  `(let [pack-list# _G.nyoom/pack]
-     (when (and pack-list# (> (length pack-list#) 0))
-       ;; 1. The Download/Sync (Native API)
-       (vim.pack.add pack-list# {:load (fn [])})
-
-       ;; 2. The Activation (packadd)
-       (each [_# spec# (ipairs pack-list#)]
-         (pcall vim.cmd.packadd spec#.name)))))
-
 ;; 1. The Dependency Agent
 (lambda lz-pack! [identifier ?options]
   (let [options (or ?options {})
         name (or options.as (identifier:match ".*/(.*)") identifier)]
-    ;; Register for native C-installation
-    (vim-pack-spec! identifier options)
-    ;; Return the name string to the parent's :requires list
-    name))
+    ;; Return a table that lz-package! can destructure
+    {:name name :reg (vim-pack-spec! identifier options)}))
 
 (lambda lz-package! [identifier ?options]
   (let [options (or ?options {})
-        ;; 1. Coerce everything to strings to prevent compiler crashes
         id-str (->str identifier)
+
+        ;; 1. Extract Requirements and Registrations
+        ;; We iterate through the :requires list. If we find an lz-pack! result
+        ;; (which is a table), we separate the name from the registration code.
+        req-list (or options.requires [])
+        req-names []
+        req-registrations []
+        _ (each [_ req (ipairs req-list)]
+            (if (= (type req) :table)
+                (do
+                  (table.insert req-names req.name)
+                  (table.insert req-registrations req.reg))
+                (table.insert req-names req)))
+
         module-name (if (or options.after options.nyoom-module)
                         (->str (or options.after options.nyoom-module))
                         nil)
@@ -523,7 +522,6 @@
                       (when module-name
                         (table.insert p `(include ,(.. :fnl.modules. module-name :.config))))
                       (when setup-plugin
-                        ;; Pattern: autoload(core.lib.setup).setup(plugin, {})
                         (table.insert p `(let [al# (require :core.lib.autoload)
                                                setup-lib# (al#.autoload :core.lib.setup)]
                                            (setup-lib#.setup ,setup-plugin {}))))
@@ -537,7 +535,7 @@
         ;; 4. Build the spec table for lz.n
         spec-kv {1 name}]
 
-    ;; Filter options and coerce symbol values to strings
+    ;; Filter options and coerce values to strings
     (each [k v (pairs options)]
       (let [k-str (tostring k)
             v-safe (if (= (type v) :table) (->str v) v)]
@@ -550,24 +548,41 @@
                    (not= k-str :as))
           (tset spec-kv k v-safe))))
 
+    ;; Inject names into the lazy-loader spec
+    (when (> (length req-names) 0)
+      (tset spec-kv :requires req-names))
+
     (if after-hook (tset spec-kv :after after-hook))
 
     ;; 5. The Generated Code Block
     `(do
-       ;; Double Registration: satisfy both length (array) and lookup (dict)
+       ;; Splice in the registrations for all dependencies first
+       ,(unpack req-registrations)
+
+       ;; Double Registration for Nyoom Modules
        ,(when module-name
           `(let [m-def# {:config-paths [,(.. :fnl.modules. module-name :.config)]}]
-             ;; String key for nyoom-module-p!
              (tset _G.nyoom/modules ,module-name m-def#)
-             ;; Array entry for nyoom-module-count! (length)
              (table.insert _G.nyoom/modules m-def#)))
 
-       ;; Native registration
+       ;; Native registration for the main plugin
        ,(vim-pack-spec! identifier options)
 
        ;; Lz.n registration
        (table.insert _G.nyoom/specs ,spec-kv))))
 ;;
+;; Macro: unpack!
+(lambda lz-unpack! []
+  "Native C-layer install and RTP load. No longer wipes the table to preserve counts."
+  `(let [pack-list# _G.nyoom/pack]
+     (when (and pack-list# (> (length pack-list#) 0))
+       ;; 1. The Download/Sync (Native API)
+       (vim.pack.add pack-list# {:load (fn [])})
+
+       ;; 2. The Activation (packadd)
+       (each [_# spec# (ipairs pack-list#)]
+         (pcall vim.cmd.packadd spec#.name)))))
+
 ;; 2. The Main Orchestrator (Refined)
 (lambda lz-load! []
   "Finalizes the plugin setup by handing the specs to lz.n"

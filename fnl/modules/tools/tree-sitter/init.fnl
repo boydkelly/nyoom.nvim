@@ -3,14 +3,8 @@
 (lz-package! :nvim-treesitter/nvim-treesitter
               {:after tools.tree-sitter
                :cmd [:TSInstall
-                     :TSUpdate
-                     :TSInstallSync
-                     :TSUpdateSync
-                     :TSBufEnable
-                     :TSBufDisable
                      :TSEnable
-                     :TSDisable
-                     :TSModuleInfo]
+                     :TSDisable]
                :requires [
                           (lz-pack! :HiPhish/nvim-ts-rainbow2 {:opt true})
                           (lz-pack! :JoosepAlviste/nvim-ts-context-commentstring {:opt true})
