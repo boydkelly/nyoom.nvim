@@ -87,6 +87,7 @@ package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
 
 -- 2. Bootstrap core/lib essentials
 local function bootstrap_lib(name)
+	print(name)
 	local src = fnl_dir .. "/core/lib/" .. name .. ".fnl"
 	local dest = lua_dir .. "/core/lib/" .. name .. ".lua"
 	api.compile.file(src, dest, { verbose = true })
@@ -98,8 +99,10 @@ local function bootstrap_lib(name)
 	return module
 end
 
+_G.nyoom = {}
 -- print("NYOOM: Bootstrapping core/lib essentials...")
 _G.shared = bootstrap_lib("shared")
+_G.nyoom.shared = bootstrap_lib("shared")
 _G.tables = bootstrap_lib("tables")
 _G.fun = bootstrap_lib("fun")
 _G.crypt = bootstrap_lib("crypt")
