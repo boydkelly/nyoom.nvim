@@ -535,7 +535,7 @@
                                  (when (not (uv#.fs_stat marker#))
                                    (print ,(.. "Building " raw-name "..."))
                                    (let [res# (vim.fn.system ,(.. "cd " plugin-path " && " run-cmd))]
-                                      ;; If no build-file was specified, create the lock
+
                                       (when (not ,build-file)
                                         (let [f# (io.open marker# :w)]
                                           (f#:write (os.date))
