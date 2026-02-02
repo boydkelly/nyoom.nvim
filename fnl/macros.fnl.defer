@@ -679,8 +679,7 @@
 
         after-hook (if (> (length after-parts) 0)
                        `(fn [] ,(unpack after-parts)))
-
-        ;; 5. Build the spec table for lz.n
+        ;; 4. Build the spec table for lz.n
         spec-kv {1 name}]
 
     ;; Filter options and coerce values to strings
@@ -699,11 +698,7 @@
           (let [v-safe (if (sym? v) (->str v) v)]
             (tset spec-kv k v-safe)))))
 
-    ;; --- Translation: defer -> DeferredUIEnter ---
-    ; (when options.defer)
-      ; (tset spec-kv :event :UIEnter))
-
-    ;; Inject loaders into the spec
+    ;; Inject names into the lazy-loader spec
     (when (> (length req-names) 0)
       (tset spec-kv :requires req-names))
 
@@ -711,7 +706,7 @@
     (if before-hook (tset spec-kv :before before-hook))
     (if after-hook (tset spec-kv :after after-hook))
 
-    ;; 6. Generated Code Block
+;; ;; 5. The Generated Code Block
     (let [final-code `(do)]
       (each [_ reg (ipairs req-registrations)]
         (table.insert final-code reg))
@@ -726,6 +721,7 @@
       (table.insert final-code `(table.insert _G.nyoom/specs ,spec-kv))
       final-code)));; Macro: unpack!
 
+;; Macro: unpack!
 (lambda lz-unpack! []
   "Native C-layer install and RTP load. No longer wipes the table to preserve counts."
   `(let [pack-list# _G.nyoom/pack]

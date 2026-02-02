@@ -590,7 +590,6 @@
                    (not= k-str :run)
                    (not= k-str :build-file)
                    (not= k-str :as))
-          ;; v-safe is defined, then immediately used by tset
           (let [v-safe (if (sym? v) (->str v) v)]
             (tset spec-kv k v-safe)))))
 
@@ -604,11 +603,9 @@
 
 ;; ;; 5. The Generated Code Block
     (let [final-code `(do)]
-      ;; Manually insert each registration into the 'do' block
       (each [_ reg (ipairs req-registrations)]
         (table.insert final-code reg))
 
-      ;; Now add the rest of the logic to the end of the 'do' block
       (when module-name
         (table.insert final-code
           `(let [m-def# {:config-paths [,(.. :fnl.modules. module-name :.config)]}]
@@ -617,9 +614,8 @@
 
       (table.insert final-code (vim-pack-spec! identifier options))
       (table.insert final-code `(table.insert _G.nyoom/specs ,spec-kv))
+      final-code)));; Macro: unpack!
 
-      ;; Return the final constructed 'do' block
-      final-code)))
 ;; Macro: unpack!
 (lambda lz-unpack! []
   "Native C-layer install and RTP load. No longer wipes the table to preserve counts."
