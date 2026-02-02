@@ -7,13 +7,11 @@ created: 2022-12-09
 version: 0.1.0
 ---
 
-
 This guide assumes a basic understanding of programming and fennel. If you haven't already, its recommended to look over [why-fennel](https://github.com/shaunsingh/nyoom.nvim/blob/main/docs/faq.md#why-fennel).
 
 While its possible to use lua for configuration as well, its not officially supported. See [lua-support](https://github.com/shaunsingh/nyoom.nvim/blob/main/docs/getting_started.md#lua-support).
 
 If you have questions about how Nyoom works, why I choose fennel, comparison to other configurations, or other common questions, its recommended to read the [FAQ](https://github.com/shaunsingh/nyoom.nvim/blob/main/docs/faq.md)
-
 
 # Structure
 
@@ -28,7 +26,6 @@ Here is where 99.99% of your private configuration should go. Anything in here i
 
 **_packages.fnl_**
 Package management is done from this file; where you’ll declare what packages to install and where from
-
 
 # Modules
 
@@ -57,22 +54,19 @@ It controls what modules are enabled and in what order they are loaded. Some mod
           +export
           +nabla)
         (sh +fish))
-``` 
+```
 
 Different modules support different flags. You’ll find a comprehensive list of available modules and their supported flags in Module Index. Flags that a module does not recognize will be silently ignored.
 **IMPORTANT:** any changes to your nyoom! block won’t take effect until you run `nyoom sync` on the command line.
-
-
 
 # Packages
 
 Nyoom nvim uses a wrapper around the popular `packer.nvim` to make it feel and function close to emacs' `use-package`. This wrapper also enables features such as Nyoom's lockfile support and advanced scripting.
 Packages are declared in the `packages.fnl` file (found under `~/.config/nvim/fnl/packages.fnl` or `~/.config/nyoom/packages.fnl`).
 
-
 ## Installing packages
 
-To install a package with Nyoom you must declare them here and run `nyoom sync` on the command line, then restart nvim for the changes to take effect. The overall syntax matches `packer.nvim` apart from some custom keys. The syntax is as follows: 
+To install a package with Nyoom you must declare them here and run `nyoom sync` on the command line, then restart nvim for the changes to take effect. The overall syntax matches `packer.nvim` apart from some custom keys. The syntax is as follows:
 ```fennel
 (use-package! :username/repo {:opt true
                               :defer reponame-to-defer
@@ -88,11 +82,9 @@ To install a package with Nyoom you must declare them here and run `nyoom sync` 
                               :config (fn [])})
 ```
 
-
 ## Loading packages
 
 By default packages are loaded automatically. You can either specify `:opt true` (and then use the `packadd!` macro to manually load the packad), or (recommended) you can use one of packer's lazy loading tags
-
 
 ### Manually loading packages
 
@@ -107,8 +99,7 @@ Here is an example of manually loading a package
 (packadd! nord.nvim)
 ```
 
-
-### Lazy loading 
+### Lazy loading
 
 As mentioned earlier, its recommended to use packer's lazy-loading keys if you can. These consist of
 - `cmd` to load on a vim command
@@ -126,7 +117,6 @@ As mentioned earlier, its recommended to use packer's lazy-loading keys if you c
 ```
 
 For further examples its recommended to look at the documentation for `packer.nvim`
-
 
 ## Configuring packages
 
@@ -157,12 +147,11 @@ require('bqf').setup({
 
 This can be translated to the following
 ```fennel
-(use-package! :kevininhwang91/nvim-bqf 
+(use-package! :kevininhwang91/nvim-bqf
    {:config (fn []
                (local {: setup} (require :bqf))
                (setup {:auto_enable true :auto_resize_height true}))})
 ```
-
 
 ## Specifying dependencies
 
@@ -173,7 +162,6 @@ Certain plugins will require depencies to be installed. To do this, you can use 
                :requires [(pack :kevinhwang91/promise-async {:opt true})]})
 ```
 
-
 ## Additional keys
 
 Packer also has a few additional keys that may be useful
@@ -183,7 +171,6 @@ Packer also has a few additional keys that may be useful
 - `tag` can specify a release tag to clone
 - `commit` can specify a commit to clone
   Nyoom also provides the `:nyoom-module` key, used internally to define new modules.
-
 
 # Config
 
@@ -202,10 +189,9 @@ The first line imports all of nyoom's macros into `config.fnl`. Its recommended 
 
 The second line imports Nyoom's `autoload` functionality. `autoload` is a drop in replacement for `require` that only loads the `required` table when its absolutely needed. Its recommended to use `autoload` instead of `require` when possible
 
-The third line imports Nyoom's `after` functionality. `after` will be familiar if you've ever used doom's `after!` macro. The `after` function can be used to adjust the configurations of plugins pre-configured by nyoom. 
+The third line imports Nyoom's `after` functionality. `after` will be familiar if you've ever used doom's `after!` macro. The `after` function can be used to adjust the configurations of plugins pre-configured by nyoom.
 
 The rest of the default `config.fnl` is quite straightforward. Please take a look at the additional documentation if you'd like to learn more about nyoom's module system, package management, core library, and macros. Additionally, feel free to reference the [examples](https://github.com/shaunsingh/nyoom.nvim/blob/main/docs/examples.md) if you prefer learning by example. If you still need additional help, feel free to ask the loving community over at our discord server.
-
 
 ## Lua support
 
@@ -233,6 +219,5 @@ vim.g.maplocalleader = " m"
 vim.keymap.set({"n"}, "<esc>", "<esc><cmd>noh<cr>", {desc = "<esc><cmd>noh<cr>"})
 
 -- modify builtin neorg config to load custom neorg directory
-after("neorg", {load = {["core.norg.dirman"] = {config = {workspaces = {main = "~/neorg"}}}}}) 
+after("neorg", {load = {["core.norg.dirman"] = {config = {workspaces = {main = "~/neorg"}}}}})
 ```
-

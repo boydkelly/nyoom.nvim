@@ -2,6 +2,6 @@
 
 ;; Neo-tree: Corrected table structure
 (lz-package! :nvim-neo-tree/neo-tree.nvim
-             {:after ui.neotree
+             {:nyoom-module! ui.neotree
               :module :neo-tree
               :cmd :Neotree})

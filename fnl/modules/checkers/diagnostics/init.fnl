@@ -1,8 +1,10 @@
-(import-macros {: lz-package! : vim-pack-spec!} :macros)
+;;(import-macros {: lz-package! : vim-pack-spec!} :macros
 
-(lz-package! :jose-elias-alvarez/null-ls.nvim
-              {:after checkers.diagnostics :after :nvim-lspconfig})
+;; (lz-package! :jose-elias-alvarez/null-ls.nvim
+              ; {:after checkers.diagnostics :after :nvim-lspconfig})
+;;  lets remplace nullls with conform
 
+;; this is default neovim now;;  diagnostic settings
 ;; floating diagnostics as lines instead
-(lz-package! "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
-              {:call-setup lsp_lines :after :nvim-lspconfig})
+;; (lz-package! "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
+;;              {:call-setup lsp_lines :after :nvim-lspconfig}
