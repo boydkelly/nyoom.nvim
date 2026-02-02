@@ -505,7 +505,6 @@
         req-names []
         req-registrations []
         _ (each [_ req (ipairs req-list)]
-            ;; We force expansion here if it's a list (a macro call)
             (let [expanded-req (if (list? req) (macroexpand req) req)]
               (if (= (type expanded-req) :table)
                   (do
@@ -539,7 +538,6 @@
                                                 raw-name)]
                             `(fn []
                                (let [uv# (or vim.loop vim.uv)
-                                     ;; If build-file is provided, use it; else use our lock file
                                      marker# (if ,build-file
                                                  (.. ,plugin-path "/" ,build-file)
                                                  (.. ,plugin-path :/.nyoom_built))]
@@ -560,7 +558,6 @@
         before-hook (if (> (length before-parts) 0)
                         `(fn [] ,(unpack before-parts)))
 
-        ;; --- 3b. After Hook Construction (Existing logic) ---
         after-parts (let [p []]
                       (when module-name
                         (table.insert p `(include ,(.. :fnl.modules. module-name :.config))))
@@ -586,9 +583,9 @@
                    (not= k-str :requires)
                    (not= k-str :config)
                    (not= k-str :call-setup)
-                   (not= k-str :defer)
                    (not= k-str :run)
                    (not= k-str :build-file)
+                   (not= k-str :defer)
                    (not= k-str :as))
           (let [v-safe (if (sym? v) (->str v) v)]
             (tset spec-kv k v-safe)))))

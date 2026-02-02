@@ -546,6 +546,7 @@
         name (raw-name:lower)
 
         ;; 4. Hook Construction
+
         run-cmd (if (sym? options.run) (->str options.run) options.run)
         build-file (if (sym? options.build-file) (->str options.build-file) options.build-file)
 
