@@ -2,6 +2,6 @@
 
 ;; Nvim-tree: Standardized structure
 (lz-package! :kyazdani42/nvim-tree.lua
-             {:after ui.nvimtree
+             {:nyoom-module ui.nvimtree
               :module :nvim-tree
               :cmd :NvimTreeToggle})

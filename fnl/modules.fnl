@@ -10,7 +10,7 @@
         (telescope +native)  ; the search engine of the future
 
         :ui
-        ; (nyoom +modes +icons); what makes Nyoom look the way it does
+        (nyoom +modes +icons); what makes Nyoom look the way it does
         dashboard            ; a nifty splash screen for neovim
         ;;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit.
         ; hydra                ; Discount modality for mythological beast hunters
@@ -18,18 +18,18 @@
         modeline             ; snazzy, nano-emacs-inspired modeline
         nvimtree           ; a project drawer, like NERDTree for vim
         neotree              ; tree-like structures for neovim
-        ; quickfix             ; enhancements to vim's builtin quickfix functionality
+        quickfix             ; really old a couple of newer replacements are available
         trouble              ; view your diagnostics, now with icons! (i knew u were trouble when you walked iiiinnn)
-        ;;tabs               ; keep tabs on your buffers, literally
+        tabs               ; keep tabs on your buffers, literally
         ; vc-gutter            ; Get your diff out of the gutter
-        ; window-select        ; Visually switch windows
-        ; zen                  ; distraction-free coding or writing TODO +twilight
-        ;;noice                ; noice ui
+        window-select        ; Visually switch windows
+        zen                  ; distraction-free coding or writing TODO +twilight
+        ;;noice                ; noice ui if enabled here disable ex_tui in config.fnl
 
         :editor
-        ; fold                 ; (nigh) universal code folding
+        ; fold                 ;  mostly build in to neovim now
         ; (format +onsave)     ; automated prettiness
-        ;;multiple-cursors   ; learn macros you dingus
+        ;;multiple-cursors     ; learn macros you dingus
         ; parinfer             ; turn lisp into python, sort of
         ; scratch              ; emacs-like scratch buffer functionality
         word-wrap            ; language-aware smart soft and hard wrapping
@@ -39,9 +39,9 @@
         toggleterm           ; persistant/floating terminal wrapper for :term
 
         :checkers
-        ;;diagnostics          ; tasing you for every semicolon you forget
+        ;;diagnostics          ; this is mostaly redundant.  put the lines option in diags config
         ; grammar              ; tasing grammar mistake every you make
-        ; spell              ; tasing you for misspelling mispelling
+        spell              ; tasing you for misspelling mispelling
 
         :tools
         ; debugger             ; stepping through code, to help you add bugs
@@ -57,7 +57,8 @@
         ;   +forge             ; Wield git like a wizard
         ;   +diffview)         ; a git diff view for neovim
         ; rgb                  ; creating color strings
-        tree-sitter          ; syntax and parsing, sitting in a tree...
+        (tree-sitter
+          +rainbows)          ; syntax and parsing, sitting in a tree...
 
         :lang
         ; cc                   ; C > C++ == 1

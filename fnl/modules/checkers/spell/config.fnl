@@ -1,5 +1,5 @@
 (import-macros {: set!} :macros)
 
 (set! spell)
-(set! spelllang [:en :es])
+(set! spelllang [:en :fr])
 (set! spelloptions [:camel :noplainbuffer])
