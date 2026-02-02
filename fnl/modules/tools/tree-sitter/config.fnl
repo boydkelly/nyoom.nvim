@@ -99,8 +99,7 @@
 
 ;; load dependencies
 
-(packadd! nvim-ts-rainbow2)
-(packadd! nvim-ts-refactor)
+; (packadd! nvim-ts-rainbow2)
 (packadd! nvim-treesitter-textobjects)
 (packadd! nvim-ts-context-commentstring)
 

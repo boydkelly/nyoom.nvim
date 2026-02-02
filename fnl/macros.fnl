@@ -498,15 +498,22 @@
         ;; 1. Extract Requirements and Registrations
         ;; We iterate through the :requires list. If we find an lz-pack! result
         ;; (which is a table), we separate the name from the registration code.
+        ;; ... inside lz-package! ...
+
+        ;; 1. Extract Requirements and Registrations
         req-list (or options.requires [])
         req-names []
         req-registrations []
         _ (each [_ req (ipairs req-list)]
-            (if (= (type req) :table)
-                (do
-                  (table.insert req-names req.name)
-                  (table.insert req-registrations req.reg))
-                (table.insert req-names req)))
+            ;; We force expansion here if it's a list (a macro call)
+            (let [expanded-req (if (list? req) (macroexpand req) req)]
+              (if (= (type expanded-req) :table)
+                  (do
+                    (table.insert req-names expanded-req.name)
+                    (table.insert req-registrations expanded-req.reg))
+                  (table.insert req-names expanded-req))))
+
+;; ... rest of the macro ...
 
         module-name (if (or options.after options.nyoom-module)
                         (->str (or options.after options.nyoom-module))
@@ -518,6 +525,16 @@
         name (raw-name:lower)
 
         ;; 3. After Hook Construction (Include -> Autoload Setup -> Config)
+        ;; --- 3a. Before Hook Construction (Requirement Triggers) ---
+        before-parts (let [p []]
+                       (each [_ r-name (ipairs req-names)]
+                         (table.insert p `((. (require :lz.n) :trigger_load) ,r-name)))
+                       p)
+
+        before-hook (if (> (length before-parts) 0)
+                        `(fn [] ,(unpack before-parts)))
+
+        ;; --- 3b. After Hook Construction (Existing logic) ---
         after-parts (let [p []]
                       (when module-name
                         (table.insert p `(include ,(.. :fnl.modules. module-name :.config))))
@@ -531,14 +548,12 @@
 
         after-hook (if (> (length after-parts) 0)
                        `(fn [] ,(unpack after-parts)))
-
-        ;; 4. Build the spec table for lz.n
+        ;; 4. Build the spec table for lz.njjj
         spec-kv {1 name}]
 
     ;; Filter options and coerce values to strings
     (each [k v (pairs options)]
-      (let [k-str (tostring k)
-            v-safe (if (= (type v) :table) (->str v) v)]
+      (let [k-str (tostring k)]
         (when (and (not= k-str :after)
                    (not= k-str :nyoom-module)
                    (not= k-str :setup)
@@ -546,31 +561,35 @@
                    (not= k-str :config)
                    (not= k-str :call-setup)
                    (not= k-str :as))
-          (tset spec-kv k v-safe))))
+          ;; v-safe is defined, then immediately used by tset
+          (let [v-safe (if (sym? v) (->str v) v)]
+            (tset spec-kv k v-safe)))))
 
     ;; Inject names into the lazy-loader spec
     (when (> (length req-names) 0)
       (tset spec-kv :requires req-names))
 
+    (if before-hook (tset spec-kv :before before-hook))
     (if after-hook (tset spec-kv :after after-hook))
 
-    ;; 5. The Generated Code Block
-    `(do
-       ;; Splice in the registrations for all dependencies first
-       ,(unpack req-registrations)
+;; ;; 5. The Generated Code Block
+    (let [final-code `(do)]
+      ;; Manually insert each registration into the 'do' block
+      (each [_ reg (ipairs req-registrations)]
+        (table.insert final-code reg))
 
-       ;; Double Registration for Nyoom Modules
-       ,(when module-name
+      ;; Now add the rest of the logic to the end of the 'do' block
+      (when module-name
+        (table.insert final-code
           `(let [m-def# {:config-paths [,(.. :fnl.modules. module-name :.config)]}]
              (tset _G.nyoom/modules ,module-name m-def#)
-             (table.insert _G.nyoom/modules m-def#)))
+             (table.insert _G.nyoom/modules m-def#))))
 
-       ;; Native registration for the main plugin
-       ,(vim-pack-spec! identifier options)
+      (table.insert final-code (vim-pack-spec! identifier options))
+      (table.insert final-code `(table.insert _G.nyoom/specs ,spec-kv))
 
-       ;; Lz.n registration
-       (table.insert _G.nyoom/specs ,spec-kv))))
-;;
+      ;; Return the final constructed 'do' block
+      final-code)))
 ;; Macro: unpack!
 (lambda lz-unpack! []
   "Native C-layer install and RTP load. No longer wipes the table to preserve counts."

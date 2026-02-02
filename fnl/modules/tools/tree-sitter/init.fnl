@@ -6,9 +6,8 @@
                      :TSEnable
                      :TSDisable]
                :requires [
-                          (lz-pack! :HiPhish/nvim-ts-rainbow2 {:opt true})
+                          ; (lz-pack! :HiPhish/nvim-ts-rainbow2 {:opt true})
                           (lz-pack! :JoosepAlviste/nvim-ts-context-commentstring {:opt true})
-                          (lz-pack! :nvim-treesitter/nvim-treesitter-refactor {:opt true})
                           (lz-pack! :nvim-treesitter/nvim-treesitter-textobjects
                                 {:opt true})]
                :setup (fn []
