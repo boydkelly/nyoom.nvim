@@ -1,6 +1,8 @@
 (local {: autoload} (require :core.lib.autoload))
 (import-macros {: nyoom-module-p!} :macros)
-(local lsp (autoload :lspconfig))
+
+(local lsp vim.lsp.config)
+
 (local lsp-servers {})
 
 ;;; Improve UI
@@ -102,7 +104,6 @@
                               :fileMatch [:packer.json]
                               :url "https://json.schemastore.org/packer"}]}))
 
-
 (nyoom-module-p! kotlin (tset lsp-servers :kotlin_langage_server {}))
 
 (nyoom-module-p! latex (tset lsp-servers :texlab {}))
@@ -119,12 +120,13 @@
 
 (nyoom-module-p! nix (tset lsp-servers :rnix {}))
 
+
 (nyoom-module-p! python
-                 (tset lsp-servers :pyright
-                       {:root_dir (lsp.util.root_pattern [:.flake8])
-                        :settings {:python {:analysis {:autoImportCompletions true
-                                                       :useLibraryCodeForTypes true
-                                                       :disableOrganizeImports false}}}}))
+  (tset lsp-servers :pyright
+    {:root_dir ((. (require :lspconfig.util) :root_pattern) :.flake8)
+     :settings {:python {:analysis {:autoImportCompletions true
+                                    :useLibraryCodeForTypes true
+                                    :disableOrganizeImports false}}}}))
 
 (nyoom-module-p! yaml
                  (tset lsp-servers :yamlls
@@ -138,10 +140,23 @@
 (nyoom-module-p! zig (tset lsp-servers :zls {}))
 
 ;; Load lsp
+(local {: deep-merge} (require :core.lib))
+(local lsp-config vim.lsp.config)
 
-(local {: deep-merge} (autoload :core.lib))
-(let [servers lsp-servers]
-  (each [server server_config (pairs servers)]
-    ((. (. lsp server) :setup) (deep-merge defaults server_config))))
+
+(each [server server-config (pairs lsp-servers)]
+  (let [final-config (deep-merge defaults server-config)]
+    ;; In Neovim 0.11+, vim.lsp.enable handles the config merge 
+    ;; and the startup of the server automatically.
+    (let [(ok? err) (pcall vim.lsp.enable server final-config)]
+      (when (not ok?)
+        (print (.. "LSP Error for " server ": " err))))))
 
 {: on-attach}
+
+; (local {: deep-merge} (autoload :core.lib))
+; (let [servers lsp-servers]
+;   (each [server server_config (pairs servers)]
+;     ((. (. lsp server) :setup) (deep-merge defaults server_config))))
+;
+; {: on-attach}

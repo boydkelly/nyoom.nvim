@@ -52,7 +52,7 @@
         ; eval                 ; run code, run (also, repls)
         ; antifennel           ; for all the fennel haters out there. this ones for you
         ; pastebin             ; interacting with pastebin platforms
-        ; lsp                  ; :vscode
+        lsp                  ; :vscode
         ; (neogit              ; a git porclain for neovim
         ;   +forge             ; Wield git like a wizard
         ;   +diffview)         ; a git diff view for neovim
@@ -62,16 +62,16 @@
         :lang
         ; cc                   ; C > C++ == 1
         ; clojure              ; java with a lisp
-        ; common-lisp          ; if you've seen one lisp, you've seen them all
+        common-lisp          ; if you've seen one lisp, you've seen them all
         ; csharp               ; java but with linq
         ; java                 ; the poster child for carpal tunnel syndrome
         ; julia                ; a better, faster MATLAB
         ;;kotlin             ; FIXME: a better, slicker Java(Script)
-        ;;json               ; { "dʒeɪsən":  "Javascript Object Notation" }
+        json               ; { "dʒeɪsən":  "Javascript Object Notation" }
         ; latex                ; writing papers in Neovim has never been so fun
         ;;ledger             ; be audit you can be
         lua                  ; one-based indices? one-based indices
-        ; markdown             ; writing docs for people to ignore
+        markdown             ; writing docs for people to ignore
         ; nim                  ; python + lisp at the speed of c
         ; (neorg               ; organize your plain life in plain text, the neovim way
         ;   +pretty

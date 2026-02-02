@@ -3,7 +3,7 @@
 ; easy to use configurations for language servers
 
 (lz-package! :neovim/nvim-lspconfig
-              {:after tools.lsp
+              {:nyoom-module tools.lsp
                :opt true
                :defer nvim-lspconfig})
                ;;:requires (pack :smjonas/inc-rename.nvim :after :nvim-lspconfig
