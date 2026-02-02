@@ -32,7 +32,7 @@
         ;;multiple-cursors   ; learn macros you dingus
         ; parinfer             ; turn lisp into python, sort of
         ; scratch              ; emacs-like scratch buffer functionality
-        ;word-wrap            ; language-aware smart soft and hard wrapping
+        word-wrap            ; language-aware smart soft and hard wrapping
 
         :term
         ;;fshell             ; WIP: the fennel shell that works everywhere
@@ -83,7 +83,7 @@
         ; python               ; beautiful is better than ugly
         ; rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
         ; (sh +fish)           ; she sells {ba,z,fi}sh shells on the C xor
-        ;;xml                ; extend my language
+        xml                ; extend my language
         yaml               ; yet another markup language to enable
         ; zig                  ; C, but simpler
 

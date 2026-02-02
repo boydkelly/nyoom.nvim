@@ -180,14 +180,14 @@ for _, pair in ipairs(core_files) do
 end
 
 -- print("NYOOM: Compiling entry point...")
-local user_files = {
+local base_files = {
 	{ fnl_dir .. "/nyoom.fnl", lua_dir .. "/nyoom.lua" },
 	{ fnl_dir .. "/modules.fnl", lua_dir .. "/modules.lua" },
 	{ fnl_dir .. "/config.fnl", lua_dir .. "/config.lua" },
 	{ fnl_dir .. "/packages.fnl", lua_dir .. "/packages.lua" },
 }
 
-for _, pair in ipairs(user_files) do
+for _, pair in ipairs(base_files) do
 	safe_compile(pair[1], pair[2])
 end
 
