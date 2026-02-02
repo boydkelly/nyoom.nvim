@@ -6,7 +6,7 @@
                         :getscriptPlugin
                         :gzip
                         :logipat
-                        :netrw
+                        ; :netrw
                         :netrwPlugin
                         :netrwSettings
                         :netrwFileHandlers
@@ -14,7 +14,7 @@
                         :tar
                         :tarPlugin
                         :rrhelper
-                        :spellfile_plugin
+                        ; :spellfile_plugin
                         :vimball
                         :vimballPlugin
                         :zip

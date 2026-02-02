@@ -87,7 +87,7 @@ package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
 
 -- 2. Bootstrap core/lib essentials
 local function bootstrap_lib(name)
-	print(name)
+	-- print(name)
 	local src = fnl_dir .. "/core/lib/" .. name .. ".fnl"
 	local dest = lua_dir .. "/core/lib/" .. name .. ".lua"
 	api.compile.file(src, dest, { verbose = true })

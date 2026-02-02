@@ -2,7 +2,7 @@
 
 (lz-package! :nvim-treesitter/nvim-treesitter
               {:nyoom-module tools.tree-sitter
-               :cmd [:TSInstall
+               :cmd [
                      :TSEnable
                      :TSDisable]
                :requires [

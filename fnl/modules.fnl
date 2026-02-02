@@ -41,7 +41,7 @@
         :checkers
         ;;diagnostics          ; this is mostaly redundant.  put the lines option in diags config
         ; grammar              ; tasing grammar mistake every you make
-        spell              ; tasing you for misspelling mispelling
+        spell                ; does not download and reprompts on every start
 
         :tools
         ; debugger             ; stepping through code, to help you add bugs

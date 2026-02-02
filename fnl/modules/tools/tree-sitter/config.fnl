@@ -28,7 +28,7 @@
 
 (nyoom-module-p! latex (table.insert treesitter-filetypes :latex))
 
-; (nyoom-module-p! ledger (table.insert treesitter-filetypes :ledger))
+(nyoom-module-p! ledger (table.insert treesitter-filetypes :ledger))
 
 (nyoom-module-p! lua (table.insert treesitter-filetypes :lua))
 
@@ -99,7 +99,6 @@
 
 ;; load dependencies
 
-; (packadd! nvim-ts-rainbow2)
 (packadd! nvim-treesitter-textobjects)
 (packadd! nvim-ts-context-commentstring)
 
@@ -114,6 +113,17 @@
 (custom-set-face! :TSRainbowCyan [] {:fg "#878d96" :bg :NONE})
 
 ;; the usual
+
+(setup :nvim-treesitter)
+
+;; the unusual
+;;
+;; We call :wait(300000) to ensure they exist before we start editing
+(let [ts (require :nvim-treesitter)]
+  (ts.install treesitter-filetypes)
+  (let [job (ts.install treesitter-filetypes)]
+    (when job
+      (job:wait 300000))))
 
 ; (setup :nvim-treesitter.configs
 ;        {:ensure_installed treesitter-filetypes
