@@ -1,7 +1,7 @@
 (import-macros {: lz-package! : vim-pack-spec! : lz-pack! : pack} :macros)
 
 (lz-package! :nvim-treesitter/nvim-treesitter
-              {:after tools.tree-sitter
+              {:nyoom-module tools.tree-sitter
                :cmd [:TSInstall
                      :TSEnable
                      :TSDisable]

@@ -526,6 +526,32 @@
 
         ;; 3. After Hook Construction (Include -> Autoload Setup -> Config)
         ;; --- 3a. Before Hook Construction (Requirement Triggers) ---
+        ;; --- Build/Run Logic (beforeAll) ---
+
+;; --- Build/Run Logic (beforeAll) with Idempotency ---
+;; --- Build/Run Logic (beforeAll) ---
+        run-cmd (if (sym? options.run) (->str options.run) options.run)
+        build-file (if (sym? options.build-file) (->str options.build-file) options.build-file)
+
+        before-all-hook (when run-cmd
+                          (let [plugin-path (.. (vim.fn.stdpath :data)
+                                                :/site/pack/core/opt/
+                                                raw-name)]
+                            `(fn []
+                               (let [uv# (or vim.loop vim.uv)
+                                     ;; If build-file is provided, use it; else use our lock file
+                                     marker# (if ,build-file
+                                                 (.. ,plugin-path "/" ,build-file)
+                                                 (.. ,plugin-path :/.nyoom_built))]
+                                 (when (not (uv#.fs_stat marker#))
+                                   (print ,(.. "Building " raw-name "..."))
+                                   (let [res# (vim.fn.system ,(.. "cd " plugin-path " && " run-cmd))]
+                                      ;; If no build-file was specified, create the lock
+                                      (when (not ,build-file)
+                                        (let [f# (io.open marker# :w)]
+                                          (f#:write (os.date))
+                                          (f#:close)))))))))
+
         before-parts (let [p []]
                        (each [_ r-name (ipairs req-names)]
                          (table.insert p `((. (require :lz.n) :trigger_load) ,r-name)))
@@ -569,6 +595,7 @@
     (when (> (length req-names) 0)
       (tset spec-kv :requires req-names))
 
+    (if before-all-hook (tset spec-kv :beforeAll before-all-hook))
     (if before-hook (tset spec-kv :before before-hook))
     (if after-hook (tset spec-kv :after after-hook))
 
