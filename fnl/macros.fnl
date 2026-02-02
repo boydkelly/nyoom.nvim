@@ -507,8 +507,7 @@
                     (table.insert req-registrations expanded-req.reg))
                   (table.insert req-names expanded-req))))
 
-        ;; 2. Module Definition (RESTORED: Use 'after' or 'nyoom-module' for logic)
-        ;; We use this to find your config files, then filter 'after' out later.
+        ;; 2. Module Definition
         module-name (let [m (or options.nyoom-module options.after)]
                       (if m
                           (if (sym? m) (tostring m) (->str m))
@@ -566,7 +565,6 @@
         spec-kv {1 name}]
 
     ;; Filter options and coerce values to strings
-    ;; This is where we "DROP" after so lz.n never sees it.
     (each [k v (pairs options)]
       (let [k-str (tostring k)]
         (when (and (not= k-str :after)
@@ -581,6 +579,11 @@
                    (not= k-str :as))
           (let [v-safe (if (sym? v) (->str v) v)]
             (tset spec-kv k v-safe)))))
+
+    ;; --- Logic: Defer Translation ---
+    ;; If :defer is true, we tell lz.n to wait for DeferredUIEnter
+    (when options.defer
+      (tset spec-kv :event :DeferredUIEnter))
 
     ;; Inject names into the lazy-loader spec
     (when (> (length req-names) 0)
@@ -604,7 +607,6 @@
       (table.insert final-code (vim-pack-spec! identifier options))
       (table.insert final-code `(table.insert _G.nyoom/specs ,spec-kv))
       final-code)))
-
 ;; Macro: unpack!
 (lambda lz-unpack! []
   "Native C-layer install and RTP load. No longer wipes the table to preserve counts."
