@@ -507,11 +507,12 @@
                     (table.insert req-registrations expanded-req.reg))
                   (table.insert req-names expanded-req))))
 
-
-
-        module-name (if (or options.after options.nyoom-module)
-                        (->str (or options.after options.nyoom-module))
-                        nil)
+        ;; 2. Module Definition (RESTORED: Use 'after' or 'nyoom-module' for logic)
+        ;; We use this to find your config files, then filter 'after' out later.
+        module-name (let [m (or options.nyoom-module options.after)]
+                      (if m
+                          (if (sym? m) (tostring m) (->str m))
+                          nil))
         setup-plugin (if options.call-setup (->str options.call-setup) nil)
 
         ;; 3. Name normalization for lz.n
@@ -519,7 +520,6 @@
         name (raw-name:lower)
 
         ;; 4. Hook Construction
-
         run-cmd (if (sym? options.run) (->str options.run) options.run)
         build-file (if (sym? options.build-file) (->str options.build-file) options.build-file)
 
@@ -535,11 +535,10 @@
                                  (when (not (uv#.fs_stat marker#))
                                    (print ,(.. "Building " raw-name "..."))
                                    (let [res# (vim.fn.system ,(.. "cd " plugin-path " && " run-cmd))]
-
-                                      (when (not ,build-file)
-                                        (let [f# (io.open marker# :w)]
-                                          (f#:write (os.date))
-                                          (f#:close)))))))))
+                                     (when (not ,build-file)
+                                       (let [f# (io.open marker# :w)]
+                                         (f#:write (os.date))
+                                         (f#:close)))))))))
 
         before-parts (let [p []]
                        (each [_ r-name (ipairs req-names)]
@@ -562,10 +561,12 @@
 
         after-hook (if (> (length after-parts) 0)
                        `(fn [] ,(unpack after-parts)))
-        ;; 4. Build the spec table for lz.n
+
+        ;; 5. Build the spec table for lz.n
         spec-kv {1 name}]
 
     ;; Filter options and coerce values to strings
+    ;; This is where we "DROP" after so lz.n never sees it.
     (each [k v (pairs options)]
       (let [k-str (tostring k)]
         (when (and (not= k-str :after)
@@ -589,7 +590,7 @@
     (if before-hook (tset spec-kv :before before-hook))
     (if after-hook (tset spec-kv :after after-hook))
 
-;; ;; 5. The Generated Code Block
+    ;; 6. Final Generated Code Block
     (let [final-code `(do)]
       (each [_ reg (ipairs req-registrations)]
         (table.insert final-code reg))
@@ -602,7 +603,7 @@
 
       (table.insert final-code (vim-pack-spec! identifier options))
       (table.insert final-code `(table.insert _G.nyoom/specs ,spec-kv))
-      final-code)));; Macro: unpack!
+      final-code)))
 
 ;; Macro: unpack!
 (lambda lz-unpack! []
