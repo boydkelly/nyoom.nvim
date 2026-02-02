@@ -496,11 +496,6 @@
         id-str (->str identifier)
 
         ;; 1. Extract Requirements and Registrations
-        ;; We iterate through the :requires list. If we find an lz-pack! result
-        ;; (which is a table), we separate the name from the registration code.
-        ;; ... inside lz-package! ...
-
-        ;; 1. Extract Requirements and Registrations
         req-list (or options.requires [])
         req-names []
         req-registrations []
@@ -512,23 +507,19 @@
                     (table.insert req-registrations expanded-req.reg))
                   (table.insert req-names expanded-req))))
 
-;; ... rest of the macro ...
+
 
         module-name (if (or options.after options.nyoom-module)
                         (->str (or options.after options.nyoom-module))
                         nil)
         setup-plugin (if options.call-setup (->str options.call-setup) nil)
 
-        ;; 2. Name normalization for lz.n
+        ;; 3. Name normalization for lz.n
         raw-name (or options.as (id-str:match ".*/(.*)") id-str)
         name (raw-name:lower)
 
-        ;; 3. After Hook Construction (Include -> Autoload Setup -> Config)
-        ;; --- 3a. Before Hook Construction (Requirement Triggers) ---
-        ;; --- Build/Run Logic (beforeAll) ---
+        ;; 4. Hook Construction
 
-;; --- Build/Run Logic (beforeAll) with Idempotency ---
-;; --- Build/Run Logic (beforeAll) ---
         run-cmd (if (sym? options.run) (->str options.run) options.run)
         build-file (if (sym? options.build-file) (->str options.build-file) options.build-file)
 
