@@ -457,15 +457,15 @@
     (doto options
       (tset 1 identifier))))
 
-(lambda use-package! [identifier ?options]
-  "Declares a plugin with its options. This macro adds it to the nyoom/pack
-  global table to later be used in the `unpack!` macro.
-  See https://github.com/wbthomason/packer.nvim for information about the
-  options."
-  (assert-compile (str? identifier) "expected string for identifier" identifier)
-  (if (not (nil? ?options))
-      (assert-compile (table? ?options) "expected table for options" ?options))
-  (table.insert _G.nyoom/pack (pack identifier ?options)))
+; (lambda use-package! [identifier ?options]
+;   "Declares a plugin with its options. This macro adds it to the nyoom/pack
+;   global table to later be used in the `unpack!` macro.
+;   See https://github.com/wbthomason/packer.nvim for information about the
+;   options."
+;   (assert-compile (str? identifier) "expected string for identifier" identifier)
+;   (if (not (nil? ?options))
+;       (assert-compile (table? ?options) "expected table for options" ?options))
+;   (table.insert _G.nyoom/pack (pack identifier ?options)))
 
 ;; Macro: vim-pack-spec!
 
@@ -1101,7 +1101,7 @@
  : clear!
  : pack
  : rock
- : use-package!
+ ; : use-package!
  : rock!
  : unpack!
  : packadd!

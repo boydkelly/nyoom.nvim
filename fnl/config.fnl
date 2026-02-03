@@ -1,5 +1,5 @@
 (require-macros :macros)
-(import-macros {: packadd! : use-package!} :macros)
+(import-macros {: packadd!} :macros)
 
 ;; You can use the `colorscheme` macro to load a custom theme, or load it manually
 ;; via require. This is the default:
@@ -31,5 +31,7 @@
 
 ; (_G.after :neorg
 ;        {:load {:core.dirman {:config {:workspaces {:main "~/neorg"}}}}})
+
+; new cmd line; incompatible with noice. mutually exclusive
 ((. (require :vim._extui) :enable) {:enable true
                                     :msg {:target :msg :timeout 4000}})

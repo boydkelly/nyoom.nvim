@@ -1,4 +1,4 @@
-(import-macros {: packadd! : pack : rock : use-package!
+(import-macros {: packadd! : pack : rock
                 : lz-package! : fake-module! : vim-pack-spec!
                 : lz-unpack! : lz-load!
                 : rock! : nyoom-init-modules!
@@ -10,8 +10,8 @@
 (set _G.nyoom/specs [])
 (set _G.nyoom/modules [])
 
-(vim-pack-spec! :nvim-lua/plenary.nvim {:module :plenary})
-(vim-pack-spec! :MunifTanjim/nui.nvim {:module :nui})
+(vim-pack-spec! :nvim-lua/plenary.nvim)
+(vim-pack-spec! :MunifTanjim/nui.nvim)
 (vim-pack-spec! :nyoom-engineering/oxocarbon.nvim)
 
 (include :fnl.modules)
