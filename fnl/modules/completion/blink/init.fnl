@@ -1,4 +1,4 @@
-(import-macros {: lz-package! : vim-pack-spec! : pack} :macros)
+(import-macros {: lz-package! : vim-pack-spec! : lz-pack!} :macros)
 ;; standard completion for neovim
 (lz-package! :L3MON4D3/LuaSnip
        {:event [:InsertEnter :CmdLineEnter]}
@@ -12,7 +12,8 @@
                :event [:InsertEnter :CmdLineEnter]
                :requires [(lz-pack! :onsails/lspkind.nvim)
                           (lz-pack! :zbirenbaum/copilot.lua)
+                          (lz-pack! :nvim-mini/mini.icons)
                           (lz-pack! :PaterJason/cmp-conjure)
                           (lz-pack! :kirasok/cmp-hledger)
-                          (lz-pack! :irbru17/blink-cmp-spell)
+                          (lz-pack! :ribru17/blink-cmp-spell)
                           (lz-pack! :saghen/blink.compat)]})

@@ -15,9 +15,9 @@
         ; dashboard            ; a nifty splash screen for neovim
         ;;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit.
         hydra                ; Discount modality for mythological beast hunters
-        ;;indent-guides      ; highlighted indent columns
+        indent-guides      ; highlighted indent columns
         modeline             ; snazzy, nano-emacs-inspired modeline
-        ;;nvimtree           ; a project drawer, like NERDTree for vim
+        nvimtree           ; a project drawer, like NERDTree for vim
         neotree              ; tree-like structures for neovim
         quickfix             ; enhancements to vim's builtin quickfix functionality
         trouble              ; view your diagnostics, now with icons! (i knew u were trouble when you walked iiiinnn)
@@ -59,7 +59,7 @@
           +forge             ; Wield git like a wizard
           +diffview)         ; a git diff view for neovim
         rgb                  ; creating color strings
-        ;;tree-sitter          ; syntax and parsing, sitting in a tree...
+        tree-sitter          ; syntax and parsing, sitting in a tree...
 
         :lang
         cc                   ; C > C++ == 1
@@ -69,10 +69,10 @@
         fennel               ;  a real langa
         java                 ; the poster child for carpal tunnel syndrome
         julia                ; a better, faster MATLAB
-        ;;kotlin             ; FIXME: a better, slicker Java(Script)
-        ;;json               ; { "dʒeɪsən":  "Javascript Object Notation" }
+        kotlin             ; FIXME: a better, slicker Java(Script)
+        json               ; { "dʒeɪsən":  "Javascript Object Notation" }
         latex                ; writing papers in Neovim has never been so fun
-        ;;ledger             ; be audit you can be
+        ledger             ; be audit you can be
         lua                  ; one-based indices? one-based indices
         markdown             ; writing docs for people to ignore
         nim                  ; python + lisp at the speed of c
@@ -81,13 +81,13 @@
           +present
           +export
           +nabla)
-        ;;(org +pretty)      ; WIP: organize your plain life in plain text, the emacs way
+        (org +pretty)      ; WIP: organize your plain life in plain text, the emacs way
         nix                  ; I hereby declare "nix geht mehr!"
         python               ; beautiful is better than ugly
         rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
         (sh +fish)           ; she sells {ba,z,fi}sh shells on the C xor
-        ;;xml                ; extend my language
-        ;;yaml               ; yet another markup language to enable
+        xml                ; extend my language
+        yaml               ; yet another markup language to enable
         zig                  ; C, but simpler
 
         :app

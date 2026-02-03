@@ -475,14 +475,17 @@
         url (if (or (identifier:match "^http") (identifier:match "^git@"))
                 identifier
                 (.. "https://github.com/" identifier))
-        ;; 2. Extract the name, removing .git if it exists at the end
+        ;; 2. Extract the name
         raw-name (url:match ".*/([^/.-]+)%.?g?i?t?$")
-        ;; Fallback if the regex is too specific for certain URLs
         name (or raw-name (url:match ".*/(.*)$"))
         spec {:src url :name name}]
+
+    ;; 3. Check for version OR branch
     (when (table? ?options)
-      (if ?options.branch
-          (set spec.version ?options.branch)))
+      (let [ver (or ?options.version ?options.branch)]
+        (when ver
+          (set spec.version ver))))
+
     `(table.insert _G.nyoom/pack ,spec)))
 
 ;; 1. The Dependency Agent
@@ -494,9 +497,11 @@
 
 (lambda lz-package! [identifier ?options]
   (let [options (or ?options {})
+        ;; 1. Preserve version/branch for the installer before filtering
+        install-version (or options.version options.branch)
         id-str (->str identifier)
 
-        ;; 1. Extract Requirements and Registrations
+        ;; 2. Extract Requirements and Registrations
         req-list (or options.requires [])
         req-names []
         req-registrations []
@@ -508,23 +513,22 @@
                     (table.insert req-registrations expanded-req.reg))
                   (table.insert req-names expanded-req))))
 
-        ;; 2. Module & Setup Logic (Option 2 Implementation)
+        ;; 3. Module & Setup Logic
         module-name (let [m (or options.nyoom-module options.after)]
                       (if m
                           (if (sym? m) (tostring m) (->str m))
                           nil))
 
-        ;; Handle call-setup symbols safely
         setup-plugin (if options.call-setup
                          (let [s options.call-setup]
                            (if (sym? s) (tostring s) (->str s)))
                          nil)
 
-        ;; 3. Name normalization
+        ;; 4. Name normalization
         raw-name (or options.as (id-str:match ".*/(.*)") id-str)
         name (raw-name:lower)
 
-        ;; 4. Hook Construction (beforeAll / before / after)
+        ;; 5. Hook Construction
         run-cmd (if (sym? options.run) (->str options.run) options.run)
         build-file (if (sym? options.build-file) (->str options.build-file) options.build-file)
 
@@ -554,7 +558,6 @@
         after-parts (let [p []]
                       (when module-name
                         (table.insert p `(include ,(.. :fnl.modules. module-name :.config))))
-                      ;; --- OPTION 2: Autoload Setup ---
                       (when setup-plugin
                         (table.insert p `(let [al# (require :core.lib.autoload)
                                                setup-lib# (al#.autoload :core.lib.setup)]
@@ -564,8 +567,10 @@
                       p)
         after-hook (if (> (length after-parts) 0) `(fn [] ,(unpack after-parts)))
 
+        ;; 6. Build lz.n spec (spec-kv)
         spec-kv {1 name}]
-;; 5. Filter Loop (Drops internal keys, passes rest to lz.n)
+
+    ;; Fill lz.n spec while filtering out internal/installer keys
     (each [k v (pairs options)]
       (let [k-str (tostring k)]
         (when (and (not= k-str :after)
@@ -584,15 +589,13 @@
                    (not= k-str :as))
           (let [v-safe (if (sym? v) (->str v) v)]
             (tset spec-kv k v-safe)))))
-    ;; 5. Filter Loop (Drops internal keys, passes rest to lz.n)
-    (when options.defer (tset spec-kv :event :DeferredUIEnter))
-    ; (when (> (length req-names) 0) (tset spec-kv :requires req-names))
 
+    (when options.defer (tset spec-kv :event :DeferredUIEnter))
     (if before-all-hook (tset spec-kv :beforeAll before-all-hook))
     (if before-hook (tset spec-kv :before before-hook))
     (if after-hook (tset spec-kv :after after-hook))
 
-    ;; 6. Final Code Generation
+    ;; 7. Final Code Generation (Now inside the main let block)
     (let [final-code `(do)]
       (each [_ reg (ipairs req-registrations)] (table.insert final-code reg))
       (when module-name
@@ -600,10 +603,20 @@
           `(let [m-def# {:config-paths [,(.. :fnl.modules. module-name :.config)]}]
              (tset _G.nyoom/modules ,module-name m-def#)
              (table.insert _G.nyoom/modules m-def#))))
-      (table.insert final-code (vim-pack-spec! identifier options))
+
+      ;; Re-insert the version/branch for the installer call
+      (let [installer-options (if install-version
+                                  (let [t# {}]
+                                    (each [k# v# (pairs options)] (tset t# k# v#))
+                                    (tset t# :version install-version)
+                                    t#)
+                                  options)]
+        (table.insert final-code (vim-pack-spec! identifier installer-options)))
+
       (table.insert final-code `(table.insert _G.nyoom/specs ,spec-kv))
       final-code)))
 
+;
 ;; Macro: unpack!
 (lambda lz-unpack! []
   "Native C-layer install and RTP load. No longer wipes the table to preserve counts."

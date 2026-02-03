@@ -4,6 +4,6 @@
 
 (lz-package! :https://codeberg.org/andyg/leap.nvim
              {:lazy false
-              :after config.default.+bindings
+              :nyoom-module config.default.+bindings
               :requires [(lz-pack! :tpope/vim-repeat)
                          (lz-pack! :ggandor/leap-ast.nvim {:opt true})]})

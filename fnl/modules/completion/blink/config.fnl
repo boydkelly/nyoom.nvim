@@ -1,128 +1,122 @@
-(local {: autoload} (require :core.lib.autoload))
-(local {: setup} (require :core.lib.setup))
-(local shared (require :core.lib.shared))
 (import-macros {: set! : nyoom-module-p! : packadd!} :macros)
-(local cmp (autoload :cmp))
-(local luasnip (autoload :luasnip))
+(global module :blink.cmp)
+(local (ok blink) (pcall require module))
+(packadd! blink-cmp-spell)
 
-;; vim settings
+(when (not ok)
+  (vim.notify (.. "Couldn't load module '" module "'"))
+  (lua "return "))
 
-(set! completeopt [:menu :menuone :noselect])
+(fn apply-blink-hl []
+  (let [blink-hl (vim.api.nvim_get_hl 0 {:link false :name :WarningMsg})]
+    (vim.api.nvim_set_hl 0 :BlinkCmpMenu {:link :Pmenu})
+    (vim.api.nvim_set_hl 0 :BlinkCmpMenuSelection {:link :PmenuShadow})
+    (vim.api.nvim_set_hl 0 :BlinkCmpLabelMatch {:bold true :fg blink-hl.fg})
+    (vim.api.nvim_set_hl 0 :PmenuKind {:bg blink-hl.fg :fg :NvimDarkGrey1})
+    (vim.api.nvim_set_hl 0 :BlinkCmpKind {:bg blink-hl.fg :fg :NvimDarkGrey1})))
 
-;; add general cmp sources
+(apply-blink-hl)
 
-(local cmp-sources [])
+(vim.api.nvim_create_autocmd :ColorScheme
+                             {:callback apply-blink-hl :pattern "*"})
 
-(table.insert cmp-sources {:name :luasnip :group_index 1})
-(table.insert cmp-sources {:name :buffer :group_index 2})
-(table.insert cmp-sources {:name :path :group_index 2})
-(table.insert cmp-sources {:name :path :group_index 2})
+(local opts {:appearance {:nerd_font_variant :normal}
+             :cmdline {:completion {:ghost_text {:enabled true}
+                                    :list {:selection {:auto_insert true
+                                                       :preselect false}}
+                                    :menu {:auto_show (fn [ctx]
+                                                        (= (vim.fn.getcmdtype)
+                                                           ":"))
+                                           :draw {:columns [[:kind_icon]
+                                                            {1 :label
+                                                             2 :label_description
+                                                             :gap 1}]}}
+                                    :trigger {:show_on_blocked_trigger_characters {}
+                                              :show_on_x_blocked_trigger_characters nil}}
+                       :enabled true
+                       :keymap {:<S-Tab> [(fn [cmp]
+                                            (cmp.select_prev))
+                                          :snippet_backward
+                                          :fallback]
+                                :<Tab> [(fn [cmp]
+                                          (cmp.select_next))
+                                        :snippet_forward
+                                        :fallback]
+                                :preset :cmdline}}
+             :completion {:accept {:auto_brackets {:enabled true}}
+                          :documentation {:auto_show true
+                                          :auto_show_delay_ms 250
+                                          :treesitter_highlighting true
+                                          :window {:border :none}}
+                          :ghost_text {:enabled true}
+                          :list {:selection {:auto_insert true
+                                             :preselect false}}
+                          :menu {:auto_show true
+                                 :border :none
+                                 :cmdline_position (fn []
+                                                     (when (not= vim.g.ui_cmdline_pos
+                                                                 nil)
+                                                       (local pos
+                                                              vim.g.ui_cmdline_pos)
+                                                       (let [___antifnl_rtn_1___ [(- (. pos
+                                                                                        1)
+                                                                                     1)
+                                                                                  (. pos
+                                                                                     1)]]
+                                                         (lua "return ___antifnl_rtn_1___")))
+                                                     (local height
+                                                            (or (and (= vim.o.cmdheight
+                                                                        0)
+                                                                     1)
+                                                                vim.o.cmdheight))
+                                                     [(- (- vim.o.lines height)
+                                                         2)
+                                                      2])
+                                 :draw {:columns [[:kind_icon]
+                                                  {1 :label
+                                                   2 :label_description
+                                                   :gap 1}
+                                                  [:source_name]]
+                                        :components {:kind_icon
 
-(nyoom-module-p! rust (table.insert cmp-sources {:name :crates :group_index 1}))
-(nyoom-module-p! neorg (table.insert cmp-sources {:name :neorg :group_index 1}))
-(nyoom-module-p! eval
-                 (table.insert cmp-sources {:name :conjure :group_index 1}))
+{:text (fn [ctx]
+         (.. " "
+             (or (. (. (require :lspkind) :symbol_map) ctx.kind) "")
+             " "))}
 
-(nyoom-module-p! lsp (do
-                       (table.insert cmp-sources
-                                     {:name :nvim_lsp :group_index 1})
-                       (table.insert cmp-sources
-                                     {:name :nvim_lsp_signature_help
-                                      :group_index 1})))
+                                                     :label {:text (fn [item]
+                                                                     item.label)}
+                                                     :source_name {:text (fn [ctx]
+                                                                           (.. "["ctx.source_name))}}}}}})"]"
+:width {:max 10}
+       :fuzzy {:implementation :prefer_rust
+               :prebuilt_binaries {:download true :force_version :v1.8.0}}
+             :keymap {:<CR> [:accept :fallback]
+                      :<S-Tab> [(fn [cmp]
+                                  (cmp.select_prev))
+                                :snippet_backward
+                                :fallback]
+                      :<Tab> [(fn [cmp]
+                                (cmp.select_next))
+                              :snippet_forward
+                              :fallback]
+                      :preset :default}
+             :signature {:enabled true}
+             :snippets {:preset :luasnip}
+             :sources {:default [:lsp :path :snippets :buffer :spell :hledger]
+                       :per_filetype [{:markdown [:snippets :buffer :spell]}
+                                      {:asciidoc [:snippets :buffer :spell]}
+                                      {:ledger {1 :hledger
+                                                :inherit_defaults false}}
+                                      {:yaml [:lsp :snippets]}]
+                       :providers {:buffer {:opts {}}
+                                   :hledger {:module :blink.compat.source
+                                             :name :hledger
+                                             :opts {}
+                                             :score_offset 3}
+                                   :lsp {:fallbacks [:buffer]}
+                                   :spell {:module :blink-cmp-spell
+                                           :name :Spell
+                                           :opts {}}}}
 
-(nyoom-module-p! copilot
-                 (do
-                   (packadd! copilot-cmp)
-                   (setup :copilot_cmp)
-                   (table.insert cmp-sources {:name :copilot :group_index 2})))
-
-;; copilot uses lines above/below current text which confuses cmp, fix:
-
-(fn has-words-before []
-  (let [(line col) (unpack (vim.api.nvim_win_get_cursor 0))]
-    (and (not= col 0) (= (: (: (. (vim.api.nvim_buf_get_lines 0 (- line 1) line
-                                                              true)
-                                  1) :sub col
-                               col) :match "%s") nil))))
-
-(setup :cmp {:experimental {:ghost_text true}
-             :window {:documentation {:border :solid}
-                      :completion {:col_offset (- 3)
-                                   :side_padding 0
-                                   :winhighlight "Normal:NormalFloat,NormalFloat:Pmenu,Pmenu:NormalFloat"}}
-             :view {:entries {:name :custom :selection_order :near_cursor}}
-             :enabled (fn []
-                        (local context (autoload :cmp.config.context))
-                        (nyoom-module-p! tree-sitter
-                                         (if (= (. (vim.api.nvim_get_mode)
-                                                   :mode)
-                                                :c)
-                                             true
-                                             (and (not (context.in_treesitter_capture :comment))
-                                                  (not (context.in_syntax_group :Comment))))))
-             :preselect cmp.PreselectMode.None
-             :snippet {:expand (fn [args]
-                                 (luasnip.lsp_expand args.body))}
-             :mapping {:<C-b> (cmp.mapping.scroll_docs -4)
-                       :<C-f> (cmp.mapping.scroll_docs 4)
-                       :<C-Space> (cmp.mapping.complete)
-                       :<C-p> (cmp.mapping.select_prev_item)
-                       :<C-n> (cmp.mapping.select_next_item)
-                       :<CR> (cmp.mapping.confirm {:behavior cmp.ConfirmBehavior.Insert
-                                                   :select false})
-                       :<C-e> (fn [fallback]
-                                (if (cmp.visible)
-                                    (do
-                                      (cmp.mapping.close)
-                                      (vim.cmd :stopinsert))
-                                    (fallback)))
-                       :<Tab> (cmp.mapping (fn [fallback]
-                                             (if (cmp.visible)
-                                                 (cmp.select_next_item)
-                                                 (luasnip.expand_or_jumpable)
-                                                 (luasnip.expand_or_jump)
-                                                 (has-words-before)
-                                                 (cmp.complete)
-                                                 :else
-                                                 (fallback)))
-                                           [:i :s :c])
-                       :<S-Tab> (cmp.mapping (fn [fallback]
-                                               (if (cmp.visible)
-                                                   (cmp.select_prev_item)
-                                                   (luasnip.jumpable -1)
-                                                   (luasnip.jump -1)
-                                                   :else
-                                                   (fallback)))
-                                             [:i :s :c])}
-             :sources cmp-sources
-             :formatting {:fields {1 :kind 2 :abbr 3 :menu}
-                          :format (fn [_ vim-item]
-                                    (set vim-item.menu vim-item.kind)
-                                    (set vim-item.kind (. shared.codicons vim-item.kind))
-                                    vim-item)}})
-
-;; Enable command-line completions
-
-(cmp.setup.cmdline "/"
-                   {:mapping (cmp.mapping.preset.cmdline)
-                    :sources [{:name :buffer :group_index 1}]})
-
-;; Enable search completions
-
-(cmp.setup.cmdline ":"
-                   {:mapping (cmp.mapping.preset.cmdline)
-                    :sources [{:name :path} {:name :cmdline :group_index 1}]})
-
-;; copilot menus
-
-(nyoom-module-p! copilot (cmp.event:on :menu_opened
-                                       (fn []
-                                         (set vim.b.copilot_suggestion_hidden
-                                              true)))
-                 (cmp.event:on :menu_closed
-                               (fn []
-                                 (set vim.b.copilot_suggestion_hidden false))))
-
-;; snippets
-
-((. (autoload :luasnip.loaders.from_vscode) :lazy_load))
+(blink.setup opts)
