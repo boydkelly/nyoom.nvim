@@ -32,7 +32,7 @@
                            :hint git-hint
                            :mode [:n :x]
                            :body :<leader>g
-                           :config {:buffer bufnr
+                           :config {:buffer 0 
                                     :color :red
                                     :invoke_on_body true
                                     :hint {:border :solid :position :middle}
@@ -422,7 +422,7 @@
                                        {:exit true}]
                                      [:h
                                        (fn []
-                                         (vim.cmd :h vimtex-mefault-mappings))
+                                         (vim.cmd "help vimtex-default-mappings"))
                                        {:exit true}]
                                      [:<Esc> nil {:exit true :nowait true}]]}))
                    (augroup! localleader-hydras

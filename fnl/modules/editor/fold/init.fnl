@@ -1,6 +1,8 @@
-(import-macros {: lz-package! : vim-pack-spec! : pack} :macros)
+(import-macros {: fake-module! } :macros)
 
-(lz-package! :kevinhwang91/nvim-ufo
-              {:after editor.fold
-               :after :nvim-treesitter
-               :requires [(pack :kevinhwang91/promise-async {:opt true})]})
+(fake-module! editor.fold)
+
+; (lz-package! :kevinhwang91/nvim-ufo
+;               {:after editor.fold
+;                :after :nvim-treesitter
+;                :requires [(pack :kevinhwang91/promise-async {:opt true})]})

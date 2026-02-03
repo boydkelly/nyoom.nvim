@@ -22,15 +22,6 @@
 
 (setup :which-key opts)
 
-; (setup :which-key {:icons {:breadcrumb "»" :separator "->" :group "+"}
-;                    :popup_mappings {:scroll_down :<c-d> :scroll_up :<c-u>}
-;                    :window {:border :solid}
-;                    :layout {:spacing 3}
-;                    :hidden [:<silent> :<cmd> :<Cmd> :<CR> :call :lua "^:" "^ "]
-;                    :triggers_blacklist {:i [:j :k] :v [:j :k]}
-;                    :height {:min 0 :max 6}
-;                    :align :center})
-;
 ;; rename groups to mimick doom
 (local wk (require :which-key))
 
