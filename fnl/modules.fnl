@@ -68,6 +68,7 @@
         ; java                 ; the poster child for carpal tunnel syndrome
         ; julia                ; a better, faster MATLAB
         ; kotlin             ; FIXME: a better, slicker Java(Script)
+        fennel                ;   for fennel-ls
         json               ; { "dʒeɪsən":  "Javascript Object Notation" }
         latex                ; writing papers in Neovim has never been so fun
         ledger             ; be audit you can be

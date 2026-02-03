@@ -1,162 +1,56 @@
-(local {: autoload} (require :core.lib.autoload))
-(import-macros {: nyoom-module-p!} :macros)
+(import-macros {: autocmd! : augroup! : clear! : nyoom-module-p!} :macros)
 
-(local lsp vim.lsp.config)
+;; 1. Collect Servers (The Nyoom Way)
+(local lsp-servers [])
 
-(local lsp-servers {})
+(nyoom-module-p! cc (table.insert lsp-servers :clangd))
+(nyoom-module-p! python (table.insert lsp-servers :pyright))
+(nyoom-module-p! lua (table.insert lsp-servers :lua_ls))
+(nyoom-module-p! fennel (table.insert lsp-servers :fennel_ls))
+(nyoom-module-p! fennel (table.insert lsp-servers :fennel-ls))
 
-;;; Improve UI
+;; 2. The Setup Function
+(fn setup-lsp []
+  ;; Diagnostic UI
+  (vim.diagnostic.config {:virtual_lines false
+                          :underline true
+                          :update_in_insert false
+                          :signs {:text {vim.diagnostic.severity.ERROR "●"
+                                         vim.diagnostic.severity.WARN  "●"
+                                         vim.diagnostic.severity.INFO  "●"
+                                         vim.diagnostic.severity.HINT  "●"}}})
 
-(set vim.lsp.handlers.textDocument/signatureHelp
-     (vim.lsp.with vim.lsp.handlers.signature_help {:border :solid}))
+  ;; Global LspAttach (Keybindings & Formatting)
+  (augroup! nyoom-lsp-attach
+    (autocmd! LspAttach *
+              (fn [event]
+                (let [buf event.buf
+                      client (vim.lsp.get_client_by_id event.data.client_id)]
+                  ;; Note: Add your (buf-map!) calls here for gd, K, etc.
+                  (when (client.supports_method :textDocument/formatting)
+                    (augroup! lsp-format (clear! {:buffer buf})
+                      (autocmd! BufWritePre <buffer>
+                                #(vim.lsp.buf.format {:bufnr buf})
+                                {:buffer buf})))))))
 
-(set vim.lsp.handlers.textDocument/hover
-     (vim.lsp.with vim.lsp.handlers.hover {:border :solid}))
+  ;; Enable servers (The 2025 way - lspconfig registry lookup)
+  (each [_ server (ipairs lsp-servers)]
+    (pcall vim.lsp.enable server)))
 
-;;; on attach function
+;; 3. The "Just-In-Time" Loader
+(let [loader (let [loaded {:status false}]
+               (fn []
+                 ;; Only run if not loaded AND we are in a "real" file buffer
+                 (when (and (not loaded.status) (= vim.bo.buftype ""))
+                   (set loaded.status true)
+                   (setup-lsp)
+                   ;; Re-trigger FileType so enabled servers attach to current buffer
+                   (when (not= vim.bo.filetype "")
+                     (vim.cmd (.. "doautocmd FileType " vim.bo.filetype))))))]
 
-(fn on-attach [client bufnr]
-  (import-macros {: buf-map! : autocmd! : augroup! : clear!} :macros)
-  (local {: contains?} (autoload :core.lib))
-  ;; Keybindings
-  (nyoom-module-p! defaults.+bindings
-                   (do
-                     (local {:hover open-doc-float!
-                             :declaration goto-declaration!
-                             :definition goto-definition!
-                             :type_definition goto-type-definition!
-                             :references goto-references!}
-                            vim.lsp.buf)
-                     (buf-map! [n] :K open-doc-float!)
-                     (buf-map! [n] :<leader>gD goto-declaration!)
-                     (buf-map! [n] :gD goto-declaration!)
-                     (buf-map! [n] :<leader>gd goto-definition!)
-                     (buf-map! [n] :gd goto-definition!)
-                     (buf-map! [n] :<leader>gt goto-type-definition!)
-                     (buf-map! [n] :gt goto-type-definition!)
-                     (buf-map! [n] :<leader>gr goto-references!)
-                     (buf-map! [n] :gr goto-references!)))
-  ;; Enable lsp formatting if available
-  (nyoom-module-p! format.+onsave
-    (when (client.supports_method "textDocument/formatting")
-      (augroup! format-before-saving
-        (clear! {:buffer bufnr})
-        (autocmd! BufWritePre <buffer> #(when (not vim.g.lsp_autoformat_disable)
-                                           (vim.lsp.buf.format {: bufnr}
-                                                              :filter #(not (contains? [:jsonls :tsserver] $.name))))
-                                       {:buffer bufnr})))))
+  ;; Register for future files
+  (autocmd! FileType * loader {:desc "Nyoom: JIT LSP Loader"})
 
-;; What should the lsp be demanded of?
-(local capabilities (vim.lsp.protocol.make_client_capabilities))
-(set capabilities.textDocument.completion.completionItem
-     {:documentationFormat [:markdown :plaintext]
-      :snippetSupport true
-      :preselectSupport true
-      :insertReplaceSupport true
-      :labelDetailsSupport true
-      :deprecatedSupport true
-      :commitCharactersSupport true
-      :tagSupport {:valueSet {1 1}}
-      :resolveSupport {:properties [:documentation
-                                    :detail
-                                    :additionalTextEdits]}})
-
-;;; Setup servers
-
-(local defaults {:on_attach on-attach
-                 : capabilities
-                 :flags {:debounce_text_changes 150}})
-
-;; fennel-language-server
-;; (tset lsp-servers :fennel-language-server {})
-;; (tset (require :lspconfig.configs) :fennel-language-server
-;;       {:default_config {:cmd [:fennel-language-server]
-;;                         :filetypes [:fennel]
-;;                         :single_file_support true
-;;                         :root_dir (lsp.util.root_pattern :fnl)
-;;                         :settings {:fennel {:workspace {:library (vim.api.nvim_list_runtime_paths)}
-;;                                             :diagnostics {:globals [:vim]}}}}})
-
-;; conditional servers
-
-(nyoom-module-p! cc (tset lsp-servers :clangd {:cmd [:clangd]}))
-
-(nyoom-module-p! csharp (tset lsp-servers :omnisharp {:cmd [:omnisharp]}))
-
-(nyoom-module-p! clojure (tset lsp-servers :clojure_lsp {}))
-
-(nyoom-module-p! java (tset lsp-servers :jdtls {}))
-
-(nyoom-module-p! sh (tset lsp-servers :bashls {}))
-
-(nyoom-module-p! julia (tset lsp-servers :julials {}))
-
-(nyoom-module-p! json
-                 (tset lsp-servers :jsonls
-                  {:format {:enabled false}
-                   :schemas [{:description "ESLint config"
-                              :fileMatch [:.eslintrc.json :.eslintrc]
-                              :url "http://json.schemastore.org/eslintrc"}
-                             {:description "Package config"
-                              :fileMatch [:package.json]
-                              :url "https://json.schemastore.org/package"}
-                             {:description "Packer config"
-                              :fileMatch [:packer.json]
-                              :url "https://json.schemastore.org/packer"}]}))
-
-(nyoom-module-p! kotlin (tset lsp-servers :kotlin_langage_server {}))
-
-(nyoom-module-p! latex (tset lsp-servers :texlab {}))
-
-(nyoom-module-p! lua
-                 (tset lsp-servers :lua_ls
-                       {:settings {:Lua {:diagnostics {:globals [:vim]}
-                                         :workspace {:library (vim.api.nvim_list_runtime_paths)
-                                                     :maxPreload 100000}}}}))
-
-(nyoom-module-p! markdown (tset lsp-servers :marksman {}))
-
-(nyoom-module-p! nim (tset lsp-servers :nimls {}))
-
-(nyoom-module-p! nix (tset lsp-servers :rnix {}))
-
-
-(nyoom-module-p! python
-  (tset lsp-servers :pyright
-    {:root_dir ((. (require :lspconfig.util) :root_pattern) :.flake8)
-     :settings {:python {:analysis {:autoImportCompletions true
-                                    :useLibraryCodeForTypes true
-                                    :disableOrganizeImports false}}}}))
-
-(nyoom-module-p! yaml
-                 (tset lsp-servers :yamlls
-                       {:settings {:yaml {
-                                          :schemaStore {:enable false
-                                                        :url "https://www.schemastore.org/api/json/catalog.json"}
-                                          :schemas {:/path/to/your/custom/strict/schema.json "yet-another.{yml,yaml}"
-                                                    "http://json.schemastore.org/prettierrc" ".prettierrc.{yml,yaml}"}
-                                          :validate true}}}))
-
-(nyoom-module-p! zig (tset lsp-servers :zls {}))
-
-;; Load lsp
-(local {: deep-merge} (require :core.lib))
-(local lsp-config vim.lsp.config)
-
-
-(each [server server-config (pairs lsp-servers)]
-  (let [final-config (deep-merge defaults server-config)]
-    ;; In Neovim 0.11+, vim.lsp.enable handles the config merge 
-    ;; and the startup of the server automatically.
-    (let [(ok? err) (pcall vim.lsp.enable server final-config)]
-      (when (not ok?)
-        (print (.. "LSP Error for " server ": " err))))))
-
-{: on-attach}
-
-; (local {: deep-merge} (autoload :core.lib))
-; (let [servers lsp-servers]
-;   (each [server server_config (pairs servers)]
-;     ((. (. lsp server) :setup) (deep-merge defaults server_config))))
-;
-; {: on-attach}
+  ;; Immediate check for CLI open (e.g., nvim file.fnl)
+  (when (and (not= vim.bo.filetype "") (= vim.bo.buftype ""))
+    (loader)))
