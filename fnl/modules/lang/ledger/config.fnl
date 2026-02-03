@@ -1,8 +1,9 @@
-(import-macros {: set! : local-set!} :macros)
+(import-macros {: set! : packadd!} :macros)
+;; {:packadd! vim-ledger}
 
 ;; set options to your liking...
-(local-set! foldmethod :syntax)
-(local-set! foldenable true)
+(set! foldmethod :syntax)
+(set! foldenable true)
 (tset vim.g :ledger_fillstring "........")
 (tset vim.g :ledger_extra_options "")
 (tset vim.g :ledger_maxwidth 80)

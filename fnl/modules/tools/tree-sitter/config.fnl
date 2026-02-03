@@ -65,37 +65,37 @@
 
 ;; (table.insert treesitter-filetypes :gitignore)))
 
-(nyoom-module-p! org
-                 (do
-                   (local tsp (autoload :nvim-treesitter.parsers))
-                   (local parser-config (tsp.get_parser_configs))
-                   (set parser-config.org
-                        {:filetype :org
-                         :install_info {:url "https://github.com/milisims/tree-sitter-org"
-                                        :files [:src/parser.c :src/scanner.cc]
-                                        :branch :main}})
-                   (table.insert treesitter-filetypes :org)))
+; (nyoom-module-p! org
+;                  (do
+;                    (local tsp (autoload :nvim-treesitter.parsers))
+;                    (local parser-config (tsp.get_parser_configs))
+;                    (set parser-config.org
+;                         {:filetype :org
+;                          :install_info {:url "https://github.com/milisims/tree-sitter-org"
+;                                         :files [:src/parser.c :src/scanner.cc]
+;                                         :branch :main}})
+;                    (table.insert treesitter-filetypes :org)))
 
 (nyoom-module-p! neorg
-                 (do
-                   (local tsp (autoload :nvim-treesitter.parsers))
-                   (local parser-config (tsp.get_parser_configs))
-                   (set parser-config.norg
-                        {:install_info {:url "https://github.com/nvim-neorg/tree-sitter-norg"
-                                        :files [:src/parser.c :src/scanner.cc]
-                                        :branch :dev
-                                        :use_makefile true}})
-                   (set parser-config.norg_meta
-                        {:install_info {:url "https://github.com/nvim-neorg/tree-sitter-norg-meta"
-                                        :files [:src/parser.c]
-                                        :branch :main}})
-                   (set parser-config.norg_table
-                        {:install_info {:url "https://github.com/nvim-neorg/tree-sitter-norg-table"
-                                        :files [:src/parser.c]
-                                        :branch :main}})
-                   (table.insert treesitter-filetypes :norg)
-                   (table.insert treesitter-filetypes :norg_table)
-                   (table.insert treesitter-filetypes :norg_meta)))
+                 (do))
+                   ; (local tsp (autoload :nvim-treesitter.parsers))
+                   ; (local parser-config (tsp.get_parser_configs))
+                   ; (set parser-config.norg
+                   ;      {:install_info {:url "https://github.com/nvim-neorg/tree-sitter-norg"
+                   ;                      :files [:src/parser.c :src/scanner.cc]
+                   ;                      :branch :dev
+                   ;                      :use_makefile true}})
+                   ; (set parser-config.norg_meta
+                   ;      {:install_info {:url "https://github.com/nvim-neorg/tree-sitter-norg-meta"
+                   ;                      :files [:src/parser.c]
+                   ;                      :branch :main}})
+                   ; (set parser-config.norg_table
+                   ;      {:install_info {:url "https://github.com/nvim-neorg/tree-sitter-norg-table"
+                   ;                      :files [:src/parser.c]
+                   ;                      :branch :main}})
+                   ; (table.insert treesitter-filetypes :norg)
+                   ; (table.insert treesitter-filetypes :norg_table)
+                   ; (table.insert treesitter-filetypes :norg_meta)))
 
 ;; load dependencies
 
@@ -115,50 +115,12 @@
 ;; the usual
 
 (setup :nvim-treesitter)
-
 ;; the unusual
 ;;
-;; We call :wait(300000) to ensure they exist before we start editing
+;; (vim.notify "NYOOM: installing treesitter parsers" vim.log.levels.INFO)
+;;
 (let [ts (require :nvim-treesitter)]
   (ts.install treesitter-filetypes)
   (let [job (ts.install treesitter-filetypes)]
     (when job
       (job:wait 300000))))
-
-; (setup :nvim-treesitter.configs
-;        {:ensure_installed treesitter-filetypes
-;         :highlight {:enable true :use_languagetree true}
-;         :indent {:enable true}
-;         :context_commentstring {:enable true}
-;         :refactor {:enable true
-;                    :keymaps {:smart_rename "<localleader>rn"}}
-;         :query_linter {:enable true
-;                        :use_virtual_text true
-;                        :lint_events ["BufWrite" "CursorHold"]}
-;         :rainbow {:enable true
-;                   :query {1 :rainbow-parens
-;                           :html :rainbow-tags
-;                           :latex :rainbow-blocks
-;                           :tsx :rainbow-tags
-;                           :vue :rainbow-tags}}
-;         :incremental_selection {:enable true
-;                                 :keymaps {:init_selection :gnn
-;                                           :node_incremental :grn
-;                                           :scope_incremental :grc
-;                                           :node_decremental :grm}}
-;         :textobjects {:select {:enable true}
-;                       :lookahead true
-;                       :keymaps {:af "@function.outer"
-;                                 :if "@function.inner"
-;                                 :ac "@class.outer"
-;                                 :ic "@class.inner"}
-;                       :move {:enable true
-;                              :set_jumps true
-;                              :goto_next_start {"]m" "@function.outer"
-;                                                "]]" "@class.outer"}
-;                              :goto_next_end {"]M" "@function.outer"
-;                                              "][" "@class.outer"}
-;                              :goto_previous_start {"[m" "@function.outer"
-;                                                    "[[" "@class.outer"}
-;                              :goto_previous_end {"[M" "@function.outer"
-;                                                  "[]" "@class.outer"}}}})

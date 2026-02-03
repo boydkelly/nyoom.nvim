@@ -2,9 +2,10 @@
 
 (lz-package! :nvim-treesitter/nvim-treesitter
               {:nyoom-module tools.tree-sitter
+               :event :UIEnter
                :cmd [
-                     :TSEnable
-                     :TSDisable]
+                     :TSLog
+                     :TSUpdate]
                :requires [
                           (lz-pack! :JoosepAlviste/nvim-ts-context-commentstring {:opt true})
                           (lz-pack! :nvim-treesitter/nvim-treesitter-textobjects

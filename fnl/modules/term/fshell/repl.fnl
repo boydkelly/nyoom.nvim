@@ -105,12 +105,12 @@ endfunction")
     (set state.bufnr bufnr)
     (vim.api.nvim_set_current_win win)
     (when init-repl?
-      (each [k v (pairs (getfenv 0))]
+      (each [k v (pairs (_G.getfenv 0))]
         (tset env k v)
         (tset fenv k v))
       (tset env :print #(write bufnr $... "\n"))
       (tset fenv :xpcall xpcall*)
-      (let [repl (setfenv fennel.repl fenv)]
+      (let [repl (_G.setfenv fennel.repl fenv)]
         (set state.coro
              (coroutine.create #(repl {: env
                                        :allowedGlobals false

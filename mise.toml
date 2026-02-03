@@ -1,0 +1,2 @@
+[tools]
+"npm:tree-sitter-cli" = "latest"

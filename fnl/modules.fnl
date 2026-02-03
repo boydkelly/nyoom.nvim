@@ -49,11 +49,11 @@
         ;;editorconfig       ; let someone else argue about tabs vs spaces
         ;;magma              ; tame Jupyter notebooks
         ; mason                ; setting your tools in stone
-        ; eval                 ; run code, run (also, repls)
-        ; antifennel           ; for all the fennel haters out there. this ones for you
-        ; pastebin             ; interacting with pastebin platforms
+        eval                 ; run code, run (also, repls)
+        ;antifennel           ; needs a macro to replace nyoom-module
+        pastebin             ; interacting with pastebin platforms
         lsp                  ; :vscode
-        ; (neogit              ; a git porclain for neovim
+        (neogit)              ; a git porclain for neovim
         ;   +forge             ; Wield git like a wizard
         ;   +diffview)         ; a git diff view for neovim
         ; rgb                  ; creating color strings
@@ -63,30 +63,30 @@
         :lang
         ; cc                   ; C > C++ == 1
         ; clojure              ; java with a lisp
-        common-lisp          ; if you've seen one lisp, you've seen them all
+        ; common-lisp          ; if you've seen one lisp, you've seen them all
         ; csharp               ; java but with linq
         ; java                 ; the poster child for carpal tunnel syndrome
         ; julia                ; a better, faster MATLAB
-        ;;kotlin             ; FIXME: a better, slicker Java(Script)
+        ; kotlin             ; FIXME: a better, slicker Java(Script)
         json               ; { "dʒeɪsən":  "Javascript Object Notation" }
-        ; latex                ; writing papers in Neovim has never been so fun
-        ;;ledger             ; be audit you can be
-        lua                  ; one-based indices? one-based indices
+        latex                ; writing papers in Neovim has never been so fun
+        ledger             ; be audit you can be
+        lua                  ; one-based indices? one-based indice1s
         markdown             ; writing docs for people to ignore
-        ; nim                  ; python + lisp at the speed of c
+        nim                  ; python + lisp at the speed of c
         (neorg)               ; organize your plain life in plain text, the neovim way
         ;   +pretty
         ;   +present
         ;   +export
         ;   +nabla)
-        ;(org +pretty)      ; WIP: organize your plain life in plain text, the emacs way
-        ; nix                  ; I hereby declare "nix geht mehr!"
-        ; python               ; beautiful is better than ugly
-        ; rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-        ; (sh +fish)           ; she sells {ba,z,fi}sh shells on the C xor
+        (org +pretty)      ; WIP: organize your plain life in plain text, the emacs way
+        nix                  ; I hereby declare "nix geht mehr!"
+        python               ; beautiful is better than ugly
+        rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+        (sh +fish)           ; she sells {ba,z,fi}sh shells on the C xor
         xml                ; extend my language
         yaml               ; yet another markup language to enable
-        ; zig                  ; C, but simpler
+        zig                  ; C, but simpler
 
         :app
         ;;calendar           ; Watch your missed deadlines in real time
