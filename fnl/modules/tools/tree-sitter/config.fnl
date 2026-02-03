@@ -1,6 +1,6 @@
 (local {: setup} (require :core.lib.setup))
 (local {: autoload} (require :core.lib.autoload))
-(import-macros {: packadd! : nyoom-module-p! : map! : custom-set-face!} :macros)
+(import-macros {: set! : local-set! : packadd! : nyoom-module-p! : map! : custom-set-face! : augroup! : autocmd! : clear! } :macros)
 
 ;; Conditionally enable leap-ast
 
@@ -124,3 +124,24 @@
   (let [job (ts.install treesitter-filetypes)]
     (when job
       (job:wait 300000))))
+
+;; 3. Create the Autocmd with the correct events
+;
+;(augroup! treesitter-setup
+(augroup! treesitter-setup
+  (clear!)
+  (autocmd! [FileType BufReadPost BufNewFile] *
+            (fn [event]
+              (let [buf event.buf
+                    bt (vim.api.nvim_get_option_value :buftype {:buf buf})
+                    ft event.match]
+                (when (and (= bt "")
+                           (not (vim.tbl_contains [:checkhealth] ft)))
+                  (let [lang (or (vim.treesitter.language.get_lang ft) ft)]
+                    ;; 1. Start Highlighting
+                    (pcall vim.treesitter.start buf lang)
+
+                    ;; 2. Set Indentation using Nyoom's paradigm
+                    ;; local-set! handles the buffer scoping for us
+                    (local-set! indentexpr "v:lua.require'nvim-treesitter'.indentexpr()")))))
+            {:desc "Nyoom: Start treesitter highlighting"}))
