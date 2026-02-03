@@ -1,7 +1,5 @@
-(local {: autoload} (require :core.lib.autoload))
-(local {: deep-merge} (require :core.lib))
 (import-macros {: nyoom-module-p!} :macros)
-
+(local lsp (autoload :lspconfig))
 (local lsp-servers {})
 
 ;;; Improve UI
@@ -66,17 +64,11 @@
                  : capabilities
                  :flags {:debounce_text_changes 150}})
 
-; fennel-language-server
-; (tset lsp-servers :fennel-language-server {})
-; (tset (require :lspconfig.configs) :fennel-language-server
-;       {:default_config {:cmd [:fennel-language-server]
-;                         :filetypes [:fennel]
-;                         :single_file_support true
-;                         :root_dir (lsp.util.root_pattern :fnl)
-;                         :settings {:fennel {:workspace {:library (vim.api.nvim_list_runtime_paths)}
-;                                             :diagnostics {:globals [:vim]}}}}})
+;; conditional servers
 
-;; lsp servers
+(nyoom-module-p! csharp (tset lsp-servers :omnisharp {:cmd [:omnisharp]}))
+
+(nyoom-module-p! clojure (tset lsp-servers :clojure_lsp {}))
 
 (nyoom-module-p! java (tset lsp-servers :jdtls {}))
 
@@ -84,15 +76,11 @@
 
 (nyoom-module-p! julia (tset lsp-servers :julials {}))
 
+(nyoom-module-p! json)
+
 (nyoom-module-p! kotlin (tset lsp-servers :kotlin_langage_server {}))
 
 (nyoom-module-p! latex (tset lsp-servers :texlab {}))
-
-(nyoom-module-p! lua
-                 (tset lsp-servers :lua_ls
-                       {:settings {:Lua {:diagnostics {:globals [:vim]}
-                                         :workspace {:library (vim.api.nvim_list_runtime_paths)
-                                                     :maxPreload 100000}}}}))
 
 (nyoom-module-p! markdown (tset lsp-servers :marksman {}))
 
@@ -100,14 +88,15 @@
 
 (nyoom-module-p! nix (tset lsp-servers :rnix {}))
 
+(nyoom-module-p! yaml)
+
+(nyoom-module-p! zig (tset lsp-servers :zls {}))
+
 ;; Load lsp
 
-(each [server server-config (pairs lsp-servers)]
-  (let [final-config (deep-merge defaults server-config)]
-    ;; In Neovim 0.11+, vim.lsp.enable handles the config merge
-    ;; and the startup of the server automatically.
-    (let [(ok? err) (pcall vim.lsp.enable server final-config)]
-      (when (not ok?)
-        (print (.. "LSP Error for " server ": " err))))))
+(local {: deep-merge} (autoload :core.lib))
+(let [servers lsp-servers]
+  (each [server server_config (pairs servers)]
+    ((. (. lsp server) :setup) (deep-merge defaults server_config))))
 
 {: on-attach}

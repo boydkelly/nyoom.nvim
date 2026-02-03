@@ -1,17 +1,26 @@
 (import-macros {: autocmd! : augroup! : clear! : nyoom-module-p!} :macros)
 
-;; 1. Collect Servers (The Nyoom Way)
 (local lsp-servers [])
 
 (nyoom-module-p! cc (table.insert lsp-servers :clangd))
 (nyoom-module-p! python (table.insert lsp-servers :pyright))
 (nyoom-module-p! lua (table.insert lsp-servers :lua_ls))
-(nyoom-module-p! fennel (table.insert lsp-servers :fennel_ls))
 (nyoom-module-p! fennel (table.insert lsp-servers :fennel-ls))
+(nyoom-module-p! csharp (table.insert lsp-servers :omnisharp))
+(nyoom-module-p! clojure (table.insert lsp-servers :clojure_lsp))
+(nyoom-module-p! java (table.insert lsp-servers :jdtls))
+(nyoom-module-p! sh (table.insert lsp-servers :bashls))
+(nyoom-module-p! julia (table.insert lsp-servers :julials))
+(nyoom-module-p! json (table.insert lsp-servers :jsonls))
+(nyoom-module-p! kotlin (table.insert lsp-servers :kotlin_langage_server))
+(nyoom-module-p! latex (table.insert lsp-servers :texlab))
+(nyoom-module-p! markdown (table.insert lsp-servers :marksman))
+(nyoom-module-p! nim (table.insert lsp-servers :nimls))
+(nyoom-module-p! nix (table.insert lsp-servers :rnix))
+(nyoom-module-p! yaml (table.insert lsp-servers :yaml_ls))
+(nyoom-module-p! zig (table.insert lsp-servers :zls))
 
-;; 2. The Setup Function
 (fn setup-lsp []
-  ;; Diagnostic UI
   (vim.diagnostic.config {:virtual_lines false
                           :underline true
                           :update_in_insert false
@@ -20,7 +29,6 @@
                                          vim.diagnostic.severity.INFO  "●"
                                          vim.diagnostic.severity.HINT  "●"}}})
 
-  ;; Global LspAttach (Keybindings & Formatting)
   (augroup! nyoom-lsp-attach
     (autocmd! LspAttach *
               (fn [event]
@@ -33,11 +41,10 @@
                                 #(vim.lsp.buf.format {:bufnr buf})
                                 {:buffer buf})))))))
 
-  ;; Enable servers (The 2025 way - lspconfig registry lookup)
   (each [_ server (ipairs lsp-servers)]
     (pcall vim.lsp.enable server)))
 
-;; 3. The "Just-In-Time" Loader
+;; The "Just-In-Time" Loader
 (let [loader (let [loaded {:status false}]
                (fn []
                  ;; Only run if not loaded AND we are in a "real" file buffer
