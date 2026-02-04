@@ -10,7 +10,7 @@
                    (let [leap-ast (autoload :leap-ast)]
                      (map! [nxo] :gs `(leap-ast.leap) {:desc "Leap AST"}))))
 
-(local treesitter-filetypes [:vimdoc :fennel :vim :regex :query :norg])
+(local treesitter-filetypes [:vimdoc :fennel :vim :regex :query])
 
 ;; conditionally install parsers
 
@@ -63,26 +63,36 @@
                    (table.insert treesitter-filetypes :gitattributes)
                    (table.insert treesitter-filetypes :gitcommit)))
 
-  ;; 1. Register Norg
 ;; (table.insert treesitter-filetypes :gitignore)))
-;; load dependencies
 
-(let [(ok? ts-install) (pcall require :nvim-treesitter.install)]
-  (when ok?
-    (nyoom-module-p! neorg
-      (ts-install.add_parser :norg
-        {:install_info {:url "https://github.com/nvim-neorg/tree-sitter-norg"
-                        :files [:src/parser.c :src/scanner.cc]
-                        :branch :main}}))
-    (nyoom-module-p! org
-      (ts-install.add_parser :org
-        {:install_info {:url "https://github.com/milisims/tree-sitter-org"
-                        :files [:src/parser.c :src/scanner.cc]
-                        :branch :main}}))))
+(local ts-install (require "nvim-treesitter.install"))
 
-(nyoom-module-p! neorg (table.insert treesitter-filetypes :norg))
+(nyoom-module-p! org
+  (do
+    (ts-install.install
+      ["org"]
+      {:grammar
+       {:org
+        {:install_info
+         {:url "https://github.com/milisims/tree-sitter-org"
+          :files ["src/parser.c" "src/scanner.c"]
+          :branch "main"}}}})
+    (table.insert treesitter-filetypes "org")
+    (vim.treesitter.language.register "org" "org")))
 
-(nyoom-module-p! org (table.insert treesitter-filetypes :org))
+(nyoom-module-p! neorg
+  (do
+    (ts-install.install
+      ["norg"]
+      {:grammar
+       {:norg
+        {:install_info
+         {:url "https://github.com/nvim-neorg/tree-sitter-norg"
+          :files ["src/parser.c" "src/scanner.c"]
+          :branch "main"}}}})
+    (table.insert treesitter-filetypes "norg")
+    (vim.treesitter.language.register "norg" "norg")))
+
 
 
 (packadd! nvim-treesitter-textobjects)
