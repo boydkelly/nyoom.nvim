@@ -15,9 +15,9 @@
 (set vim.env.PATH (.. vim.env.PATH ":" (vim.fn.stdpath :data) :/mason/bin))
 (set vim.env.PATH (.. vim.env.PATH ":" (vim.fn.stdpath :config) :/bin))
 
-(let! python3_host_prog (if (executable? "python") (vim.fn.exepath "python")
-                          (executable? "python3") (vim.fn.exepath "python3")
-                          nil))
+(let! python3_host_prog (if (executable? :python) (vim.fn.exepath :python)
+                            (executable? :python3) (vim.fn.exepath :python3)
+                            nil))
 
 ;; check for cli
 
@@ -25,7 +25,6 @@
 
 ;; If its a cli instance, load package management
 ;; If its a regular instance, load defaults, userconfig and plugins
-(require :packages)
 (if (not cli)
     (do
       ; (print "set options")
@@ -73,7 +72,8 @@
       ;; nightly only options
       (local {: nightly?} (_G.autoload :core.lib))
       (if (nightly?)
-          (do))
+          (do
+            ))
       ;; gui options
       (set! list)
       (set! fillchars {:eob " "
@@ -96,5 +96,7 @@
       (let! neovide_padding_right 38)
       (let! neovide_padding_bottom 20)
       ;; load userconfig
-      (require :config)))
-      ;; (require :pacttesting)
+      (require :config)
+      (require :packages)))
+
+;; (require :pacttesting)

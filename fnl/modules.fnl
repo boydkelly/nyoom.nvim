@@ -19,6 +19,7 @@
         modeline             ; snazzy, nano-emacs-inspired modeline
         nvimtree           ; a project drawer, like NERDTree for vim
         neotree              ; tree-like structures for neovim
+        oil
         quickfix             ; enhancements to vim's builtin quickfix functionality
         trouble              ; view your diagnostics, now with icons! (i knew u were trouble when you walked iiiinnn)
         ;;tabs               ; keep tabs on your buffers, literally
@@ -99,3 +100,4 @@
           +bindings
           +which-key
           +smartparens))
+

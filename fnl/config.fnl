@@ -1,12 +1,12 @@
 (require-macros :macros)
-(import-macros {: packadd!} :macros)
+(import-macros {: packadd! : colorscheme} :macros)
 
 ;; You can use the `colorscheme` macro to load a custom theme, or load it manually
 ;; via require. This is the default:
 
 ; (print "CONFIG: colorscheme")
 (set! background :dark)
-(colorscheme oxocarbon)
+;; (colorscheme oxocarbon)
 
 ;; The set! macro sets vim.opt options. By default it sets the option to true
 ;; Appending `no` in front sets it to false. This determines the style of line
@@ -35,3 +35,4 @@
 ; new cmd line; incompatible with noice. mutually exclusive
 ((. (require :vim._extui) :enable) {:enable true
                                     :msg {:target :msg :timeout 4000}})
+
