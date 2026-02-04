@@ -7,5 +7,4 @@
                           (lz-pack! :JoosepAlviste/nvim-ts-context-commentstring {:opt true})
                           (lz-pack! :nvim-treesitter/nvim-treesitter-context)
                           (lz-pack! :nvim-treesitter/nvim-treesitter-textobjects
-                                {:opt true})]
-               })
+                                {:opt true})]})

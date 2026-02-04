@@ -10,7 +10,7 @@
                    (let [leap-ast (autoload :leap-ast)]
                      (map! [nxo] :gs `(leap-ast.leap) {:desc "Leap AST"}))))
 
-(local treesitter-filetypes [:vimdoc :fennel :vim :regex :query])
+(local treesitter-filetypes [:vimdoc :fennel :vim :regex :query :norg])
 
 ;; conditionally install parsers
 
@@ -42,6 +42,8 @@
 
 (nyoom-module-p! zig (table.insert treesitter-filetypes :zig))
 
+(nyoom-module-p! neorg (table.insert treesitter-filetypes :norg))
+
 (nyoom-module-p! cc
                  (do
                    (table.insert treesitter-filetypes :c)
@@ -65,37 +67,35 @@
 
 ;; (table.insert treesitter-filetypes :gitignore)))
 
-; (nyoom-module-p! org
-;                  (do
-;                    (local tsp (autoload :nvim-treesitter.parsers))
-;                    (local parser-config (tsp.get_parser_configs))
-;                    (set parser-config.org
-;                         {:filetype :org
-;                          :install_info {:url "https://github.com/milisims/tree-sitter-org"
-;                                         :files [:src/parser.c :src/scanner.cc]
-;                                         :branch :main}})
-;                    (table.insert treesitter-filetypes :org)))
+(nyoom-module-p! org
+                 (do
+                   (local tsp (autoload :nvim-treesitter.parsers))
+                   (local parser-config (tsp.get_parser_configs))
+                   (set parser-config.org
+                        {:filetype :org
+                         :install_info {:url "https://github.com/milisims/tree-sitter-org"
+                                        :files [:src/parser.c :src/scanner.cc]
+                                        :branch :main}})
+                   (table.insert treesitter-filetypes :org)))
 
 (nyoom-module-p! neorg
-                 (do))
-                   ; (local tsp (autoload :nvim-treesitter.parsers))
-                   ; (local parser-config (tsp.get_parser_configs))
-                   ; (set parser-config.norg
-                   ;      {:install_info {:url "https://github.com/nvim-neorg/tree-sitter-norg"
-                   ;                      :files [:src/parser.c :src/scanner.cc]
-                   ;                      :branch :dev
-                   ;                      :use_makefile true}})
-                   ; (set parser-config.norg_meta
-                   ;      {:install_info {:url "https://github.com/nvim-neorg/tree-sitter-norg-meta"
-                   ;                      :files [:src/parser.c]
-                   ;                      :branch :main}})
-                   ; (set parser-config.norg_table
-                   ;      {:install_info {:url "https://github.com/nvim-neorg/tree-sitter-norg-table"
-                   ;                      :files [:src/parser.c]
-                   ;                      :branch :main}})
-                   ; (table.insert treesitter-filetypes :norg)
-                   ; (table.insert treesitter-filetypes :norg_table)
-                   ; (table.insert treesitter-filetypes :norg_meta)))
+                (do
+                  (local tsp (autoload :nvim-treesitter.parsers))
+                  (local parser-config (tsp.get_parser_configs))
+                  (set parser-config.norg
+                       {:install_info {:url "https://github.com/nvim-neorg/tree-sitter-norg"
+                                       :files [:src/parser.c :src/scanner.cc]
+                                       :branch :dev
+                                       :use_makefile true}})
+                  (set parser-config.norg_meta
+                       {:install_info {:url "https://github.com/nvim-neorg/tree-sitter-norg-meta"
+                                       :files [:src/parser.c]
+                                       :branch :main}})
+                  (set parser-config.norg_table
+                       {:install_info {:url "https://github.com/nvim-neorg/tree-sitter-norg-table"
+                                       :files [:src/parser.c]
+                                       :branch :main}})
+                  (table.insert treesitter-filetypes :norg)))
 
 ;; load dependencies
 

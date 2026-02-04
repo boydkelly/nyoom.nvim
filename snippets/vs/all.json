@@ -1,0 +1,12 @@
+{
+  "email": {
+    "prefix": "email",
+    "description": "email",
+    "body": ["bkelly@coastsystems.net"]
+  },
+  "counter": {
+    "prefix": "counter",
+    "description": "counter",
+    "body": ["({counter:ex})"]
+  }
+}

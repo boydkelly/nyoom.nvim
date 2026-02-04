@@ -1,0 +1,33 @@
+{
+  "name": "snippets",
+  "engines": {
+    "vscode": "^1.11.0"
+  },
+  "contributes": {
+    "snippets": [
+      {
+        "language": [
+          "plaintext",
+          "asciidoctor",
+          "asciidoc",
+          "markdown",
+          "html",
+          "global",
+          "all"
+        ],
+        "path": "./global.json"
+      },
+      {
+        "language": [
+        "asciidoc",
+        "asciidoctor"
+        ],
+        "path": "./asciidoc.json"
+      },
+      {
+        "language": "yaml",
+        "path": "./yaml.json"
+      }
+    ]
+  }
+}

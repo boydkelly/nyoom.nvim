@@ -2,6 +2,7 @@
 (global module :blink.cmp)
 (local (ok blink) (pcall require module))
 (packadd! blink-cmp-spell)
+(packadd! luasnip)
 
 (when (not ok)
   (vim.notify (.. "Couldn't load module '" module "'"))

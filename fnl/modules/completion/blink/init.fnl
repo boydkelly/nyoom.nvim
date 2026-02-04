@@ -12,7 +12,6 @@
                :event [:InsertEnter :CmdLineEnter]
                :requires [(lz-pack! :onsails/lspkind.nvim)
                           (lz-pack! :zbirenbaum/copilot.lua)
-                          (lz-pack! :nvim-mini/mini.icons)
                           (lz-pack! :PaterJason/cmp-conjure)
                           (lz-pack! :kirasok/cmp-hledger)
                           (lz-pack! :ribru17/blink-cmp-spell)

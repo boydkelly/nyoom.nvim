@@ -1,0 +1,192 @@
+{
+  "it": {
+    "prefix": "it",
+    "description": "new item",
+    "body": [
+      "  - dyu: ${1:}",
+      "    alt:",
+      "      - ${2:}",
+      "    emp: null",
+      "    cf:",
+      "      - null",
+      "    trans:",
+      "      - lang: fr",
+      "        detail: ${3:}",
+      "        speech:",
+      "          - type: ${4:}",
+      "            t-uuid: uuid",
+      "            def:",
+      "              - gloss: ${5:}",
+      "                gl-id: uuid",
+      "                note2: null",
+      "                note3: null",
+      "                note4: null",
+      "\t\t\t\t\t\t\t\ttags:",
+      "                example:",
+      "                  - source: ${6:}",
+      "                    target: ${7:}",
+      "                    ex-id: uuid",
+      "$0"
+    ]
+  },
+  "ex": {
+    "prefix": "ex",
+    "description": "new example",
+    "body": [
+      "                  - source: ${1:}",
+      "                    target: ${2:}",
+      "                    ex-id: uuid",
+      "$0"
+    ]
+  },
+  "gl": {
+    "prefix": "gl",
+    "description": "new gloss",
+    "body": [
+      "              - gloss: ${1:}",
+      "                gl-id: uuid",
+      "                note2: null",
+      "                note3: null",
+      "                note4: null",
+      "\t\t\t\t\t\t\t\ttags:",
+      "                example:",
+      "                  - source: ${2:}",
+      "                    target: ${3:}",
+      "                    ex-id: uuid",
+      "$0"
+    ]
+  },
+  "ty": {
+    "prefix": "ty",
+    "description": "new type",
+    "body": [
+      "          - type: ${1:}",
+      "            t-uuid: uuid",
+      "            def:",
+      "              - gloss: ${2:}",
+      "                gl-id: uuid",
+      "                note2: null",
+      "                note3: null",
+      "                note4: null",
+      "                tags:",
+      "                example:",
+      "                  - source: ${3:}",
+      "                    target: ${4:}",
+      "                    ex-id: uuid",
+      "$0"
+    ]
+  },
+  "sr": {
+    "prefix": "sr",
+    "description": "related",
+    "body": [
+      "                    sr:",
+      "                      kref:",
+      "                        - '@type': $1",
+      "                          '#text': $2",
+      "                        - '@type': $3",
+      "                          '#text': $4"
+    ]
+  },
+  "dyu": {
+    "prefix": "dyu",
+    "description": "headword",
+    "body": [
+      "      - k:",
+      "          - '@xml:lang': dyu",
+      "            '#text': $1",
+      "        def:",
+      "          def:",
+      "            '@xml:lang': fr",
+      "            def:",
+      "              - '@def-id': uuid",
+      "                gr:",
+      "                  abbr: $2",
+      "                def:",
+      "                  - '@def-id': uuid",
+      "                    co: null",
+      "                    deftext: $3",
+      "                    ex:",
+      "                      - '@type': exm",
+      "                        '@ex-id': uuid",
+      "                        '@author':",
+      "                        '@source':",
+      "                        ex_orig: $4",
+      "                        ex_tran: $5",
+      "                    sr:",
+      "                      kref:",
+      "                        - '@type': syn",
+      "                          '#text': $6",
+      "                    etm: null",
+      "                    categ:",
+      "          sr:",
+      "            kref:",
+      "              - '@type': spv",
+      "                '#text': $7"
+    ]
+  },
+  "spv": {
+    "prefix": "spv",
+    "description": "spv",
+    "body": [
+      "          sr:",
+      "            kref:",
+      "              - +content: $1",
+      "                +@type: rel",
+      "$0"
+    ]
+  },
+  "syn": {
+    "prefix": "syn",
+    "description": "syn",
+    "body": [
+      "                    kref:",
+      "                      - +content: $1",
+      "                        +@type: rel",
+      "$0"
+    ]
+  },
+  "rel": {
+    "prefix": "rel",
+    "description": "related",
+    "body": [
+      "                    kref:",
+      "                      - +content: $1",
+      "                        +@type: rel",
+      "$0"
+    ]
+  },
+  "-k": {
+    "prefix": "-k",
+    "description": "headword",
+    "body": [
+      " - k:",
+      "     +content: $1",
+      "     +@xml:lang: dyu",
+      "   def:",
+      "     def:",
+      "       +@xml:lang: fr",
+      "       def:",
+      "         - +@def-id: uuid",
+      "           gr:",
+      "             abbr: ",
+      "           def:",
+      "             - +@def-id: uuid",
+      "               deftext: $2",
+      "               ex:",
+      "                 +@type: exm",
+      "                 +@ex-id: uuid",
+      "                 ex_orig:",
+      "                 ex_tran:",
+      "               sr:",
+      "                 kref:",
+      "                   - +content: $3",
+      "                     +@type: syn",
+      "     sr:",
+      "       kref:",
+      "         - +content: $4",
+      "           +@type: spv",
+      "$0"
+    ]
+  }
+}
