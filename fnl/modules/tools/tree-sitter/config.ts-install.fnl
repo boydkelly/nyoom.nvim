@@ -1,34 +1,14 @@
 (local {: setup} (require :core.lib.setup))
 (local {: autoload} (require :core.lib.autoload))
-(import-macros {: set!
-                : local-set!
-                : packadd!
-                : nyoom-module-p!
-                : map!
-                : custom-set-face!
-                : augroup!
-                : autocmd!
-                : clear!} :macros)
+(import-macros {: set! : local-set! : packadd! : nyoom-module-p! : map! : custom-set-face! : augroup! : autocmd! : clear! } :macros)
 
 ;; Conditionally enable leap-ast
+
 (nyoom-module-p! bindings
                  (do
                    (packadd! leap-ast.nvim)
                    (let [leap-ast (autoload :leap-ast)]
                      (map! [nxo] :gs `(leap-ast.leap) {:desc "Leap AST"}))))
-
-(packadd! nvim-treesitter-textobjects)
-(packadd! nvim-ts-context-commentstring)
-
-;; setup hl groups for ts-rainbow
-
-(custom-set-face! :TSRainbowRed [] {:fg "#878d96" :bg :NONE})
-(custom-set-face! :TSRainbowYellow [] {:fg "#a8a8a8" :bg :NONE})
-(custom-set-face! :TSRainbowBlue [] {:fg "#8d8d8d" :bg :NONE})
-(custom-set-face! :TSRainbowOrange [] {:fg "#a2a9b0" :bg :NONE})
-(custom-set-face! :TSRainbowGreen [] {:fg "#8f8b8b" :bg :NONE})
-(custom-set-face! :TSRainbowViolet [] {:fg "#ada8a8" :bg :NONE})
-(custom-set-face! :TSRainbowCyan [] {:fg "#878d96" :bg :NONE})
 
 (local treesitter-filetypes [:vimdoc :fennel :vim :regex :query])
 
@@ -53,8 +33,6 @@
 (nyoom-module-p! lua (table.insert treesitter-filetypes :lua))
 
 (nyoom-module-p! nix (table.insert treesitter-filetypes :nix))
-
-(nyoom-module-p! org (table.insert treesitter-filetypes :org))
 
 (nyoom-module-p! python (table.insert treesitter-filetypes :python))
 
@@ -87,33 +65,79 @@
 
 ;; (table.insert treesitter-filetypes :gitignore)))
 
-;   (nyoom-module-p! neorg
-;     (do
-;       (tset ts-parsers :norg
-;             {:install_info {:url "https://github.com/nvim-neorg/tree-sitter-norg"
-;                             :files [:src/parser.c :src/scanner.cc]
-;                             :branch :main}})
-;       (table.insert treesitter-filetypes :norg))))
+(local ts-install (require "nvim-treesitter.install"))
 
+(nyoom-module-p! org
+  (do
+    (ts-install.install
+      ["org"]
+      {:grammar
+       {:org
+        {:install_info
+         {:url "https://github.com/milisims/tree-sitter-org"
+          :files ["src/parser.c" "src/scanner.c"]
+          :branch "main"}}}})
+    (table.insert treesitter-filetypes "org")
+    (vim.treesitter.language.register "org" "org")))
+
+(nyoom-module-p! neorg
+  (do
+    (ts-install.install
+      ["norg"]
+      {:grammar
+       {:norg
+        {:install_info
+         {:url "https://github.com/nvim-neorg/tree-sitter-norg"
+          :files ["src/parser.c" "src/scanner.c"]
+          :branch "main"}}}})
+    (table.insert treesitter-filetypes "norg")
+    (vim.treesitter.language.register "norg" "norg")))
+
+
+
+(packadd! nvim-treesitter-textobjects)
+(packadd! nvim-ts-context-commentstring)
+
+;; setup hl groups for ts-rainbow
+
+(custom-set-face! :TSRainbowRed  [] {:fg "#878d96" :bg :NONE})
+(custom-set-face! :TSRainbowYellow [] {:fg "#a8a8a8" :bg :NONE})
+(custom-set-face! :TSRainbowBlue [] {:fg "#8d8d8d" :bg :NONE})
+(custom-set-face! :TSRainbowOrange [] {:fg "#a2a9b0" :bg :NONE})
+(custom-set-face! :TSRainbowGreen [] {:fg "#8f8b8b" :bg :NONE})
+(custom-set-face! :TSRainbowViolet [] {:fg "#ada8a8" :bg :NONE})
+(custom-set-face! :TSRainbowCyan [] {:fg "#878d96" :bg :NONE})
+
+;; the usual
+
+(setup :nvim-treesitter)
 ;; the unusual
-;; this is a noop if it already installed
+;;
 ;; (vim.notify "NYOOM: installing treesitter parsers" vim.log.levels.INFO)
+;;
 (let [ts (require :nvim-treesitter)]
   (ts.install treesitter-filetypes)
   (let [job (ts.install treesitter-filetypes)]
     (when job
       (job:wait 300000))))
 
-(augroup! treesitter-setup (clear!)
-          (autocmd! [FileType] *
-                    (fn [event]
-                      (let [buf event.buf
-                            ft (vim.api.nvim_get_option_value :filetype {: buf})
-                            lang (vim.treesitter.language.get_lang ft)]
-                        (when lang
-                          ;; 1. Start Highlighting
-                          (pcall vim.treesitter.start buf lang)
-                          ;; 2. Set Indentation (Now correctly scoped inside the 'when')
-                          (local-set! indentexpr
-                                      "v:lua.require'nvim-treesitter'.indentexpr()"))))
-                    {:desc "Nyoom: Start treesitter highlighting and indentation"}))
+;; 3. Create the Autocmd with the correct events
+;
+;(augroup! treesitter-setup
+(augroup! treesitter-setup
+  (clear!)
+  (autocmd! [FileType BufReadPost BufNewFile] *
+            (fn [event]
+              (let [buf event.buf
+                    bt (vim.api.nvim_get_option_value :buftype {:buf buf})
+                    ft event.match]
+                (when (and (= bt "")
+                           (not (vim.tbl_contains [:checkhealth] ft)))
+                  (let [lang (or (vim.treesitter.language.get_lang ft) ft)]
+                    ;; 1. Start Highlighting
+                    (pcall vim.treesitter.start buf lang)
+
+                    ;; 2. Set Indentation using Nyoom's paradigm
+                    ;; local-set! handles the buffer scoping for us
+                    (local-set! indentexpr "v:lua.require'nvim-treesitter'.indentexpr()")))))
+            {:desc "Nyoom: Start treesitter highlighting"}))

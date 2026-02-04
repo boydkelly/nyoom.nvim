@@ -7,3 +7,4 @@
 ;; Load tablemode on org enter
 
 (autocmd! VimEnter *.org `(vim.cmd.TableModeToggle))
+
