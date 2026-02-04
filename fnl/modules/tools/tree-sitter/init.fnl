@@ -8,3 +8,4 @@
                           (lz-pack! :nvim-treesitter/nvim-treesitter-context)
                           (lz-pack! :nvim-treesitter/nvim-treesitter-textobjects
                                 {:opt true})]})
+
