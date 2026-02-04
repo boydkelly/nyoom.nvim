@@ -5,31 +5,32 @@
 ;; fnlfmt: skip
 (nyoom! :completion
         ;cmp                  ; the ultimate code completion backend
-        blink
+        blink                ; completion so fast you’ll think you imagined it
+
         ;;copilot            ; the code completion of the future
         ;;fzf-lua            ; TODO a search engine for love and life
         (telescope +native)  ; the search engine of the future
 
         :ui
         (nyoom +modes +icons); what makes Nyoom look the way it does
-        ; dashboard            ; a nifty splash screen for neovim
+        dashboard            ; a nifty splash screen for neovim
         ;;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit.
         hydra                ; Discount modality for mythological beast hunters
         indent-guides      ; highlighted indent columns
         modeline             ; snazzy, nano-emacs-inspired modeline
-        nvimtree           ; a project drawer, like NERDTree for vim
-        neotree              ; tree-like structures for neovim
+        ;nvimtree           ; a project drawer, like NERDTree for vim
+        ;neotree              ; tree-like structures for neovim
         oil
         quickfix             ; enhancements to vim's builtin quickfix functionality
         trouble              ; view your diagnostics, now with icons! (i knew u were trouble when you walked iiiinnn)
-        ;;tabs               ; keep tabs on your buffers, literally
+        tabs               ; keep tabs on your buffers, literally
         vc-gutter            ; Get your diff out of the gutter
         window-select        ; Visually switch windows
         zen                  ; distraction-free coding or writing TODO +twilight
         ;noice                ; noice ui
 
         :editor
-        fold                 ; (nigh) universal code folding
+        ;fold                 ; (nigh) universal code folding
         (format +onsave)     ; automated prettiness
         ;;multiple-cursors   ; learn macros you dingus
         parinfer             ; turn lisp into python, sort of
@@ -38,12 +39,12 @@
         word-wrap            ; language-aware smart soft and hard wrapping
 
         :term
-        ;;fshell             ; WIP: the fennel shell that works everywhere
+        fshell             ; WIP: the fennel shell that works everywhere
         toggleterm           ; persistant/floating terminal wrapper for :term
 
         :checkers
-        diagnostics          ; tasing you for every semicolon you forget
-        grammar              ; tasing grammar mistake every you make
+        ; diagnostics          ; tasing you for every semicolon you forget
+        ; grammar              ; tasing grammar mistake every you make
         ;;spell              ; tasing you for misspelling mispelling
 
         :tools
@@ -56,6 +57,8 @@
         antifennel           ; for all the fennel haters out there. this ones for you
         pastebin             ; interacting with pastebin platforms
         lsp                  ; :vscode
+        (jj +diffview)       ; rewrite history like it never happened
+
         (neogit              ; a git porclain for neovim
           +forge             ; Wield git like a wizard
           +diffview)         ; a git diff view for neovim
@@ -100,4 +103,3 @@
           +bindings
           +which-key
           +smartparens))
-

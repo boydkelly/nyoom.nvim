@@ -5,10 +5,8 @@
                      ; :separator "->"
                      :group "+"
                      :rules false}
-             :win {:border :solid
-                   :padding [1 0]}
-             :layout {:spacing 3
-                      :align :center}
+             :win {:border :solid :padding [1 0]}
+             :layout {:spacing 3 :align :center}
              :filter (fn [mapping]
                        (let [mode mapping.mode
                              key mapping.lhs]
@@ -16,17 +14,21 @@
                                    (or (= key :j) (= key :k))))))
              :plugins {:presets {:g true :windows true :z true}
                        :spelling {:enabled false}}
-             :replace {:desc [[:<silent> ""] [:<cmd> ""] [:<Cmd> ""]
-                              [:<CR> ""] [:call ""] [:lua ""]
-                              ["^:" ""] ["^ " ""]]}})
+             :replace {:desc [[:<silent> ""]
+                              [:<cmd> ""]
+                              [:<Cmd> ""]
+                              [:<CR> ""]
+                              [:call ""]
+                              [:lua ""]
+                              ["^:" ""]
+                              ["^ " ""]]}})
 
 (setup :which-key opts)
 
 ;; rename groups to mimick doom
 (local wk (require :which-key))
 
-(wk.add [
-         {1 :<leader><tab> :group :workspace}
+(wk.add [{1 :<leader><tab> :group :workspace}
          {1 :<leader>b :group :buffer}
          {1 :<leader>c :group :code}
          {1 :<leader>cl :group :LSP}
@@ -35,6 +37,7 @@
          {1 :<leader>h :group :help}
          {1 :<leader>hn :group :nyoom}
          {1 :<leader>i :group :insert}
+         {1 :<leader>j :group :jj}
          {1 :<leader>n :group :notes}
          {1 :<leader>o :group :open}
          {1 :<leader>oa :group :agenda}

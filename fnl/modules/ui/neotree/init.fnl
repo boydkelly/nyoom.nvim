@@ -3,4 +3,10 @@
 (lz-package! :nvim-neo-tree/neo-tree.nvim
              {:nyoom-module ui.neotree
               :module :neo-tree
-              :cmd :Neotree})
+              :keys [[:<leader>op
+                      "<cmd>Neotree toggle<CR>"
+                      {:desc "Project sidebar"}]
+                     [:<leader>oP
+                      "<cmd>Neotree %:p:h:h %:p<CR>"
+                      {:desc "Find file in project sidebar"}]]})
+
