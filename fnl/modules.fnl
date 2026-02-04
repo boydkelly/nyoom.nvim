@@ -44,13 +44,13 @@
 
         :checkers
         ; diagnostics          ; tasing you for every semicolon you forget
-        ; grammar              ; tasing grammar mistake every you make
-        ;;spell              ; tasing you for misspelling mispelling
+        grammar              ; tasing grammar mistake every you make
+        spell              ; tasing you for misspelling mispelling
 
         :tools
         ;debugger             ; stepping through code, to help you add bugs
         docker               ; row row row your boat TODO +netman?
-        ;;editorconfig       ; let someone else argue about tabs vs spaces
+        editorconfig       ; let someone else argue about tabs vs spaces
         ;;magma              ; tame Jupyter notebooks
         ; mason                ; setting your tools in stone
         eval                 ; run code, run (also, repls)
