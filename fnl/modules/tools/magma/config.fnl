@@ -1,5 +1,3 @@
 (import-macros {: lz-package! : vim-pack-spec!} :macros)
-
-(lz-package! :dccsillag/magma-nvim {:nyoom-module tools.magma
-                                     :cmd :MagmaInit})
+;deal with this edge case later
 ;(lz-package! :dccsillag/magma-nvim {:nyoom-module ":UpdateRemotePlugins"})
