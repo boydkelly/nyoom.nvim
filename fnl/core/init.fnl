@@ -96,7 +96,8 @@
       (let! neovide_padding_right 38)
       (let! neovide_padding_bottom 20)
       ;; load userconfig
-      (require :config)
-      (require :packages)))
+      (require :config)))
+
+(require :packages)
 
 ;; (require :pacttesting)

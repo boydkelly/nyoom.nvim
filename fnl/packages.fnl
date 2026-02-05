@@ -34,7 +34,6 @@
 (packadd! :oxocarbon.nvim)
 
 ;; Compile modules
-(nyoom-compile-modules!)
+; (nyoom-compile-modules!) ;; not ding anything
 
 (lz-load!)
-
