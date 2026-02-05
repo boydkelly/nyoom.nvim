@@ -22,6 +22,8 @@
 (vim-pack-spec! :nvim-lua/plenary.nvim)
 (vim-pack-spec! :MunifTanjim/nui.nvim)
 (vim-pack-spec! :nyoom-engineering/oxocarbon.nvim)
+(packadd! :plenary.nvim)
+(packadd! :nui.nvim)
 
 ;;
 ;; (include :fnl.modules) --not needed, it just works
