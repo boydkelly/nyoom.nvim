@@ -1,3 +1,3 @@
-(import-macros {: nyoom-module!} :macros)
+(import-macros {: fake-module!} :macros)
 
-(nyoom-module! editor.multiple-cursors)
+(fake-module! editor.multiple-cursors)

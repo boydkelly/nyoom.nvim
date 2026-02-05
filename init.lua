@@ -166,6 +166,19 @@ local function safe_compile(src, dest)
 	end
 end
 
+local function safe_compile_dir(src, dest)
+	-- 3. Run the standard Tangerine compile
+	local ok, err = pcall(function()
+		api.compile.dir(src, dest, {
+			force = true,
+			verbose = false,
+		})
+	end)
+
+	if not ok then
+		print("COMPILE ERROR [" .. src .. "]: " .. tostring(err))
+	end
+end
 -- print("NYOOM: Compiling core logic...")
 
 local core_files = {
@@ -194,17 +207,15 @@ for _, pair in ipairs(base_files) do
 	safe_compile(pair[1], pair[2])
 end
 
--- ========================================
--- 5. Compile 'after' RTP (The non-dumb way)
--- ========================================
-if vim.fn.isdirectory("after") == 1 then
-	-- Compile everything in /after/*.fnl to /after/*.lua
-	-- Neovim will then naturally find after/ftplugin/python.lua, etc.
-	--api.compile.dir(fnl_dir .. "/after/lsp/", "/after/lsp/", {
-	api.compile.dir("after/lsp", "after/lsp/", {
-		force = true,
-		verbose = false,
-	})
+-- print("NYOOM: Compiling other files...")
+local other_files = {
+	{ fnl_dir .. "/utils", lua_dir .. "/utils" },
+	{ fnl_dir .. "/after/lsp", lua_dir .. "/after/lsp" },
+	{ fnl_dir .. "/modules", lua_dir .. "/modules" },
+}
+
+for _, pair in ipairs(other_files) do
+	safe_compile_dir(pair[1], pair[2])
 end
 
 -- ========================================

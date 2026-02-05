@@ -1,7 +1,7 @@
 (import-macros {: lz-package! : vim-pack-spec!} :macros)
 
 (lz-package! :akinsho/bufferline.nvim
-              {:after ui.tabs
+              {:nyoom-module ui.tabs
                :opt true
                :setup (fn []
                         (vim.api.nvim_create_autocmd [:BufAdd :TabEnter]

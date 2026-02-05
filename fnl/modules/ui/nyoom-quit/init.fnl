@@ -1,3 +1,3 @@
-(import-macros {: nyoom-module!} :macros)
+(import-macros {: fake-module!} :macros)
 
-(nyoom-module! ui.nyoom-quit)
+(fake-module! ui.nyoom-quit)
