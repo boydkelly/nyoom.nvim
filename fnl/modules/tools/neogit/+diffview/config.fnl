@@ -2,6 +2,7 @@
 (local {: autoload} (require :core.lib.autoload))
 (local actions (autoload :diffview.actions))
 
+
 (setup :diffview
        {:diff_binaries false
         :enhanced_diff_hl true
@@ -11,11 +12,13 @@
         :signs {:fold_closed "" :fold_open ""}
         :view {:merge_tool {:layout :diff3_mixed :disable_diagnostics true}}
         :file_panel {:listing_style :tree
+                     :log_options {:git {:single_file {:diff_merges :combined}
+                                         :multi_file {:diff_merges :first-parent}}}
                      :tree_options {:flatten_dirs true
                                     :folder_statuses :only_folded}
                      :win_config {:position :left :width 35}}
-        :file_history_panel {:log_options {:single_file {:diff_merges :combined}
-                                           :multi_file {:diff_merges :first-parent}}
+        :file_history_panel {:log_options {:git {:single_file {:diff_merges :combined}
+                                                 :multi_file {:diff_merges :first-parent}}}
                              :win_config {:position :bottom :height 16}}
         :commit_log_panel {:win_config {}}
         :default_args {:DiffviewOpen {} :DiffviewFileHistory {}}
