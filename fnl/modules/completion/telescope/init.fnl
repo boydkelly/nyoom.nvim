@@ -3,7 +3,7 @@
 (lz-package! :nvim-lua/telescope.nvim
               {:nyoom-module completion.telescope
                :module [:telescope]
-               :event :UIEnter
+               :cmd :Telescope
                :requires [(lz-pack! :nvim-telescope/telescope-ui-select.nvim
                                 {:opt true})
                           (lz-pack! :nvim-telescope/telescope-file-browser.nvim

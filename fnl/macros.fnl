@@ -568,12 +568,21 @@
     ;; Fill lz.n spec while filtering out internal/installer keys
     (each [k v (pairs options)]
       (let [k-str (tostring k)]
-        (when (and (not= k-str :after) (not= k-str :nyoom-module)
-                   (not= k-str :setup) (not= k-str :requires)
-                   (not= k-str :config) (not= k-str :call-setup)
-                   (not= k-str :run) (not= k-str :module) (not= k-str :branch)
-                   (not= k-str :version) (not= k-str :opt)
-                   (not= k-str :build-file) (not= k-str :defer) (not= k-str :as))
+        (when (and (not= k-str :after)
+                   (not= k-str :nyoom-module)
+                   (not= k-str :setup)
+                   (not= k-str :requires)
+                   (not= k-str :config)
+                   (not= k-str :call-setup)
+                   (not= k-str :run)
+                   (not= k-str :cmd)
+                   (not= k-str :module)
+                   (not= k-str :branch)
+                   (not= k-str :version)
+                   (not= k-str :opt)
+                   (not= k-str :build-file)
+                   (not= k-str :defer)
+                   (not= k-str :as))
           (let [v-safe (if (sym? v) (->str v) v)]
             (tset spec-kv k v-safe)))))
     (when options.defer (tset spec-kv :event :DeferredUIEnter))
@@ -581,8 +590,8 @@
     (if before-hook (tset spec-kv :before before-hook))
     (if after-hook (tset spec-kv :after after-hook))
     ;; 7. Final Code Generation (Now inside the main let block)
-    (let [final-code `(do
-                        )]
+    (let [final-code `(do)]
+
       (each [_ reg (ipairs req-registrations)] (table.insert final-code reg))
       (when module-name
         (table.insert final-code
@@ -726,12 +735,12 @@
         loadname (string.sub (string.match package "/.+") 2)
         augroup (.. :nyoom-pact- loadname)
         host :github
-        autocmds `(do
-                    )
-        callback `(do
-                    )
-        result `(do
-                  )
+        autocmds `(do)
+
+        callback `(do)
+
+        result `(do)
+
         options (or ?options {})
         options (collect [k v (pairs options)]
                   (match k
