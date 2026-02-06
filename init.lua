@@ -104,13 +104,7 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 	}
 
 	-- Only these specific keys will be injected into _G
-	local runtime_globals = {
-		shared = true,
-		tables = true,
-		fun = true,
-		crypt = true,
-		p_lib = true,
-	}
+	local runtime_globals = {}
 
 	local loaded_libs = {}
 
@@ -123,12 +117,6 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 			_G[key] = module
 		end
 	end
-
-	-- Establish global aliases from loaded libs
-	_G["echo!"] = loaded_libs.io["echo!"]
-	_G["err!"] = loaded_libs.io["err!"]
-	_G.nth = _G.fun.nth
-	_G.deep_merge = _G.tables.deep_merge
 
 	-- ========================================
 	-- 5. Main Logic Compilation
