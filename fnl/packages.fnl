@@ -24,14 +24,13 @@
 (packadd! oxocarbon.nvim)
 (colorscheme oxocarbon)
 
-(include :fnl.modules)
+;; (include :fnl.modules)
 (nyoom-init-modules!)
 
 (lz-unpack!)
 
-(packadd! :plenary.nvim)
-(packadd! :nui.nvim)
-(packadd! :oxocarbon.nvim)
+; (packadd! :plenary.nvim)
+; (packadd! :nui.nvim)
 
 ;; Compile modules
 ; (nyoom-compile-modules!) ;; not ding anything
