@@ -55,7 +55,7 @@ package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
 -- ========================================
 local function safe_compile_file(src, dest)
 	local ok, err = pcall(function()
-		api.compile.file(src, dest, { force = false, verbose = true })
+		api.compile.file(src, dest, { force = false, verbose = false })
 	end)
 	if not ok then
 		print("COMPILE ERROR [" .. src .. "]: " .. tostring(err))
@@ -64,7 +64,7 @@ end
 
 local function safe_compile_dir(src, dest)
 	local ok, err = pcall(function()
-		api.compile.dir(src, dest, { force = false, verbose = true })
+		api.compile.dir(src, dest, { force = false, verbose = false })
 	end)
 	if not ok then
 		print("COMPILE ERROR [" .. src .. "]: " .. tostring(err))
