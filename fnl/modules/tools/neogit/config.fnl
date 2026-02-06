@@ -11,7 +11,7 @@
                         :hunk ["" ""]}
                 :integrations {:diffview true}
                 :sections {:recent {:folded false}}
-                :mappings {:status {:B :BranchPopup}}})
+                })
 
 (augroup! neogit-config (autocmd! FileType Neogit* `(local-set! nolist))
           (autocmd! [FileType BufEnter] NeogitCommitView
