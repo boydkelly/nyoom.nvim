@@ -15,4 +15,3 @@
                          (lz-pack! :LukasPietzschmann/telescope-tabs
                                    {:opt true})
                          (lz-pack! :jvgrootveld/telescope-zoxide {:opt true})]})
-
