@@ -569,17 +569,19 @@
                         (table.insert p options.config))
                       p)
         after-hook (if (> (length after-parts) 0)
-                       `(fn [] ,(unpack after-parts)))
+                       `(fn []
+                          ,(unpack after-parts)
+                          nil)) ;; <--- Add this nil
         ;; 6. Build lz.n spec (spec-kv)
         spec-kv {1 name}]
     ;; Fill lz.n spec while filtering out internal/installer keys
     (each [k v (pairs options)]
       (let [k-str (tostring k)]
-        (when (and (not= k-str :after) (not= k-str :nyoom-module)
+        (when (and (not= k-str :nyoom-modules) (not= k-str :after)
                    (not= k-str :setup) (not= k-str :requires)
                    (not= k-str :config) (not= k-str :call-setup)
-                   (not= k-str :run) (not= k-str :cmd) (not= k-str :module)
-                   (not= k-str :branch) (not= k-str :version) (not= k-str :opt)
+                   (not= k-str :run) (not= k-str :module) (not= k-str :branch)
+                   (not= k-str :version) (not= k-str :opt)
                    (not= k-str :build-file) (not= k-str :defer) (not= k-str :as))
           (let [v-safe (if (sym? v) (->str v) v)]
             (tset spec-kv k v-safe)))))
@@ -1132,4 +1134,3 @@
  : nyoom-module-ensure!
  : nyoom-package-count!
  : nyoom-module-count!}
-

@@ -98,7 +98,7 @@
         ;;calendar           ; Watch your missed deadlines in real time
 
         :config
-        ;;literate           ; FIXME: Disguise your config as poor documentation
+        ;literate           ; FIXME: Disguise your config as poor documentation
         (default             ; Reasonable defaults for reasonable people
           +bindings
           +which-key

@@ -9,4 +9,3 @@
                      [:<leader>oP
                       "<cmd>Neotree %:p:h:h %:p<CR>"
                       {:desc "Find file in project sidebar"}]]})
-

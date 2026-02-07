@@ -3,7 +3,7 @@
 (lz-package! :kyazdani42/nvim-tree.lua
              {:nyoom-module ui.nvimtree
               :module :nvim-tree
-              :event :UIEnter
+              :cmd :NvimTreeToggle
               :keys [[:<leader>op
                       :<cmd>NvimTreeToggle<CR>
                       {:desc "Project sidebar"}]

@@ -10,6 +10,6 @@
         :git {:enable false :ignore true}
         :hijack_directories {:enable true :auto_open true}
         :actions {:open_file {:resize_window true}}
-       :renderer { :indent_markers { :enable false }
+        :renderer { :indent_markers { :enable false }
               :root_folder_label false }}) 
 ; [NvimTree] view.hide_root_folder is deprecated, please set renderer.root_folder_label = false
