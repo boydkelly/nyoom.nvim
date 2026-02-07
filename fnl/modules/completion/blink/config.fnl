@@ -10,8 +10,8 @@
 
 (fn apply-blink-hl []
   (let [blink-hl (vim.api.nvim_get_hl 0 {:link false :name :WarningMsg})]
-    (vim.api.nvim_set_hl 0 :BlinkCmpMenu {:link :Pmenu})
-    (vim.api.nvim_set_hl 0 :BlinkCmpMenuSelection {:link :PmenuShadow})
+    (vim.api.nvim_set_hl 0 :BlinkCmpMenu {:link :NormalFloat})
+    (vim.api.nvim_set_hl 0 :BlinkCmpMenuSelection {:link :FloatShadow})
     (vim.api.nvim_set_hl 0 :BlinkCmpLabelMatch {:bold true :fg blink-hl.fg})
     (vim.api.nvim_set_hl 0 :PmenuKind {:bg blink-hl.fg :fg :NvimDarkGrey1})
     (vim.api.nvim_set_hl 0 :BlinkCmpKind {:bg blink-hl.fg :fg :NvimDarkGrey1})))
@@ -87,53 +87,34 @@
                                                                 item.label)}
                                                 :source_name {:text (fn [ctx]
                                                                       (.. "["
-                                                                          ctx.source_name))}}}}}})
-
-"]"
-
-:width
-
-{:max 10}
-
-:fuzzy
-
-{:implementation :prefer_rust
- :prebuilt_binaries {:download true :force_version :v1.8.0}}
-
-:keymap
-
-{:<CR> [:accept :fallback]
- :<S-Tab> [(fn [cmp]
-             (cmp.select_prev))
-           :snippet_backward
-           :fallback]
- :<Tab> [(fn [cmp]
-           (cmp.select_next))
-         :snippet_forward
-         :fallback]
- :preset :default}
-
-:signature
-
-{:enabled true}
-
-:snippets
-
-{:preset :luasnip}
-
-:sources
-
-{:default [:lsp :path :snippets :buffer :spell :hledger]
- :per_filetype [{:markdown [:snippets :buffer :spell]}
-                {:asciidoc [:snippets :buffer :spell]}
-                {:ledger {1 :hledger :inherit_defaults false}}
-                {:yaml [:lsp :snippets]}]
- :providers {:buffer {:opts {}}
-             :hledger {:module :blink.compat.source
-                       :name :hledger
-                       :opts {}
-                       :score_offset 3}
-             :lsp {:fallbacks [:buffer]}
-             :spell {:module :blink-cmp-spell :name :Spell :opts {}}}}
+                                                                          ctx.source_name
+                                                                          "]"))}}}
+                            :width {:max 10}}}
+        :fuzzy {:implementation :prefer_rust
+                :prebuilt_binaries {:download true :force_version :v1.8.0}}
+        :keymap {:<CR> [:accept :fallback]
+                 :<S-Tab> [(fn [cmp]
+                             (cmp.select_prev))
+                           :snippet_backward
+                           :fallback]
+                 :<Tab> [(fn [cmp]
+                           (cmp.select_next))
+                         :snippet_forward
+                         :fallback]
+                 :preset :default}
+        :signature {:enabled true}
+        :snippets {:preset :luasnip}
+        :sources {:default [:lsp :path :snippets :buffer :spell :hledger]
+                  :per_filetype [{:markdown [:snippets :buffer :spell]}
+                                 {:asciidoc [:snippets :buffer :spell]}
+                                 {:ledger {1 :hledger :inherit_defaults false}}
+                                 {:yaml [:lsp :snippets]}]
+                  :providers {:buffer {:opts {}}
+                              :hledger {:module :blink.compat.source
+                                        :name :hledger
+                                        :opts {}
+                                        :score_offset 3}
+                              :lsp {:fallbacks [:buffer]}
+                              :spell {:module :blink-cmp-spell :name :Spell :opts {}}}}})
 
 (blink.setup opts)

@@ -27,7 +27,7 @@
         vc-gutter            ; Get your diff out of the gutter
         window-select        ; Visually switch windows
         zen                  ; distraction-free coding or writing TODO +twilight
-        ;noice                ; noice ui
+        noice                ; noice ui
 
         :editor
         ;fold                 ; (nigh) universal code folding
