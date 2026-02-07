@@ -28,10 +28,9 @@
 
 ;; sometimes you want to modify a plugin thats loaded from within a module. For
 ;; this you can use the `after` function
-
+(set vim.deprecate (fn []))
 ; (_G.after :neorg
 ;        {:load {:core.dirman {:config {:workspaces {:main "~/neorg"}}}}})
-
 ; new cmd line; incompatible with noice. mutually exclusive
 ((. (require :vim._core.ui2) :enable) {:enable false
                                        :msg {:target :msg :timeout 4000}})
