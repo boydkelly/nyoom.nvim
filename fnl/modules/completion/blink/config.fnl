@@ -10,8 +10,8 @@
 
 (fn apply-blink-hl []
   (let [blink-hl (vim.api.nvim_get_hl 0 {:link false :name :WarningMsg})]
-    (vim.api.nvim_set_hl 0 :BlinkCmpMenu {:link :NormalFloat})
-    (vim.api.nvim_set_hl 0 :BlinkCmpMenuSelection {:link :FloatShadow})
+    (vim.api.nvim_set_hl 0 :BlinkCmpMenu {:link :Pmenu})
+    (vim.api.nvim_set_hl 0 :BlinkCmpMenuSelection {:link :PmenuShadow})
     (vim.api.nvim_set_hl 0 :BlinkCmpLabelMatch {:bold true :fg blink-hl.fg})
     (vim.api.nvim_set_hl 0 :PmenuKind {:bg blink-hl.fg :fg :NvimDarkGrey1})
     (vim.api.nvim_set_hl 0 :BlinkCmpKind {:bg blink-hl.fg :fg :NvimDarkGrey1})))
@@ -89,7 +89,7 @@
                                                                       (.. "["
                                                                           ctx.source_name
                                                                           "]"))}}}
-                            :width {:max 10}}}
+                            :min_width 10}}
         :fuzzy {:implementation :prefer_rust
                 :prebuilt_binaries {:download true :force_version :v1.8.0}}
         :keymap {:<CR> [:accept :fallback]
@@ -104,8 +104,10 @@
                  :preset :default}
         :signature {:enabled true}
         :snippets {:preset :luasnip}
-        :sources {:default [:lsp :path :snippets :buffer :spell :hledger]
+        :sources {:default [:lsp :path :snippets :buffer]
                   :per_filetype [{:markdown [:snippets :buffer :spell]}
+                                 {:neorg [:snippets :buffer :spell]}
+                                 {:org [:snippets :buffer :spell]}
                                  {:asciidoc [:snippets :buffer :spell]}
                                  {:ledger {1 :hledger :inherit_defaults false}}
                                  {:yaml [:lsp :snippets]}]

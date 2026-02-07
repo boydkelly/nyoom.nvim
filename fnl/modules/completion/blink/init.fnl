@@ -1,7 +1,7 @@
 (import-macros {: lz-package! : vim-pack-spec! : lz-pack!} :macros)
 ;; standard completion for neovim
 (lz-package! :L3MON4D3/LuaSnip
-       {:event [:InsertEnter :CmdLineEnter]}
+       {:event [:UIEnter :InsertEnter :CmdLineEnter]}
        :nyoom-module completion.luasnip
        :requires [(lz-pack! :rafamadriz/friendly-snippets)])
 
@@ -16,3 +16,6 @@
                           (lz-pack! :kirasok/cmp-hledger)
                           (lz-pack! :ribru17/blink-cmp-spell)
                           (lz-pack! :saghen/blink.compat)]})
+
+
+
