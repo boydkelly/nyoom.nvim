@@ -1,0 +1,16 @@
+@document.meta
+title: Todo
+description: Stuff to fix in nyoom
+author: Boyd Kelly
+categories: docs
+created: 2026-02-08
+version: 0.1.0
+@end
+
+= TOC
+
+1.  treesitter installs all enabled parsers the first time on any file.
+either a)  put treesittter install in the nyoom install script.
+and/or fix the config to only install parser for file opened
+
+2. Blink is no longer finding luasnip and lspkind

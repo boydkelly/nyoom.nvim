@@ -18,21 +18,23 @@
 (set _G.nyoom/specs [])
 (set _G.nyoom/modules [])
 
+;; could be added to a general dependencies layer; or just added to telescope etc.
 (vim-pack-spec! :nvim-lua/plenary.nvim)
 (vim-pack-spec! :MunifTanjim/nui.nvim)
 (vim-pack-spec! :nyoom-engineering/oxocarbon.nvim)
-(packadd! oxocarbon.nvim)
-(colorscheme oxocarbon)
 
-;; (include :fnl.modules)
+(lz-unpack!) ;; install the stuff
+;;
+;; (include :fnl.modules) --not needed, it just works
 (nyoom-init-modules!)
-
-(lz-unpack!)
 
 ; (packadd! :plenary.nvim)
 ; (packadd! :nui.nvim)
 
 ;; Compile modules
-; (nyoom-compile-modules!) ;; not ding anything
+; (nyoom-compile-modules!) ;; not ding anything... it just works
 
 (lz-load!)
+;; oxocarbon could either be added to core install with tangerine and lz.n or as a regular module
+(packadd! oxocarbon.nvim)
+(colorscheme oxocarbon)

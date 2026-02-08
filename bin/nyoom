@@ -1,19 +1,15 @@
 #!/usr/bin/env bash
 
 set -o errexit -o pipefail -o nounset
-
-PACKER_COMMIT=90f794d01dd5f50404f8ef6e1d22377ba5180787
-HOTPOT_COMMIT=9fd5d6e341861c776ec9c69a2fc524deae67b541
-COMMIT_DATE="${COMMIT_DATE:-2023-06-01}"
-
-git config --global advice.detachedHead false
-
 # people like xdg
 NVIM_APPNAME="${NVIM_APPNAME:-nvim}"
+NVIM_APPNAME=nvim-nyoom
 CONFIG_PATH="${XDG_CONFIG_HOME:-${HOME}/.config}/${NVIM_APPNAME}"
 CACHE_PATH="${XDG_CACHE_HOME:-${HOME}/.cache}/${NVIM_APPNAME}"
 DATA_PATH="${XDG_DATA_HOME:-${HOME}/.local/share}/${NVIM_APPNAME}"
 NYOOM_CONFIG="${XDG_DATA_HOME:-${HOME}/.config}/nyoom"
+export NYOOM_CLI=true
+echo $NYOOM_CONFIG
 
 NYOOM_CURRENT_DIR_REAL=$(realpath "$(pwd)")
 NYOOM_BASENAME=$(basename "$NYOOM_CURRENT_DIR_REAL")
@@ -55,25 +51,9 @@ function install_nyoom() {
     printf "\n\033[1m\033[32mSuccessfully Linked Nyoom Configs\033[0m\n\n"
   fi
   printf "Installing Core Dependencies..."
-  rm -rf "${DATA_PATH}/site/pack"
-  # git clone -q -b feat/lockfile --single-branch https://github.com/EdenEast/packer.nvim "${DATA_PATH}/site/pack/packer/opt/packer.nvim"
-  nvim --headless -c 'lua vim.pack.add({"https://github.com/udayvir-singh/tangerine.nvim"})' +qa,
-  # 2. Add lz.n and Treesitter (without immediate start)
-  #nvim --headless -c 'lua vim.pack.add({"https://github.com/nvim-neorocks/lz.n", "https://github.com/nvim-treesitter/nvim-treesitter"})' +qa
+  rm -rfv "${DATA_PATH}/site/pack"
+  nvim --headless -c 'lua vim.pack.add({"https://github.com/udayvir-singh/tangerine.nvim","https://github.com/nvim-neorocks/lz.n" })' +qa
 
-  # git clone https://github.com/wbthomason/packer.nvim "${DATA_PATH}/site/pack/packer/opt/packer.nvim"
-  # COMMIT=$(git -C "$nyoom"/config/${NVIM_APPNAME:-nvim} rev-list -n 1 --before=${COMMIT_DATE} --first-parent HEAD)
-  # git -C "${DATA_PATH}/site/pack/packer/opt/packer.nvim" checkout ${COMMIT}
-  # #-b nyoom
-  # git clone https://github.com/rktjmp/hotpot.nvim.git "${DATA_PATH}/site/pack/packer/start/hotpot.nvim"
-  # COMMIT=$(git -C "$nyoom"/config/${NVIM_APPNAME:-nvim} rev-list -n 1 --before=${COMMIT_DATE} --first-parent HEAD)
-  # # commit feb 14, 2023   No changes till sept
-  # git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout ${COMMIT}
-  #-b nyoom
-  ## git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout v0.6.0
-
-  # git clone --depth 1 https://github.com/wbthomason/packer.nvim "${DATA_PATH}/site/pack/packer/opt/packer.nvim"
-  # git clone --depth 1 https://github.com/rktjmp/hotpot.nvim.git "${DATA_PATH}/site/pack/packer/start/hotpot.nvim"
   printf "\n\033[1m\033[32mSuccessfully Installed Core Dependencies\033[0m\n\n"
 }
 
@@ -95,11 +75,13 @@ case "${1:-}" in
 help)
   help
   ;;
+status)
+  print_nyoom_status
+  ;;
 install)
-  # force installl for now
-  rm -rf "${DATA_PATH}/site/pack"
-
-  if [ -d "${DATA_PATH}/site/pack/packer/opt/packer.nvim/" ]; then
+  # test force installl for now
+  #rm -rf "${DATA_PATH}/site/pack"
+  if [ -d "${DATA_PATH}/site/pack/core/opt/tangerine.nvim" ] && [ -d "${DATA_PATH}/site/pack/core/opt/lz.n" ]; then
     printf "\n\033[1m\033[32mCore Dependencies are Already Installed\033[0m\n"
   else
     install_nyoom
@@ -110,24 +92,15 @@ sync)
   printf "Synchronizing your config with Nyoom Nvim\n\n"
   print_nyoom_status
   # if [ -e "${CONFIG_PATH}/lockfile.lua" ]; then
-  if [ ! -d "${DATA_PATH}/site/pack/packer/opt/packer.nvim/" ]; then
+  if [ ! -d "${DATA_PATH}/site/pack/core/opt/tangerine.nvim" ] || [ ! -d "${DATA_PATH}/site/pack/core/opt/lz.n" ]; then
     printf "Core Dependencies Unavailable, running 'nyoom install'\n"
     install_nyoom
   fi
   printf "Clearing cache"
-  rm -rf "${CACHE_PATH}"
-  rm -f "${CONFIG_PATH}/lua/packer_compiled.lua" || true
-  # set ulimit to fix packer.sync hanging with --headless: https://github.com/wbthomason/packer.nvim/issues/751
-  ulimit -S -n 4096
-  NYOOM_CLI=true NVIM_APPNAME=$NVIM_APPNAME nvim --headless -c 'autocmd User PackerComplete quitall' -c 'lua require("packer").sync()'
-  COMMIT=$(git -C "$nyoom"/config/${NVIM_APPNAME:-nvim} rev-list -n 1 --before=${COMMIT_DATE} --first-parent HEAD)
+  #rm -f "${CONFIG_PATH}/lua/packer_compiled.lua" || true
 
-  git -C "${DATA_PATH}/site/pack/packer/opt/packer.nvim" checkout ${COMMIT}
-  #-b nyoom
-  ## git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout v0.6.0
-  COMMIT=$(git -C "$nyoom"/config/${NVIM_APPNAME:-nvim} rev-list -n 1 --before=${COMMIT_DATE} --first-parent HEAD)
+  NYOOM_CLI=true NVIM_APPNAME=$NVIM_APPNAME nvim --headless -c 'lua vim.pack.update()' +qa
 
-  git -C "${DATA_PATH}/site/pack/packer/start/hotpot.nvim" checkout ${COMMIT}
   #-b nyoom
 
   echo
@@ -139,13 +112,13 @@ sync)
       printf "\nSyncing Tree-sitter Parsers (this may take a while)\n"
       # upstream bug?
       # nvim --headless -c 'TSUpdate' -c 'sleep 20' -c 'qall'
-      nvim --headless -c 'TSUpdateSync' -c 'qall'
+      # nvim --headless -c 'TSUpdateSync' -c 'qall'
       printf "\n\033[1m\033[36mNyoom successfully synced parsers in $(expr $(date +%s) - $ts_time)s\033[0m\n"
     fi
   else
     printf "\nTree-sitter module disabled: skipping"
   fi
-  if [ -d "${DATA_PATH}/site/pack/packer/opt/mason.nvim/" ]; then
+  if [ -d "${DATA_PATH}/site/pack/core/opt/mason.nvim/" ]; then
     echo
     read -p "Would you like to sync tooling for enabled modules through Mason (language-servers, formatters, and linters)? y/n: " -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then

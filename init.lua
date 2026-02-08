@@ -2,15 +2,40 @@
 -- 1. Plugin Management (Bootstrap)
 -- ========================================
 
--- ========================================
+local dev = false
+local data_path = vim.fn.stdpath("data")
+local tangerine_path = data_path .. "/site/pack/core/opt/tangerine.nvim"
+local lz_path = data_path .. "/site/pack/core/opt/lz.n"
+
+-- 1. Check if core dependencies are missing on disk
+-- fs_stat returns information about the path, or nil if it doesn't exist
+local bootstrap_exists = (vim.loop.fs_stat(tangerine_path) and vim.loop.fs_stat(lz_path))
+
+-- 3. The Guard Logic
+-- If missing AND not in CLI mode, block execution
+if not bootstrap_exists then
+	-- either install or make user run install script.
+	vim.pack.add({
+		{ src = "https://github.com/nvim-neorocks/lz.n" },
+		{ src = "https://github.com/udayvir-singh/tangerine.nvim" },
+	})
+	dev = true -- to force package install below
+	-- or
+	-- vim.api.nvim_err_writeln("\nError: Core Dependencies Unavailable\nPlease install with: bin/nyoom install\n")
+	--
+	--     return vim.cmd("qall!")
+end
+dev = true
+-- 4. Proceed with your setup if we passed the check
+-- ========================================t
 -- 2. Tangerine & Fennel Configuration
 -- ========================================
 
 -- Set up paths and move to config root for 'include' resolution
 -- vim.cmd.cd(vim.fn.stdpath("config"))
 local fnl_dir = vim.fn.stdpath("config") .. "/fnl"
-local lua_dir = vim.fn.stdpath("config") .. "/lua"
-
+local lua_dir = vim.fn.stdpath("config") .. "/.nyoom"
+--  the lua_dir can go into the .cache like hotpot, but i have it in ~.config/nvim-nyoom for easy access
 -- 1. Check native Lua first (Fastest)
 local function file_exists(path)
 	local f = io.open(path, "r")
@@ -22,16 +47,10 @@ local function file_exists(path)
 	end
 end
 
-local dev = false
 local core_exists = file_exists(lua_dir .. "/core/init.lua")
 
 -- 2. Only check environment variables if we aren't sure yet
 if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
-	vim.pack.add({
-		{ src = "https://github.com/nvim-neorocks/lz.n" },
-		{ src = "https://github.com/udayvir-singh/tangerine.nvim" },
-	})
-
 	vim.cmd.packadd("tangerine.nvim")
 
 	local api = require("tangerine.api")
@@ -39,7 +58,7 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 	-- fennel["allowed-globals"] = nyoom_globals
 
 	fennel.path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. (fennel.path or "")
-	fennel["macro-path"] = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/macros-macros/?.fnl;" .. (fennel["macro-path"] or "")
+	fennel["macro-path"] = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/macros/?.fnl;" .. (fennel["macro-path"] or "")
 	package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
 	--
 	--
@@ -68,6 +87,7 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 	-- Compiles and requires libraries immediately for use in the bootstrap phase
 
 	local function bootstrap_corelib(name)
+		-- print(name)
 		local src = fnl_dir .. "/core/lib/" .. name .. ".fnl"
 		local dest = lua_dir .. "/core/lib/" .. name .. ".lua"
 
@@ -84,6 +104,7 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 	end
 
 	-- Compile macros first so core libs can use them
+	-- if we try to compile this as a file it causes an error...  but works as a dir. go figure
 	safe_compile_dir(fnl_dir .. "/macros", lua_dir .. "/macros")
 
 	_G.nyoom = {}
@@ -104,7 +125,7 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 	}
 
 	-- Only these specific keys will be injected into _G
-	local runtime_globals = {}
+	local runtime_globals = { shared = true }
 
 	local loaded_libs = {}
 
@@ -151,6 +172,6 @@ end
 vim.cmd.packadd("lz.n") -- for now
 local ok, err = pcall(require, "nyoom")
 if not ok then
-	print("NYOOM: Handoff failed!")
+	print("NYOOM: Fennel handoff failed!")
 	print(err)
 end

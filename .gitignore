@@ -1,7 +1,7 @@
 nvim-pack-lock.json
 # neovim
+.nyoom
 .compiled
-lua/
 profile.json
 
 # cli
