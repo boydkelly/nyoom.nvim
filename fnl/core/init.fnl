@@ -8,7 +8,7 @@
 
 ;; add userconfig to runtimepath
 
-(set! rtp+ (.. (vim.loop.os_homedir) :/.config/nyoom))
+(set! rtp+ (.. (vim.uv.os_homedir) :/.config/nyoom))
 
 ;; add python provider and mason binaries
 
@@ -25,6 +25,7 @@
 
 ;; If its a cli instance, load package management
 ;; If its a regular instance, load defaults, userconfig and plugins
+;; and package management
 (if (not cli)
     (do
       ; (print "set options")

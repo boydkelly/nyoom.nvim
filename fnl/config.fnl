@@ -31,6 +31,7 @@
 (set vim.deprecate (fn []))
 ; (_G.after :neorg
 ;        {:load {:core.dirman {:config {:workspaces {:main "~/neorg"}}}}})
-; new cmd line; incompatible with noice. mutually exclusive
-((. (require :vim._core.ui2) :enable) {:enable true 
+;
+; new cmd line; noice config disables this after startup...   Best of both.
+((. (require :vim._core.ui2) :enable) {:enable true
                                        :msg {:target :msg :timeout 4000}})
