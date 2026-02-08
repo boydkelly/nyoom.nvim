@@ -2,6 +2,7 @@
 (global module :blink.cmp)
 (local (ok blink) (pcall require module))
 (packadd! blink-cmp-spell)
+(packadd! lspkind)
 (packadd! luasnip)
 
 (when (not ok)

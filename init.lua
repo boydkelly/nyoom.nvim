@@ -2,6 +2,8 @@
 -- 1. Plugin Management (Bootstrap)
 -- ========================================
 
+--  just testing a few install scenarios with nyoom install/sync
+-- set dev true below to force compile on start
 local dev = false
 local data_path = vim.fn.stdpath("data")
 local tangerine_path = data_path .. "/site/pack/core/opt/tangerine.nvim"

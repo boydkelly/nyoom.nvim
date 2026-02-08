@@ -23,10 +23,10 @@
 (vim-pack-spec! :MunifTanjim/nui.nvim)
 (vim-pack-spec! :nyoom-engineering/oxocarbon.nvim)
 
-(lz-unpack!) ;; install the stuff
 ;;
 ;; (include :fnl.modules) --not needed, it just works
 (nyoom-init-modules!)
+(lz-unpack!) ;; install the stuff
 
 ; (packadd! :plenary.nvim)
 ; (packadd! :nui.nvim)
