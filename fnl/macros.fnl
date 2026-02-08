@@ -475,7 +475,6 @@
 ;   (table.insert _G.nyoom/pack (pack identifier ?options)))
 
 ;; Macro: vim-pack-spec!
-
 (lambda vim-pack-spec! [identifier ?options]
   "Native package spec. Supports full URLs (GitLab/SourceHut) or GitHub shortcuts."
   (let [;; 1. Determine the URL
@@ -484,7 +483,8 @@
                 (.. "https://github.com/" identifier))
         ;; 2. Extract the name
         raw-name (url:match ".*/([^/.-]+)%.?g?i?t?$")
-        name (or raw-name (url:match ".*/(.*)$"))
+        ;; ADD :lower() here
+        name (let [n (or raw-name (url:match ".*/(.*)$"))] (n:lower))
         spec {:src url : name}]
     ;; 3. Check for version OR branch
     (when (table? ?options)
@@ -493,10 +493,11 @@
           (set spec.version ver))))
     `(table.insert _G.nyoom/pack ,spec)))
 
-;; 1. The Dependency Agent
 (lambda lz-pack! [identifier ?options]
   (let [options (or ?options {})
-        name (or options.as (identifier:match ".*/(.*)") identifier)]
+        raw-name (or options.as (identifier:match ".*/(.*)") identifier)
+        ;; ADD :lower() here
+        name (raw-name:lower)]
     ;; Return a table that lz-package! can destructure
     {: name :reg (vim-pack-spec! identifier options)}))
 
