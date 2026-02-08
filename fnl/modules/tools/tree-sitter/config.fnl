@@ -8,6 +8,7 @@
                 : custom-set-face!
                 : augroup!
                 : autocmd!
+                : command!
                 : clear!} :macros)
 
 ;; Conditionally enable leap-ast
@@ -54,7 +55,7 @@
 
 (nyoom-module-p! nix (table.insert treesitter-filetypes :nix))
 
-(nyoom-module-p! org (table.insert treesitter-filetypes :org))
+; (nyoom-module-p! org (table.insert treesitter-filetypes :org))
 
 (nyoom-module-p! python (table.insert treesitter-filetypes :python))
 
@@ -85,7 +86,7 @@
                    (table.insert treesitter-filetypes :gitattributes)
                    (table.insert treesitter-filetypes :gitcommit)))
 
-;; (table.insert treesitter-filetypes :gitignore)))
+;; (table.insert treesitter-filetypes :gitignore)
 
 ;   (nyoom-module-p! neorg
 ;     (do
@@ -98,11 +99,23 @@
 ;; the unusual
 ;; this is a noop if it already installed
 ;; (vim.notify "NYOOM: installing treesitter parsers" vim.log.levels.INFO)
-(let [ts (require :nvim-treesitter)]
-  (ts.install treesitter-filetypes)
-  (let [job (ts.install treesitter-filetypes)]
-    (when job
-      (job:wait 300000))))
+
+(fn ts-install []
+  (let [languages (table.concat treesitter-filetypes " ")]
+    (vim.cmd (.. "TSInstall! " languages))))
+
+(fn ts-sync []
+  (let [ts-install (require :nvim-treesitter.install)]
+    (let [job (ts-install.install treesitter-filetypes)]
+      (if (= (type job) :table)
+          (do
+            (print "Nyoom: Compiling parsers (this will block Neovim to prevent a crash)...")
+            (job:wait 300000)
+            (print "Nyoom: Sync finished."))
+          (print "Nyoom: All parsers are already up to date.")))))
+
+(command! TSSync `(ts-sync)
+          {:desc "Sync all parsers defined in config"})
 
 (augroup! treesitter-setup (clear!)
           (autocmd! [FileType] *

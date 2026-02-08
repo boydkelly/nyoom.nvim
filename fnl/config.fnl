@@ -32,5 +32,5 @@
 ; (_G.after :neorg
 ;        {:load {:core.dirman {:config {:workspaces {:main "~/neorg"}}}}})
 ; new cmd line; incompatible with noice. mutually exclusive
-((. (require :vim._core.ui2) :enable) {:enable false
+((. (require :vim._core.ui2) :enable) {:enable true 
                                        :msg {:target :msg :timeout 4000}})

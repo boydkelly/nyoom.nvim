@@ -60,7 +60,7 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 	-- fennel["allowed-globals"] = nyoom_globals
 
 	fennel.path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. (fennel.path or "")
-	fennel["macro-path"] = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/macros/?.fnl;" .. (fennel["macro-path"] or "")
+	fennel["macro-path"] = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/macros-macros/?.fnl;" .. (fennel["macro-path"] or "")
 	package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
 	--
 	--

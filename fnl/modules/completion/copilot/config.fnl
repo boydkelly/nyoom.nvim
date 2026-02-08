@@ -4,4 +4,7 @@
 ; (nyoom-module-ensure! cmp)
 ; (nyoom-module-ensure! lsp)
 
-(setup :copilot {:cmp {:enabled true}})
+(setup :copilot {:cmp {:enabled true}
+       :panel {:enabled false}
+                 :suggestion {:enabled false}
+})
