@@ -4,7 +4,7 @@
 
 --  just testing a few install scenarios with nyoom install/sync
 -- set dev true below to force compile on start
-local dev = false
+local dev = true
 local data_path = vim.fn.stdpath("data")
 local tangerine_path = data_path .. "/site/pack/core/opt/tangerine.nvim"
 local lz_path = data_path .. "/site/pack/core/opt/lz.n"
@@ -27,7 +27,6 @@ if not bootstrap_exists then
 	--
 	--     return vim.cmd("qall!")
 end
-dev = true
 -- ========================================t
 -- 2. Tangerine & Fennel Configuration
 -- ========================================
@@ -42,16 +41,17 @@ local lua_dir = vim.fn.stdpath("config") .. "/.nyoom"
 local core_exists = vim.uv.fs_stat(lua_dir .. "/core/init.lua")
 
 -- 2. Only check environment variables if we aren't sure yet
+vim.cmd.packadd("tangerine.nvim")
+
+local api = require("tangerine.api")
+local fennel = require("tangerine.fennel")
+-- fennel["allowed-globals"] = nyoom_globals
+
+fennel.path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. (fennel.path or "")
+fennel["macro-path"] = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/macros-macros/?.fnl;" .. (fennel["macro-path"] or "")
+package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
+
 if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
-	vim.cmd.packadd("tangerine.nvim")
-
-	local api = require("tangerine.api")
-	local fennel = require("tangerine.fennel")
-	-- fennel["allowed-globals"] = nyoom_globals
-
-	fennel.path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. (fennel.path or "")
-	fennel["macro-path"] = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/macros-macros/?.fnl;" .. (fennel["macro-path"] or "")
-	package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
 	--
 	--
 	local function safe_compile_file(src, dest)
