@@ -2,9 +2,10 @@
 (local {: setup} (require :core.lib.setup))
 (local shared (require :core.lib.shared))
 (import-macros {: set! : nyoom-module-p! : packadd!} :macros)
-(local cmp (autoload :cmp))
+;(packadd! nvim-cmp)
+;(local cmp (autoload :nvim-cmp))
+(local cmp (require :cmp))
 (local luasnip (autoload :luasnip))
-
 ;; vim settings
 
 (set! completeopt [:menu :menuone :noselect])
@@ -44,8 +45,7 @@
                                                               true)
                                   1) :sub col
                                col) :match "%s") nil))))
-
-(setup :cmp {:experimental {:ghost_text true}
+(cmp.setup {:experimental {:ghost_text true}
              :window {:documentation {:border :solid}
                       :completion {:col_offset (- 3)
                                    :side_padding 0
