@@ -555,24 +555,36 @@
                        p)
         before-hook (if (> (length before-parts) 0)
                         `(fn [] ,(unpack before-parts)))
+ ;; 5. Hook Construction
+;; 5. Hook Construction
         after-parts (let [p []]
-                      (when module-name
-                        (table.insert p
-                                      `(include ,(.. :modules. module-name
-                                                     :.config))))
-                      (when setup-plugin
-                        (table.insert p
-                                      `(let [al# (require :core.lib.autoload)
-                                             setup-lib# (al#.autoload :core.lib.setup)]
-                                         (setup-lib#.setup ,setup-plugin {}))))
-                      (when options.config
-                        (table.insert p options.config))
-                      p)
+              ;; 1. Handle Nyoom Module Include (nyoom-module/after)
+              (when module-name
+                (table.insert p `(require ,(.. :modules. module-name :.config))))
+
+              ;; 2. Handle setup-plugin
+              (when setup-plugin
+                (table.insert p `(let [al# (require :core.lib.autoload)
+                                       setup-lib# (al#.autoload :core.lib.setup)]
+                                   (setup-lib#.setup ,setup-plugin {}))))
+
+              ;; 3. Handle :config (Always force modules. prefix)
+              (when options.config
+                (let [cfg (->str options.config)]
+                  (table.insert p `(require ,(.. :modules. cfg)))))
+
+              ;; 4. Handle :after (Always force modules. prefix)
+              (when (and options.after (not= (->str options.after) module-name))
+                (let [aft (->str options.after)]
+                  (table.insert p `(require ,(.. :modules. aft)))))
+              p)
+
+;; The wrapper function logic
         after-hook (if (> (length after-parts) 0)
-                       `(fn []
-                          ,(unpack after-parts)
-                          nil)) ;; <--- Add this nil
-        ;; 6. Build lz.n spec (spec-kv)
+               `(fn []
+                  (do ,(unpack after-parts))
+                  nil))
+
         spec-kv {1 name}]
     ;; Fill lz.n spec while filtering out internal/installer keys
     (each [k v (pairs options)]

@@ -142,7 +142,6 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 		{ fnl_dir .. "/modules.fnl", lua_dir .. "/modules.lua" },
 		{ fnl_dir .. "/config.fnl", lua_dir .. "/config.lua" },
 		{ fnl_dir .. "/packages.fnl", lua_dir .. "/packages.lua" },
-		{ fnl_dir .. "/utils/pluginspecs.fnl", lua_dir .. "/utils/pluginspecs.lua" },
 	}
 
 	local modules = {
