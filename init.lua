@@ -11,8 +11,8 @@ local lz_path = data_path .. "/site/pack/core/opt/lz.n"
 
 -- 1. Check if core dependencies are missing on disk
 -- fs_stat returns information about the path, or nil if it doesn't exist
-local bootstrap_exists = (vim.loop.fs_stat(tangerine_path) and vim.loop.fs_stat(lz_path))
-
+-- Modern Neovim (0.10+) style
+local bootstrap_exists = vim.uv.fs_stat(tangerine_path) and vim.uv.fs_stat(lz_path)
 -- 3. The Guard Logic
 -- If missing AND not in CLI mode, block execution
 if not bootstrap_exists then
@@ -28,7 +28,6 @@ if not bootstrap_exists then
 	--     return vim.cmd("qall!")
 end
 dev = true
--- 4. Proceed with your setup if we passed the check
 -- ========================================t
 -- 2. Tangerine & Fennel Configuration
 -- ========================================
@@ -39,17 +38,8 @@ local fnl_dir = vim.fn.stdpath("config") .. "/fnl"
 local lua_dir = vim.fn.stdpath("config") .. "/.nyoom"
 --  the lua_dir can go into the .cache like hotpot, but i have it in ~.config/nvim-nyoom for easy access
 -- 1. Check native Lua first (Fastest)
-local function file_exists(path)
-	local f = io.open(path, "r")
-	if f then
-		f:close()
-		return true
-	else
-		return false
-	end
-end
 
-local core_exists = file_exists(lua_dir .. "/core/init.lua")
+local core_exists = vim.uv.fs_stat(lua_dir .. "/core/init.lua")
 
 -- 2. Only check environment variables if we aren't sure yet
 if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
