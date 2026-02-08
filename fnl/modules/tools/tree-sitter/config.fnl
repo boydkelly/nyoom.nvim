@@ -114,7 +114,7 @@
             (print "Nyoom: Sync finished."))
           (print "Nyoom: All parsers are already up to date.")))))
 
-(command! TSSync `(ts-sync)
+(command! TSUpdateSync `(ts-sync)
           {:desc "Sync all parsers defined in config"})
 
 (augroup! treesitter-setup (clear!)
