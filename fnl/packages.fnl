@@ -22,8 +22,6 @@
 (vim-pack-spec! :nvim-lua/plenary.nvim)
 (vim-pack-spec! :MunifTanjim/nui.nvim)
 (vim-pack-spec! :nyoom-engineering/oxocarbon.nvim)
-(packadd! :plenary.nvim)
-(packadd! :nui.nvim)
 
 ;;
 ;; (include :fnl.modules) --not needed, it just works
@@ -38,5 +36,7 @@
 
 (lz-load!)
 ;; oxocarbon could either be added to core install with tangerine and lz.n or as a regular module
+(packadd! :plenary.nvim)
+(packadd! :nui.nvim)
 (packadd! oxocarbon.nvim)
 (colorscheme oxocarbon)

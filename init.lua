@@ -10,12 +10,11 @@ local tangerine_path = data_path .. "/site/pack/core/opt/tangerine.nvim"
 local lz_path = data_path .. "/site/pack/core/opt/lz.n"
 
 -- 1. Check if core dependencies are missing on disk
--- fs_stat returns information about the path, or nil if it doesn't exist
--- Modern Neovim (0.10+) style
-local bootstrap_exists = vim.uv.fs_stat(tangerine_path) and vim.uv.fs_stat(lz_path)
+local bootstrap_ok = vim.uv.fs_stat(tangerine_path) and vim.uv.fs_stat(lz_path)
+--
 -- 3. The Guard Logic
 -- If missing AND not in CLI mode, block execution
-if not bootstrap_exists then
+if not bootstrap_ok then
 	-- either install or make user run install script.
 	vim.pack.add({
 		{ src = "https://github.com/nvim-neorocks/lz.n" },
