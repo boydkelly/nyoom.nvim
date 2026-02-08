@@ -80,7 +80,7 @@ status)
   ;;
 install)
   # test force installl for now
-  #rm -rf "${DATA_PATH}/site/pack"
+  rm -rf "${DATA_PATH}/site/pack/core/opt"
   if [ -d "${DATA_PATH}/site/pack/core/opt/tangerine.nvim" ] && [ -d "${DATA_PATH}/site/pack/core/opt/lz.n" ]; then
     printf "\n\033[1m\033[32mCore Dependencies are Already Installed\033[0m\n"
   else
@@ -91,12 +91,11 @@ sync)
   start_time=$(date +%s)
   printf "Synchronizing your config with Nyoom Nvim\n\n"
   print_nyoom_status
-  # if [ -e "${CONFIG_PATH}/lockfile.lua" ]; then
   if [ ! -d "${DATA_PATH}/site/pack/core/opt/tangerine.nvim" ] || [ ! -d "${DATA_PATH}/site/pack/core/opt/lz.n" ]; then
     printf "Core Dependencies Unavailable, running 'nyoom install'\n"
     install_nyoom
   fi
-  printf "Clearing cache"
+  # printf "Clearing cache"
   #rm -f "${CONFIG_PATH}/lua/packer_compiled.lua" || true
 
   NYOOM_CLI=true NVIM_APPNAME=$NVIM_APPNAME nvim --headless -c 'lua vim.pack.update()' +qa
@@ -104,15 +103,13 @@ sync)
   #-b nyoom
 
   echo
-  if [ -d "${DATA_PATH}/site/pack/packer/opt/nvim-treesitter/" ]; then
+  if [ -d "${DATA_PATH}/site/pack/core/opt/nvim-treesitter/" ]; then
     echo
     read -p "Would you like to sync tree-sitter parsers for enabled modules? y/n: " -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then
       ts_time=$(date +%s)
       printf "\nSyncing Tree-sitter Parsers (this may take a while)\n"
-      # upstream bug?
-      # nvim --headless -c 'TSUpdate' -c 'sleep 20' -c 'qall'
-      # nvim --headless -c 'TSUpdateSync' -c 'qall'
+      nvim --headless -c 'TSUpdateSync' -c 'qall'
       printf "\n\033[1m\033[36mNyoom successfully synced parsers in $(expr $(date +%s) - $ts_time)s\033[0m\n"
     fi
   else
@@ -137,16 +134,10 @@ sync)
   # fi
   ;;
 lock)
-  if [ -e "${CONFIG_PATH}/lua/packer_compiled.lua" ]; then
-    start_time=$(date +%s)
-    printf "\nGenerating lockfile with Nyoom Nvim\n\n"
-    print_nyoom_status
-    printf "Compiling lockfile"
-    NYOOM_CLI=true nvim --headless -c 'autocmd User PackerLockfileDone quitall' -c 'lua require("packer").lockfile()'
-    printf "\n\033[1m\033[32mNyoom successfully generated lockfile in $(expr $(date +%s) - $start_time)s\033[0m\n\n"
+  if [ -e "${CONFIG_PATH}/lua/nvim-pack-lock.lua" ]; then
+    true
   else
-    printf "\n\033[31mError: Compiled plugins not available. Please first run 'nyoom sync'\033[0m\n"
-    printf "\n\033[1m\033[32mUpdate Aborted\033[0m\n\n"
+    false
   fi
   ;;
 upgrade)
