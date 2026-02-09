@@ -1,7 +1,7 @@
 (local {: setup} (require :core.lib.setup))
 (local {: truncate} (require :core.lib))
 
-(import-macros {: nyoom-package-count! : nyoom-module-count!} :macros)
+(import-macros {: nyoom-package-count! : nyoom-module-count! : nyoom-module-p! : map!} :macros)
 
 (local package-counter (nyoom-package-count!))
 (local module-counter (nyoom-module-count!))
@@ -15,6 +15,12 @@
 (local startup-time (or (and startup-time-file
                              (tonumber (startup-time-file:match startup-time-pattern)))
                         nil))
+
+(fn open-project []
+(nyoom-module-p! telescope)
+  (if (nyoom-module-p! project)
+      (vim.cmd :ProjectRecents)
+      (vim.cmd "Telescope project")))
 
 (var text "")
 (if (and startup-time (>= startup-time 1000))
@@ -74,6 +80,7 @@
                        "\\   _-'                                                                                    `-_   /"
                        " `''                                                                                          ``' "]
                  :opts {:position :center :hl :Comment}}
+
         :buttons {:type :group
                   :val [(button "SPC q l" "  Reload last session"
                                 ":Telescope find_files <CR>")
@@ -81,7 +88,7 @@
                                 ":Telescope oldfiles<CR>")
                         (button "SPC f r" "  Recently opened files"
                                 ":Telescope oldfiles<CR>")
-                        (button "SPC p p" "  Open project" ":<CR>")
+                        (button "SPC p p" "  Open project" (fn [] (open-project)))
                         (button "SPC RET" "  Jump to bookmark"
                                 ":Telescope marks<CR>")
                         (button "SPC f P" "  Open private configuration"
@@ -106,4 +113,3 @@
                         sections.footer
                         {:type :padding :val 1}
                         sections.icon]})
-

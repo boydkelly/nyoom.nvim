@@ -33,8 +33,8 @@
                     vim.diagnostic.severity.WARN  shared.icons.warn
                     vim.diagnostic.severity.INFO  shared.icons.info
                     vim.diagnostic.severity.HINT  shared.icons.hint}}
-     :virtual_lines true
-     :virtual_text true
+     :virtual_lines false
+     :virtual_text false
      :float {:show_header false
              :source true}
      :update_in_insert false

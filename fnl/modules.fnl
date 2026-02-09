@@ -58,7 +58,7 @@
         pastebin             ; interacting with pastebin platforms
         lsp                  ; :vscode
         (jj +diffview)       ; rewrite history like it never happened
-
+        project
         (neogit              ; a git porclain for neovim
           +forge             ; Wield git like a wizard
           +diffview)         ; a git diff view for neovim

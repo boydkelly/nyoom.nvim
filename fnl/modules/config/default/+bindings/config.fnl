@@ -86,13 +86,15 @@
 (map! [n] "<leader><tab>]" :<cmd>tabp<CR> {:desc "Next tab"})
 (map! [n] "<leader><tab>`" "<cmd>tabn#<CR>" {:desc "Switch to last tab"})
 (map! [n] :<leader><tab>d :<cmd>tabclose<CR> {:desc "Delete this tab"})
-
-(nyoom-module-p! telescope
-                 (map! [n] :<leader><tab>l
-                       "<cmd>:lua require'telescope'.extensions.project.project{}<CR>"
-                       {:desc "List projects"}))
-
 (map! [n] :<leader><tab>n :<cmd>tabnew<CR> {:desc "New tab"})
+
+(fn open-project []
+(nyoom-module-p! telescope)
+  (if (nyoom-module-p! project)
+      (vim.cmd "ProjectRecents")
+      (vim.cmd "Telescope project")))
+
+(map! [n] "<leader>pp" open-project {:desc "List projects"})
 
 (nyoom-module-p! telescope
                  (do
