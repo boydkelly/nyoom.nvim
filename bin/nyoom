@@ -109,7 +109,7 @@ sync)
     if [[ $REPLY =~ ^[Yy]$ ]]; then
       ts_time=$(date +%s)
       printf "\nSyncing Tree-sitter Parsers (this may take a while)\n"
-      nvim --headless -c 'TSUpdateSync' -c 'qall'
+      nvim --headless -c "lua require('modules.tools.treesitter.config')" -c "TSUpdateSync" -c "qall"
       printf "\n\033[1m\033[36mNyoom successfully synced parsers in $(expr $(date +%s) - $ts_time)s\033[0m\n"
     fi
   else

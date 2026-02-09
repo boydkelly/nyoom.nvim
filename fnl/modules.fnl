@@ -4,8 +4,8 @@
 
 ;; fnlfmt: skip
 (nyoom! :completion
-        cmp                  ; the ultimate code completion backend
-        ;blink                ; completion so fast you’ll think you imagined it
+        ;cmp                  ; the ultimate code completion backend
+        blink                ; completion so fast you’ll think you imagined it
 
         ;;copilot            ; the code completion of the future
         ;;fzf-lua            ; TODO a search engine for love and life

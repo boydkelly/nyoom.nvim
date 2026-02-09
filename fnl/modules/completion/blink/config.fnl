@@ -5,7 +5,7 @@
 (packadd! lspkind.nvim)
 (packadd! cmp-conjure)
 (packadd! copilot.lua)
-(packadd! LuaSnip)
+(packadd! luasnip)
 
 (fn apply-blink-hl []
   (let [blink-hl (vim.api.nvim_get_hl 0 {:link false :name :WarningMsg})]
