@@ -45,6 +45,7 @@
          {1 :<leader>n :group :notes}
          {1 :<leader>o :group :open}
          {1 :<leader>oa :group :agenda}
+         {1 :<leader>ot :group :terminal}
          {1 :<leader>p :group :project}
          {1 :<leader>q :group :quit/session}
          {1 :<leader>r :group :remote}

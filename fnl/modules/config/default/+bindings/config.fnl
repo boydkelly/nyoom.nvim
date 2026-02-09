@@ -403,10 +403,10 @@
                             {:desc "Conjure log split"}))
 
 (nyoom-module-p! toggleterm
-                 (map! [n] :<leader>ot :<cmd>ToggleTerm<CR>
+                 (map! [n] :<leader>ots :<cmd>ToggleTerm<CR>
                        {:desc "Open term split"}))
 
-(map! [n] :<leader>oT :<cmd>term<CR> {:desc "Open term buffer"})
+(map! [n] :<leader>otb :<cmd>term<CR> {:desc "Open term buffer"})
 ;;; p +project
 
 ;;; q +quit/session
