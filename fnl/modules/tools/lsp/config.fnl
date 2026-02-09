@@ -11,6 +11,7 @@
 (nyoom-module-p! clojure (table.insert lsp-servers :clojure_lsp))
 (nyoom-module-p! java (table.insert lsp-servers :jdtls))
 (nyoom-module-p! sh (table.insert lsp-servers :bashls))
+(nyoom-module-p! sh.+nu (table.insert lsp-servers :nushell))
 (nyoom-module-p! julia (table.insert lsp-servers :julials))
 (nyoom-module-p! json (table.insert lsp-servers :jsonls))
 (nyoom-module-p! kotlin (table.insert lsp-servers :kotlin_langage_server))
@@ -69,5 +70,3 @@
   ;; Immediate check for CLI open (e.g., nvim file.fnl)
   (when (and (not= vim.bo.filetype "") (= vim.bo.buftype ""))
     (loader)))
-
-

@@ -36,32 +36,20 @@
 ;; conditionally install parsers
 
 (nyoom-module-p! clojure (table.insert treesitter-filetypes :clojure))
-
 (nyoom-module-p! common-lisp (table.insert treesitter-filetypes :commonlisp))
-
 (nyoom-module-p! csharp (table.insert treesitter-filetypes :c_sharp))
-
 (nyoom-module-p! java (table.insert treesitter-filetypes :java))
-
 (nyoom-module-p! julia (table.insert treesitter-filetypes :julia))
-
 (nyoom-module-p! kotlin (table.insert treesitter-filetypes :kotlin))
-
 (nyoom-module-p! latex (table.insert treesitter-filetypes :latex))
-
 (nyoom-module-p! ledger (table.insert treesitter-filetypes :ledger))
-
 (nyoom-module-p! lua (table.insert treesitter-filetypes :lua))
-
 (nyoom-module-p! nix (table.insert treesitter-filetypes :nix))
-
 ; (nyoom-module-p! org (table.insert treesitter-filetypes :org))
-
 (nyoom-module-p! python (table.insert treesitter-filetypes :python))
-
 (nyoom-module-p! sh (table.insert treesitter-filetypes :bash))
-
 (nyoom-module-p! sh.+fish (table.insert treesitter-filetypes :fish))
+(nyoom-module-p! sh.+nu (table.insert treesitter-filetypes :nu))
 
 (nyoom-module-p! zig (table.insert treesitter-filetypes :zig))
 
