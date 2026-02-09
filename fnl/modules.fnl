@@ -18,15 +18,15 @@
         hydra                ; Discount modality for mythological beast hunters
         indent-guides      ; highlighted indent columns
         modeline             ; snazzy, nano-emacs-inspired modeline
-        nvimtree           ; a project drawer, like NERDTree for vim
-        neotree              ; tree-like structures for neovim
+        ;nvimtree           ; a project drawer, like NERDTree for vim
+        ;neotree              ; tree-like structures for neovim
         oil
         quickfix             ; enhancements to vim's builtin quickfix functionality
         trouble              ; view your diagnostics, now with icons! (i knew u were trouble when you walked iiiinnn)
         tabs                 ; keep tabs on your buffers, literally
         vc-gutter            ; Get your diff out of the gutter
         window-select        ; Visually switch windows
-        zen                  ; distraction-free coding or writing TODO +twilight
+        ;zen                  ; distraction-free coding or writing TODO +twilight
         noice                ; noice ui
 
         :editor
@@ -39,11 +39,11 @@
         word-wrap            ; language-aware smart soft and hard wrapping
 
         :term
-        fshell             ; WIP: the fennel shell that works everywhere
+        ;fshell             ; WIP: the fennel shell that works everywhere
         toggleterm           ; persistant/floating terminal wrapper for :term
 
         :checkers
-        ; diagnostics          ; tasing you for every semicolon you forget
+        diagnostics          ; tasing you for every semicolon you forget
         grammar              ; tasing grammar mistake every you make
         spell              ; tasing you for misspelling mispelling
 

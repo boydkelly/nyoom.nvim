@@ -20,3 +20,14 @@
                             :text "~"
                             :numhl :GitSignsDeleteNr
                             :linehl :GitSignsDeleteLn}}})
+
+; (fn []
+;                         (autocmd! BufRead *
+;                                   `(fn []
+;                                      (vim.fn.system (.. "git -C "
+;                                                         (vim.fn.expand "%:p:h")
+;                                                         " rev-parse"))
+;                                      (when (= vim.v.shell_error 0)
+;                                        (vim.schedule (fn []
+;                                                        ((. (require :packer)
+;                                                            :loader) :gitsigns.nvim)))))))

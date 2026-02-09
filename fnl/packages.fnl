@@ -36,7 +36,7 @@
 
 (lz-load!)
 ;; oxocarbon could either be added to core install with tangerine and lz.n or as a regular module
-(packadd! :plenary.nvim)
-(packadd! :nui.nvim)
+; (packadd! :plenary.nvim)
+; (packadd! :nui.nvim)
 (packadd! oxocarbon.nvim)
 (colorscheme oxocarbon)

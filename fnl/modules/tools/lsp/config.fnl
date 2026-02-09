@@ -1,4 +1,5 @@
 (import-macros {: autocmd! : augroup! : clear! : nyoom-module-p!} :macros)
+(local shared (require :core.lib.shared))
 
 (local lsp-servers [])
 
@@ -21,14 +22,23 @@
 (nyoom-module-p! xml (table.insert lsp-servers :leminx))
 (nyoom-module-p! zig (table.insert lsp-servers :zls))
 
+(local shared (require :core.lib.shared))
 (fn setup-lsp []
-  (vim.diagnostic.config {:virtual_lines false
-                          :underline true
-                          :update_in_insert false
-                          :signs {:text {vim.diagnostic.severity.ERROR "●"
-                                         vim.diagnostic.severity.WARN "●"
-                                         vim.diagnostic.severity.INFO "●"
-                                         vim.diagnostic.severity.HINT "●"}}})
+
+(vim.diagnostic.config
+    {:underline {:severity {:min vim.diagnostic.severity.INFO}}
+     :signs {:severity {:min vim.diagnostic.severity.HINT}
+             :text {vim.diagnostic.severity.ERROR shared.icons.error
+                    vim.diagnostic.severity.WARN  shared.icons.warn
+                    vim.diagnostic.severity.INFO  shared.icons.info
+                    vim.diagnostic.severity.HINT  shared.icons.hint}}
+     :virtual_lines true
+     :virtual_text true
+     :float {:show_header false
+             :source true}
+     :update_in_insert false
+     :severity_sort true})
+
   (augroup! nyoom-lsp-attach
             (autocmd! LspAttach *
                       (fn [event]
@@ -40,7 +50,7 @@
                                       (autocmd! BufWritePre <buffer>
                                                 #(vim.lsp.buf.format {:bufnr buf})
                                                 {:buffer buf})))))))
-  (each [_ server (ipairs lsp-servers)]
+(each [_ server (ipairs lsp-servers)]
     (pcall vim.lsp.enable server)))
 
 ;; The "Just-In-Time" Loader
@@ -53,8 +63,11 @@
                    ;; Re-trigger FileType so enabled servers attach to current buffer
                    (when (not= vim.bo.filetype "")
                      (vim.cmd (.. "doautocmd FileType " vim.bo.filetype))))))]
+
   ;; Register for future files
   (autocmd! FileType * loader {:desc "Nyoom: JIT LSP Loader"})
   ;; Immediate check for CLI open (e.g., nvim file.fnl)
   (when (and (not= vim.bo.filetype "") (= vim.bo.buftype ""))
     (loader)))
+
+

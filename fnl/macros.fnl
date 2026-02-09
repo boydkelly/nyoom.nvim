@@ -530,6 +530,7 @@
         run-cmd (if (sym? options.run) (->str options.run) options.run)
         build-file (if (sym? options.build-file) (->str options.build-file)
                        options.build-file)
+ ;; 5. Hook Construction
         before-all-hook (when run-cmd
                           (let [plugin-path (.. (vim.fn.stdpath :data)
                                                 :/site/pack/core/opt/ raw-name)]
@@ -556,8 +557,6 @@
                        p)
         before-hook (if (> (length before-parts) 0)
                         `(fn [] ,(unpack before-parts)))
- ;; 5. Hook Construction
-;; 5. Hook Construction
         after-parts (let [p []]
               ;; 1. Handle Nyoom Module Include (nyoom-module/after)
               (when module-name
