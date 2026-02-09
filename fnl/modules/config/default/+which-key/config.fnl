@@ -1,4 +1,7 @@
 (local {: setup} (require :core.lib.setup))
+(import-macros {: nyoom-module-p! } :macros)
+
+(local spelling (nyoom-module-p! spell))
 
 (local opts {;; 1. New Icon System
              :icons {:breadcrumb "»"
@@ -13,7 +16,8 @@
                          (not (and (or (= mode :i) (= mode :v))
                                    (or (= key :j) (= key :k))))))
              :plugins {:presets {:g true :windows true :z true}
-                       :spelling {:enabled false}}
+                       ;; Use the variable here
+                       :spelling {:enabled spelling}}
              :replace {:desc [[:<silent> ""]
                               [:<cmd> ""]
                               [:<Cmd> ""]
