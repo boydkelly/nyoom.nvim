@@ -14,12 +14,12 @@
         :ui
         (nyoom +modes +icons); what makes Nyoom look the way it does
         ;dashboard            ; a nifty splash screen for neovim
-        ;;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit.
+        nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit.
         ;hydra                ; Discount modality for mythological beast hunters
         indent-guides      ; highlighted indent columns
         modeline             ; snazzy, nano-emacs-inspired modeline
         ;nvimtree           ; a project drawer, like NERDTree for vim
-        ;neotree              ; tree-like structures for neovim
+        neotree              ; tree-like structures for neovim
         oil
         quickfix             ; enhancements to vim's builtin quickfix functionality
         trouble              ; view your diagnostics, now with icons! (i knew u were trouble when you walked iiiinnn)
@@ -44,7 +44,7 @@
 
         :checkers
         diagnostics          ; tasing you for every semicolon you forget
-        grammar              ; tasing grammar mistake every you make
+        ;grammar              ; tasing grammar mistake every you make
         spell              ; tasing you for misspelling mispelling
 
         :tools
@@ -66,14 +66,14 @@
         tree-sitter          ; syntax and parsing, sitting in a tree...
 
         :lang
-        cc                   ; C > C++ == 1
+        ;;cc                   ; C > C++ == 1
         clojure              ; java with a lisp
         common-lisp          ; if you've seen one lisp, you've seen them all
         ;csharp               ; java but with linq
         fennel               ;
         java                 ; the poster child for carpal tunnel syndrome
         ;julia                ; a better, faster MATLAB
-        ;kotlin             ; FIXME: a better, slicker Java(Script)
+        ;; kotlin             ; FIXME: a better, slicker Java(Script)
         json               ; { "dʒeɪsən":  "Javascript Object Notation" }
         latex                ; writing papers in Neovim has never been so fun
         ledger             ; be audit you can be
@@ -91,7 +91,8 @@
         rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
         (sh
           +nu
-          +fish)           ; she sells {ba,z,fi}sh shells on the C xor
+          ; +fish
+          )           ; she sells {ba,z,fi}sh shells on the C xor
         toml                ; extend my language
         xml                ; extend my language
         yaml               ; yet another markup language to enable
@@ -106,4 +107,3 @@
           +bindings
           +which-key
           +smartparens))
-
