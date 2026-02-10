@@ -20,7 +20,7 @@
 (nyoom-module-p! nim (table.insert lsp-servers :nimls))
 (nyoom-module-p! nix (table.insert lsp-servers :rnix))
 (nyoom-module-p! yaml (table.insert lsp-servers :yaml_ls))
-(nyoom-module-p! xml (table.insert lsp-servers :leminx))
+(nyoom-module-p! xml (table.insert lsp-servers :lemminx))
 (nyoom-module-p! zig (table.insert lsp-servers :zls))
 
 (local shared (require :core.lib.shared))
