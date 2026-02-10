@@ -9,7 +9,19 @@
 (nyoom-module-p! fennel (table.insert lsp-servers :fennel-ls))
 (nyoom-module-p! csharp (table.insert lsp-servers :omnisharp))
 (nyoom-module-p! clojure (table.insert lsp-servers :clojure_lsp))
+(nyoom-module-p! html
+                 (do
+                   (table.insert lsp-servers :html)
+                   (table.insert lsp-servers :cssls)))
+
 (nyoom-module-p! java (table.insert lsp-servers :jdtls))
+(nyoom-module-p! javascript.+svelte (table.insert lsp-servers :svelte))
+(if (or (nyoom-module-p! javascript) (nyoom-module-p! javascript.+ts))
+    (table.insert lsp-servers :vtsls))
+
+; (nyoom-module-p! javascript.+ts (table.insert lsp-servers :ts_ls))
+(nyoom-module-p! javascript.+svelte (table.insert lsp-servers :svelte))
+
 (nyoom-module-p! sh (table.insert lsp-servers :bashls))
 (nyoom-module-p! sh.+nu (table.insert lsp-servers :nushell))
 (nyoom-module-p! julia (table.insert lsp-servers :julials))
@@ -19,6 +31,7 @@
 (nyoom-module-p! markdown (table.insert lsp-servers :marksman))
 (nyoom-module-p! nim (table.insert lsp-servers :nimls))
 (nyoom-module-p! nix (table.insert lsp-servers :rnix))
+(nyoom-module-p! sql (table.insert lsp-servers :sqls))
 (nyoom-module-p! toml (table.insert lsp-servers :taplo))
 (nyoom-module-p! yaml (table.insert lsp-servers :yamlls))
 (nyoom-module-p! xml (table.insert lsp-servers :lemminx))
@@ -26,21 +39,17 @@
 
 (local shared (require :core.lib.shared))
 (fn setup-lsp []
-
-(vim.diagnostic.config
-    {:underline {:severity {:min vim.diagnostic.severity.INFO}}
-     :signs {:severity {:min vim.diagnostic.severity.HINT}
-             :text {vim.diagnostic.severity.ERROR shared.icons.error
-                    vim.diagnostic.severity.WARN  shared.icons.warn
-                    vim.diagnostic.severity.INFO  shared.icons.info
-                    vim.diagnostic.severity.HINT  shared.icons.hint}}
-     :virtual_lines false
-     :virtual_text false
-     :float {:show_header false
-             :source true}
-     :update_in_insert false
-     :severity_sort true})
-
+  (vim.diagnostic.config {:underline {:severity {:min vim.diagnostic.severity.INFO}}
+                          :signs {:severity {:min vim.diagnostic.severity.HINT}
+                                  :text {vim.diagnostic.severity.ERROR shared.icons.error
+                                         vim.diagnostic.severity.WARN shared.icons.warn
+                                         vim.diagnostic.severity.INFO shared.icons.info
+                                         vim.diagnostic.severity.HINT shared.icons.hint}}
+                          :virtual_lines false
+                          :virtual_text false
+                          :float {:show_header false :source true}
+                          :update_in_insert false
+                          :severity_sort true})
   (augroup! nyoom-lsp-attach
             (autocmd! LspAttach *
                       (fn [event]
@@ -52,7 +61,7 @@
                                       (autocmd! BufWritePre <buffer>
                                                 #(vim.lsp.buf.format {:bufnr buf})
                                                 {:buffer buf})))))))
-(each [_ server (ipairs lsp-servers)]
+  (each [_ server (ipairs lsp-servers)]
     (pcall vim.lsp.enable server)))
 
 ;; The "Just-In-Time" Loader
@@ -65,7 +74,6 @@
                    ;; Re-trigger FileType so enabled servers attach to current buffer
                    (when (not= vim.bo.filetype "")
                      (vim.cmd (.. "doautocmd FileType " vim.bo.filetype))))))]
-
   ;; Register for future files
   (autocmd! FileType * loader {:desc "Nyoom: JIT LSP Loader"})
   ;; Immediate check for CLI open (e.g., nvim file.fnl)

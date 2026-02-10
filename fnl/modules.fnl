@@ -43,7 +43,6 @@
         toggleterm           ; persistant/floating terminal wrapper for :term
 
         :checkers
-        conform
         ;diagnostics          ; tasing you for every semicolon you forget
         grammar              ; tasing grammar mistake every you make
         spell              ; tasing you for misspelling mispelling
@@ -72,7 +71,10 @@
         common-lisp          ; if you've seen one lisp, you've seen them all
         csharp               ; java but with linq
         fennel               ;
-        (java +svelte)                 ; the poster child for carpal tunnel syndrome
+        java                 ; the poster child for carpal tunnel syndrome
+        (javascript
+          +ts
+          +svelte)
         julia                ; a better, faster MATLAB
         kotlin             ; FIXME: a better, slicker Java(Script)
         json               ; { "dʒeɪsən":  "Javascript Object Notation" }
@@ -93,6 +95,7 @@
         (sh
           +nu
           +fish)           ; she sells {ba,z,fi}sh shells on the C xor
+        sql
         toml                ; extend my language
         xml                ; extend my language
         yaml               ; yet another markup language to enable
