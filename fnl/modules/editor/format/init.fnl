@@ -1,3 +1,7 @@
-(import-macros {: fake-module!} :macros)
+(import-macros {: lz-package! : vim-pack-spec!} :macros)
 
-(fake-module! editor.format)
+(lz-package! :stevearc/conform.nvim
+             {:nyoom-module checkers.conform
+              :event [:BufReadPre :BufNewFile]
+              :priority 1000})
+
