@@ -32,6 +32,7 @@ tinymist = "latest"
 "npm:tree-sitter-cli" = "latest"
 "github:clangd/clangd" = "latest"
 "github:clojure-lsp/clojure-lsp" = "latest"
+"github:nim-lang/nimble" = "0.20.1"
 [tools."github:redhat-developer/vscode-xml"]
 version = "latest"
 rename_exe = "lemminx"

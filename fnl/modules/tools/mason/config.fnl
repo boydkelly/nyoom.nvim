@@ -90,6 +90,9 @@
     (nyoom-module-p! rust
       (table.insert mason-tools :rustfmt))
 
+    (nyoom-module-p! toml
+      (table.insert mason-tools :taplo))
+
     (nyoom-module-p! sh
       (table.insert mason-tools :shfmt))))
 

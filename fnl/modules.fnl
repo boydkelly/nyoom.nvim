@@ -51,8 +51,8 @@
         ;debugger             ; stepping through code, to help you add bugs
         docker               ; row row row your boat TODO +netman?
         editorconfig       ; let someone else argue about tabs vs spaces
-        ;;magma              ; tame Jupyter notebooks
-        ; mason                ; setting your tools in stone
+        ;magma              ; tame Jupyter notebooks
+        mason                ; setting your tools in stone
         eval                 ; run code, run (also, repls)
         antifennel           ; for all the fennel haters out there. this ones for you
         pastebin             ; interacting with pastebin platforms
@@ -79,7 +79,7 @@
         ledger             ; be audit you can be
         lua                  ; one-based indices? one-based indices
         markdown             ; writing docs for people to ignore
-        nim                  ; python + lisp at the speed of c
+        ; nim                  ; python + lisp at the speed of c
         (neorg               ; organize your plain life in plain text, the neovim way
           +pretty
           +present
@@ -92,6 +92,7 @@
         (sh
           +nu
           +fish)           ; she sells {ba,z,fi}sh shells on the C xor
+        toml                ; extend my language
         xml                ; extend my language
         yaml               ; yet another markup language to enable
         zig                  ; C, but simpler

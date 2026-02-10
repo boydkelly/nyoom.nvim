@@ -19,7 +19,8 @@
 (nyoom-module-p! markdown (table.insert lsp-servers :marksman))
 (nyoom-module-p! nim (table.insert lsp-servers :nimls))
 (nyoom-module-p! nix (table.insert lsp-servers :rnix))
-(nyoom-module-p! yaml (table.insert lsp-servers :yaml_ls))
+(nyoom-module-p! toml (table.insert lsp-servers :taplo))
+(nyoom-module-p! yaml (table.insert lsp-servers :yamlls))
 (nyoom-module-p! xml (table.insert lsp-servers :lemminx))
 (nyoom-module-p! zig (table.insert lsp-servers :zls))
 
