@@ -7,6 +7,6 @@
 ;;:requires (pack :smjonas/inc-rename.nvim :after :nvim-lspconfig
 ;;                :call-setup inc_rename)})
 
-(lz-package! :smjonas/inc-rename.nvim
-             {:nyoom-module tools.lsp.increname :call-setup inc_rename})
+; (lz-package! :smjonas/inc-rename.nvim
+;              {:nyoom-module tools.lsp.increname :call-setup inc_rename})
 
