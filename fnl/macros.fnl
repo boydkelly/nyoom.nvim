@@ -1040,37 +1040,50 @@
   (let [modules (register-modules ...)]
     (tset _G :nyoom/modules modules)))
 
-(lambda nyoom-init-modules! []
-  "Initializes nyoom's module system.
-  ```fennel
-  (nyoom-init-modules!)
-  ```"
+(lambda lz-init-modules! []
+  "Bakes the init.fnl files for all enabled modules."
   (fn init-module [module-name module-def]
     (icollect [_ include-path (ipairs (or module-def.include-paths []))]
       `(include ,include-path)))
 
   (fn init-modules [registry]
-    (icollect [module-name module-def (pairs registry)]
-      (init-module module-name module-def)))
+    (let [inits []]
+      (each [_ module-def (pairs registry)]
+        (let [items (init-module _ module-def)]
+          (each [_ expr (ipairs items)]
+            (table.insert inits expr))))
+      inits))
 
   (let [inits (init-modules _G.nyoom/modules)]
     (expand-exprs inits)))
 
-(lambda nyoom-compile-modules! []
-  "Compiles and caches module files.
-  ```fennel
-  (nyoom-compile-modules!)
-  ```"
+(lambda lz-compile-modules! []
+  "Bakes the config.fnl files for all enabled modules, only if they exist."
+  (fn file-exists? [path]
+    (let [;; Convert dot-notation path to a physical file path
+          filename (.. (vim.fn.stdpath :config) :/fnl/ (path:gsub "%." "/")
+                       :.fnl)
+          f (io.open filename :r)]
+      (if f (do
+              (f:close) true) false)))
+
   (fn compile-module [module-name module-decl]
-    (icollect [_ config-path (ipairs (or module-decl.config-paths []))]
-      `,(pcall require config-path)))
+    (let [exprs []]
+      (each [_ config-path (ipairs (or module-decl.config-paths []))]
+        (if (file-exists? config-path)
+            (table.insert exprs `(pcall (fn [] (include ,config-path))))))
+      exprs))
 
   (fn compile-modules [registry]
-    (icollect [module-name module-def (pairs registry)]
-      (compile-module module-name module-def)))
+    (let [source []]
+      (each [_ module-def (pairs registry)]
+        (let [configs (compile-module _ module-def)]
+          (each [_ expr (ipairs configs)]
+            (table.insert source expr))))
+      source))
 
   (let [source (compile-modules _G.nyoom/modules)]
-    (expand-exprs [(unpack source)])))
+    (expand-exprs source)))
 
 (lambda nyoom-module! [name]
   "By default modules should be loaded through use-package!. Of course, not every
@@ -1177,7 +1190,6 @@
  : clear!
  : pack
  : rock
- ; : use-package!
  : rock!
  : unpack!
  : packadd!
@@ -1188,12 +1200,14 @@
  : lz-unpack!
  : lz-trigger-load!
  : lz-load-specs!
+ : lz-load!
+ : lz-init-modules!
+ : lz-compile-modules!
  : fake-module!
  : nyoom!
- : nyoom-init-modules!
- : nyoom-compile-modules!
  : nyoom-module!
  : nyoom-module-p!
  : nyoom-module-ensure!
  : nyoom-package-count!
  : nyoom-module-count!}
+

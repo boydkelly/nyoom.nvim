@@ -52,7 +52,7 @@
         docker               ; row row row your boat TODO +netman?
         editorconfig       ; let someone else argue about tabs vs spaces
         ;magma              ; tame Jupyter notebooks
-        mason                ; setting your tools in stone
+        ;mason                ; setting your tools in stone
         eval                 ; run code, run (also, repls)
         antifennel           ; for all the fennel haters out there. this ones for you
         pastebin             ; interacting with pastebin platforms
@@ -111,3 +111,4 @@
           +bindings
           +which-key
           +smartparens))
+
