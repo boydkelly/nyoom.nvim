@@ -603,13 +603,8 @@
     ;; 7. Final Code Generation (Now inside the main let block)
     (let [final-code `(do
                         )]
-      (each [_ reg (ipairs req-registrations)] (table.insert final-code reg))
-      (when module-name
-        (table.insert final-code
-                      `(let [m-def# {:config-paths [,(.. :modules. module-name
-                                                         :.config)]}]
-                         (tset _G.nyoom/modules ,module-name m-def#)
-                         (table.insert _G.nyoom/modules m-def#))))
+      (each [_ reg (ipairs req-registrations)] (table.insert final-code reg)) ; (when module-name ;   (table.insert final-code ;                 `(let [m-def# {:config-paths [,(.. :modules. module-name
+      ;                                                    :.config)]}] ;                    (tset _G.nyoom/modules ,module-name m-def#) ;                    (table.insert _G.nyoom/modules m-def#))))
       ;; Re-insert the version/branch for the installer call
       (let [installer-options (if install-version
                                   (let [t# {}]
