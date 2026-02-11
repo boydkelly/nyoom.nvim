@@ -24,9 +24,11 @@
 (vim-pack-spec! :nyoom-engineering/oxocarbon.nvim)
 
 ;;
-;; (include :fnl.modules) --not needed, it just works
+(include :modules)
 (nyoom-init-modules!)
-(lz-unpack!) ;; install the stuff
+(lz-unpack!)
+
+;; install the stuff
 
 ; (packadd! :plenary.nvim)
 ; (packadd! :nui.nvim)
@@ -34,9 +36,11 @@
 ;; Compile modules
 ; (nyoom-compile-modules!) ;; not ding anything... it just works
 
+;;(nyoom-compile-modules!)
 (lz-load!)
 ;; oxocarbon could either be added to core install with tangerine and lz.n or as a regular module
 ; (packadd! :plenary.nvim)
 ; (packadd! :nui.nvim)
 (packadd! oxocarbon.nvim)
 (colorscheme oxocarbon)
+

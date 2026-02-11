@@ -493,7 +493,7 @@
           (set spec.version ver))))
     `(table.insert _G.nyoom/pack ,spec)))
 
-(lambda lz-pack! [identifier ?options]
+(lambda lz-trigger-load! [identifier ?options]
   (let [options (or ?options {})
         raw-name (or options.as (identifier:match ".*/(.*)") identifier)
         ;; ADD :lower() here
@@ -1134,7 +1134,7 @@
  : lz-package!
  : vim-pack-spec!
  : lz-unpack!
- : lz-pack!
+ : lz-trigger-load!
  : lz-load!
  : fake-module!
  : nyoom!

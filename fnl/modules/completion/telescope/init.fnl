@@ -1,17 +1,17 @@
-(import-macros {: lz-package! : vim-pack-spec! : lz-pack!} :macros)
+(import-macros {: lz-package! : vim-pack-spec! : lz-trigger-load!} :macros)
 
 (lz-package! :nvim-lua/telescope.nvim
              {:nyoom-module completion.telescope
               :module [:telescope]
               :event :UIEnter
-              :requires [(lz-pack! :nvim-telescope/telescope-ui-select.nvim
+              :requires [(lz-trigger-load! :nvim-telescope/telescope-ui-select.nvim
                                    {:opt true})
-                         (lz-pack! :nvim-telescope/telescope-file-browser.nvim
+                         (lz-trigger-load! :nvim-telescope/telescope-file-browser.nvim
                                    {:opt true})
-                         (lz-pack! :nvim-telescope/telescope-media-files.nvim
+                         (lz-trigger-load! :nvim-telescope/telescope-media-files.nvim
                                    {:opt true})
-                         (lz-pack! :nvim-telescope/telescope-project.nvim
+                         (lz-trigger-load! :nvim-telescope/telescope-project.nvim
                                    {:opt true})
-                         (lz-pack! :LukasPietzschmann/telescope-tabs
+                         (lz-trigger-load! :LukasPietzschmann/telescope-tabs
                                    {:opt true})
-                         (lz-pack! :jvgrootveld/telescope-zoxide {:opt true})]})
+                         (lz-trigger-load! :jvgrootveld/telescope-zoxide {:opt true})]})

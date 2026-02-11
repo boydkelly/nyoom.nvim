@@ -3,6 +3,8 @@
 (lz-package! :nvim-neo-tree/neo-tree.nvim
              {:nyoom-module ui.neotree
               :module :neo-tree
+              :enabled true
+              :cmd [:Neotree]
               :keys [[:<leader>op
                       "<cmd>Neotree toggle<CR>"
                       {:desc "Project sidebar"}]

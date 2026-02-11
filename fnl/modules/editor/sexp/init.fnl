@@ -4,5 +4,6 @@
              {:ft [:fennel :clojure :lisp :racket :scheme :janet :guile]
               :config (tset vim.g :sexp_filetypes
                             "clojure,scheme,lisp,timl,fennel,janet,hy")
-              :requires [(lz-pack! :tpope/vim-sexp-mappings-for-regular-people
-                                   {:after :vim-sexp})]})
+              :requires [(lz-trigger-load :tpope/vim-sexp-mappings-for-regular-people
+                                          {:after :vim-sexp})]})
+
