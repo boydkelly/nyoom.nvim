@@ -33,6 +33,7 @@
 (lz-load-specs!)
 
 (lz-compile-modules!)
+; (lz-compile-modules!)
 ;; oxocarbon could either be added to core install with tangerine and lz.n or as a regular module
 ; (packadd! :plenary.nvim)
 ; (packadd! :nui.nvim)
