@@ -30,13 +30,9 @@
 
 ;; install the stuff
 
-; (packadd! :plenary.nvim)
-; (packadd! :nui.nvim)
-
 ;; Compile modules
-; (nyoom-compile-modules!) ;; not ding anything... it just works
+; (nyoom-compile-modules!) ;; precompiled in init.lua
 
-;;(nyoom-compile-modules!)
 (lz-load!)
 ;; oxocarbon could either be added to core install with tangerine and lz.n or as a regular module
 ; (packadd! :plenary.nvim)

@@ -47,7 +47,6 @@ local fennel = require("tangerine.fennel")
 -- fennel["allowed-globals"] = nyoom_globals
 
 fennel.path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. (fennel.path or "")
--- fennel["macro-path"] = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/macros-macros/?.fnl;" .. (fennel["macro-path"] or "")
 package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
 
 if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
@@ -96,7 +95,7 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 
 	-- Compile macros first so core libs can use them
 	-- if we try to compile this as a file it causes an error...  but works as a dir. go figure
-	safe_compile_dir(fnl_dir .. "/macros", lua_dir .. "/macros")
+	-- safe_compile_dir(fnl_dir .. "/macros", lua_dir .. "/macros")
 
 	_G.nyoom = {}
 
