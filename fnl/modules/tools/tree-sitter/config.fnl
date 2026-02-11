@@ -43,7 +43,7 @@
 (nyoom-module-p! clojure (table.insert treesitter-filetypes :clojure))
 (nyoom-module-p! common-lisp (table.insert treesitter-filetypes :commonlisp))
 (nyoom-module-p! csharp (table.insert treesitter-filetypes :c_sharp))
-(nyoom-module-p! html
+(nyoom-module-p! web
                  (do
                    (table.insert treesitter-filetypes :html)
                    (table.insert treesitter-filetypes :css)))

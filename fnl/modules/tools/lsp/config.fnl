@@ -9,10 +9,9 @@
 (nyoom-module-p! fennel (table.insert lsp-servers :fennel-ls))
 (nyoom-module-p! csharp (table.insert lsp-servers :omnisharp))
 (nyoom-module-p! clojure (table.insert lsp-servers :clojure_lsp))
-(nyoom-module-p! html
-                 (do
-                   (table.insert lsp-servers :html)
-                   (table.insert lsp-servers :cssls)))
+(nyoom-module-p! web (do
+                       (table.insert lsp-servers :html)
+                       (table.insert lsp-servers :cssls)))
 
 (nyoom-module-p! java (table.insert lsp-servers :jdtls))
 (nyoom-module-p! javascript.+svelte (table.insert lsp-servers :svelte))
@@ -79,3 +78,4 @@
   ;; Immediate check for CLI open (e.g., nvim file.fnl)
   (when (and (not= vim.bo.filetype "") (= vim.bo.buftype ""))
     (loader)))
+
