@@ -474,6 +474,7 @@
 
 ;; Macro: vim-pack-spec!
 (lambda vim-pack-spec! [identifier ?options]
+  "Inserts the specs from lz-package into _G.nyoom/pack for loading with lz.n"
   "Native package spec. Supports full URLs (GitLab/SourceHut) or GitHub shortcuts."
   (let [;; 1. Determine the URL
         url (if (or (identifier:match :^http) (identifier:match "^git@"))
@@ -492,12 +493,57 @@
     `(table.insert _G.nyoom/pack ,spec)))
 
 (lambda lz-trigger-load! [identifier ?options]
+  "this is the basic call for the requires key.  If a package is required, it must be
+  installed with vim pack. the lz-package macro will process the require and create an lz.n
+  trigger_load function in the before function. This is suitable for extensions that do not require setup.
+  Otherwise use lz-pack."
   (let [options (or ?options {})
         raw-name (or options.as (identifier:match ".*/(.*)") identifier)
         ;; ADD :lower() here
         name (raw-name:lower)]
     ;; Return a table that lz-package! can destructure
     {: name :reg (vim-pack-spec! identifier options)}))
+
+(lambda lz-pack [identifier ?options]
+  "Identical to legacy pack, but returns a table structured for lz-package! destructuring.
+  Processes :nyoom-module, :call-setup, and :defer before passing to vim-pack-spec!"
+  (assert-compile (str? identifier) "expected string for identifier" identifier)
+  (if (not (nil? ?options))
+      (assert-compile (table? ?options) "expected table for options" ?options))
+  (let [options (or ?options {})
+        ;; Calculate the name (same logic as lz-trigger-load!)
+        raw-name (or options.as (identifier:match ".*/(.*)") identifier)
+        name (raw-name:lower)
+        ;; Transform the options exactly like the original pack macro
+        processed-options (collect [k v (pairs options)]
+                            (match k
+                              :call-setup (values :config
+                                                  (string.format "require(\"core.lib.autoload\")[\"autoload\"](\"core.lib.setup\")[\"setup\"](\"%s\", {})"
+                                                                 (->str v)))
+                              :nyoom-module (values :config
+                                                    (string.format "require(\"modules.%s.config\")"
+                                                                   (->str v)))
+                              :defer (values :setup
+                                             (let [package (->str v)]
+                                               `(lambda []
+                                                  (vim.api.nvim_create_autocmd [:BufRead
+                                                                                :BufWinEnter
+                                                                                :BufNewFile]
+                                                                               {:group (vim.api.nvim_create_augroup ,package
+                                                                                                                    {})
+                                                                                :callback (fn []
+                                                                                            (if (not= (vim.fn.expand "%")
+                                                                                                      "")
+                                                                                                (vim.defer_fn (fn []
+                                                                                                                ((. (require :packer)
+                                                                                                                    :loader) ,package)
+                                                                                                                (if (= ,package
+                                                                                                                       :nvim-lspconfig)
+                                                                                                                    (vim.cmd "silent! do FileType")))
+                                                                                                  0)))}))))
+                              _ (values k v)))]
+    ;; Return the lz-style table
+    {: name :reg (vim-pack-spec! identifier processed-options)}))
 
 (lambda lz-package! [identifier ?options]
   (let [options (or ?options {})
@@ -620,6 +666,7 @@
                                     t#)
                                   options)]
         (table.insert final-code (vim-pack-spec! identifier installer-options)))
+      ;; nyoom spces for lz.n to process
       (table.insert final-code `(table.insert _G.nyoom/specs ,spec-kv))
       final-code)))
 
@@ -636,7 +683,7 @@
          (pcall vim.cmd.packadd spec#.name)))))
 
 ;; 2. The Main Orchestrator (Refined)
-(lambda lz-load! []
+(lambda lz-load-specs! []
   "Finalizes the plugin setup by handing the specs to lz.n"
   `(let [(ok?# lz#) (pcall require :lz.n)]
      (if ok?#
@@ -1084,6 +1131,10 @@
   "Returns code to calculate number of modules at runtime"
   `(length (or _G.nyoom/modules [])))
 
+(lambda nyoom-spec-count! []
+  "Returns code to calculate number of modules at runtime"
+  `(length (or _G.nyoom/specs [])))
+
 ; (tset _G :nyoom/servers [])
 ; (tset _G :nyoom/lintesr [])
 ; (tset _G :nyoom/formatters [])
@@ -1136,7 +1187,7 @@
  : vim-pack-spec!
  : lz-unpack!
  : lz-trigger-load!
- : lz-load!
+ : lz-load-specs!
  : fake-module!
  : nyoom!
  : nyoom-init-modules!
@@ -1146,4 +1197,3 @@
  : nyoom-module-ensure!
  : nyoom-package-count!
  : nyoom-module-count!}
-
