@@ -1,4 +1,3 @@
-(local {: setup} (require :core.lib.setup))
 (local {: autoload} (require :core.lib.autoload))
 (import-macros {: set!
                 : local-set!
@@ -132,4 +131,6 @@
                           (local-set! indentexpr
                                       "v:lua.require'nvim-treesitter'.indentexpr()"))))
                     {:desc "Nyoom: Start treesitter highlighting and indentation"}))
+
+;; no need to run nvim-treesitter setup unless changing default options
 
