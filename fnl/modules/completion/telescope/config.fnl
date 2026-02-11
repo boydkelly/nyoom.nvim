@@ -1,25 +1,30 @@
 (local {: setup} (require :core.lib.setup))
 (local {: autoload} (require :core.lib.autoload))
-(import-macros {: packadd! : map! : nyoom-module-p! : augroup! : clear! : autocmd!} :macros)
+(import-macros {: packadd!
+                : map!
+                : nyoom-module-p!
+                : augroup!
+                : clear!
+                : autocmd!} :macros)
 (local {: load_extension} (autoload :telescope))
 (local {: executable?} (autoload :core.lib))
 
 ;; load telescope
 
-(setup :telescope {:defaults {:prompt_prefix "   "
-                              :selection_caret "  "
-                              :entry_prefix "  "
-                              :sorting_strategy :ascending
-                              :layout_strategy :flex
-                              :set_env {:COLORTERM :truecolor}
-                              :dynamic_preview_title
-                              :layout_config {:horizontal {:prompt_position :top
-                                                           :preview_width 0.55}
-                                              :vertical {:mirror false}
-                                              :width 0.87
-                                              :height 0.8
-                                              :preview_cutoff 120} true}
-                   :pickers {:oldfiles {:prompt_title "Recent files"}}})
+(setup :telescope
+       {:defaults {:prompt_prefix "   "
+                   :selection_caret "  "
+                   :entry_prefix "  "
+                   :sorting_strategy :ascending
+                   :layout_strategy :flex
+                   :set_env {:COLORTERM :truecolor}
+                   :dynamic_preview_title :layout_config
+                   {:height 0.8
+                     :horizontal {:preview_width 0.55 :prompt_position :top}
+                     :preview_cutoff 120
+                     :vertical {:mirror false}
+                     :width 0.87} true}
+        :pickers {:oldfiles {:prompt_title "Recent files"}}})
 
 ;; Load extensions
 
@@ -82,3 +87,4 @@
                                             {:desc "Local diagnostics"})
                                       (map! [n] :<leader>cX open-diag-float!
                                             {:desc "Project diagnostics"})))))
+

@@ -45,7 +45,7 @@
                                          vim.diagnostic.severity.INFO shared.icons.info
                                          vim.diagnostic.severity.HINT shared.icons.hint}}
                           :virtual_lines false
-                          :virtual_text false
+                          :virtual_text true
                           :float {:show_header false :source true}
                           :update_in_insert false
                           :severity_sort true})
@@ -78,4 +78,3 @@
   ;; Immediate check for CLI open (e.g., nvim file.fnl)
   (when (and (not= vim.bo.filetype "") (= vim.bo.buftype ""))
     (loader)))
-

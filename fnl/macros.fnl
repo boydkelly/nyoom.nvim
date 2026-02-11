@@ -1,5 +1,3 @@
-;; fennel-ls: macro-file
-
 (local {: nil?
         : str?
         : bool?
@@ -542,14 +540,20 @@
                                                  (.. ,plugin-path
                                                      :/.nyoom_built))]
                                  (when (not (uv#.fs_stat marker#))
-                                   (print ,(.. "Building " raw-name "..."))
+                                   (vim.notify ,(.. "Building " raw-name "...")
+                                               vim.log.levels.INFO)
                                    (let [res# (vim.fn.system ,(.. "cd "
                                                                   plugin-path
                                                                   " && " run-cmd))]
-                                     (when (not ,build-file)
-                                       (let [f# (io.open marker# :w)]
-                                         (f#:write (os.date))
-                                         (f#:close)))))))))
+                                     ;; Check if the shell command actually worked
+                                     (if (not= vim.v.shell_error 0)
+                                         (error (.. "Build failed for "
+                                                    ,raw-name ": " res#))
+                                         ;; If success, handle the marker
+                                         (when (not ,build-file)
+                                           (let [f# (io.open marker# :w)]
+                                             (f#:write (os.date))
+                                             (f#:close))))))))))
         before-parts (let [p []]
                        (each [_ r-name (ipairs req-names)]
                          (table.insert p

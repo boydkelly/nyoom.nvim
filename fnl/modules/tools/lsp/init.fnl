@@ -2,11 +2,7 @@
 
 ; easy to use configurations for language servers
 
-(lz-package! :neovim/nvim-lspconfig
-              {:setup nvim-lspconfig
-               :opt true
+(lz-package! :neovim/nvim-lspconfig {:nyoom-module tools.lsp :event :UIEnter})
 
-               :after tools.lsp
-               :defer nvim-lspconfig})
-               ;;:requires (pack :smjonas/inc-rename.nvim :after :nvim-lspconfig
-               ;;                :call-setup inc_rename)})
+;;:requires (pack :smjonas/inc-rename.nvim :after :nvim-lspconfig
+;;                :call-setup inc_rename)})
