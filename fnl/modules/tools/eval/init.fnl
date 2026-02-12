@@ -1,7 +1,7 @@
 (import-macros {: lz-package! : vim-pack-spec!} :macros)
 
 ;; interactive lisp evaluation
-(lz-package! :Olical/conjure {:after tools.eval
+(lz-package! :Olical/conjure {:nyoom-module tools.eval
                                :branch :develop
                                :ft [:fennel
                                     :clojure

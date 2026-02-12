@@ -1,7 +1,7 @@
 (import-macros {: lz-package! : vim-pack-spec!} :macros)
 
 (lz-package! :anuvyklack/hydra.nvim
-              {:after ui.hydra
+              {:nyoom-module ui.hydra
                :module :hydra
                :keys [:<leader>g
                       :<leader>v

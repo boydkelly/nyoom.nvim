@@ -1,4 +1,4 @@
 (import-macros {: lz-package! : vim-pack-spec!} :macros)
 
 (lz-package! :p00f/clangd_extensions.nvim
-              {:after lang.cc :ft [:c :cpp]})
+              {:nyoom-module lang.cc :ft [:c :cpp]})

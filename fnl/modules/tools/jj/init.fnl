@@ -1,7 +1,7 @@
 (import-macros {: lz-package! : vim-pack-spec!} :macros)
 
 ; Magit for neovim
-(lz-package! :nicolasgb/jj.nvim {:after tools.jj :keys
+(lz-package! :nicolasgb/jj.nvim {:nyoom-module tools.jj :keys
              [{1 :<leader>jD
                2 (fn []
                    ((. (require :jj.cmd) :describe)))

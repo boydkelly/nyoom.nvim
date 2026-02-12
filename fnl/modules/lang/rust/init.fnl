@@ -7,4 +7,4 @@
 
 ; inlay-hints + lldb + niceties for rust-analyzer
 
-(lz-package! :simrat39/rust-tools.nvim {:after lang.rust :ft :rust})
+(lz-package! :simrat39/rust-tools.nvim {:nyoom-module lang.rust :ft :rust})
