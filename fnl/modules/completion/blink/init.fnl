@@ -12,12 +12,14 @@
                :lazy false
                :event [:InsertEnter :CmdLineEnter]
                :requires [(lz-trigger-load! :onsails/lspkind.nvim)
+                          (lz-trigger-load! :saghen/blink.compat)
                           (lz-trigger-load! :zbirenbaum/copilot.lua)
                           (lz-trigger-load! :giuxtaposition/blink-cmp-copilot)
                           (lz-trigger-load! :PaterJason/cmp-conjure)
                           (lz-trigger-load! :kirasok/cmp-hledger)
                           (lz-trigger-load! :ribru17/blink-cmp-spell)
-                          (lz-trigger-load! :saghen/blink.compat)]})
+                          ]}
+               )
 
 
 

@@ -22,7 +22,7 @@
 ;; install the stuff
 (lz-unpack!)
 (include :modules)
-(print (.. "DEBUG: Module count from packages.fnl is " (nyoom-module-count!)));;
+; (print (.. "DEBUG: Module count from packages.fnl is " (nyoom-module-count!)));;
 (nyoom-init-modules!)
 ; (nyoom-compile-modules!) ;; precompiled in init.lua
 (lz-load-specs!)

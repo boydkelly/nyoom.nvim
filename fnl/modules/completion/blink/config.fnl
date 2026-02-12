@@ -1,8 +1,10 @@
 (import-macros {: set! : nyoom-module-p! : packadd! : autocmd!} :macros)
 (local {: setup} (require :core.lib.setup))
 
+(packadd! blink.compat)
 (packadd! blink-cmp-spell)
 (packadd! lspkind.nvim)
+(packadd! conjure)
 (packadd! cmp-conjure)
 (packadd! copilot.lua)
 (packadd! luasnip)
@@ -133,4 +135,3 @@
 
 ;; (blink.setup opts)
 (setup :blink.cmp opts)
-
