@@ -46,6 +46,8 @@
     (rawset _G k v)))
 
 ; (vim.notify "NYOOM: Requiring core" vim.log.levels.INFO)
+(set _G.nyoom/pack [])
+(set _G.nyoom/specs [])
 
 ;; Finally load Nyoom core
 (require :core)
