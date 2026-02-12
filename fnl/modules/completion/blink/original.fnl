@@ -1,7 +1,7 @@
+(import-macros {: set! : nyoom-module-p! : packadd!} :macros)
 (local {: autoload} (require :core.lib.autoload))
 (local {: setup} (require :core.lib.setup))
 (local shared (require :core.lib.shared))
-(import-macros {: set! : nyoom-module-p! : packadd!} :macros)
 (local cmp (autoload :cmp))
 (local luasnip (autoload :luasnip))
 
@@ -98,7 +98,8 @@
              :formatting {:fields {1 :kind 2 :abbr 3 :menu}
                           :format (fn [_ vim-item]
                                     (set vim-item.menu vim-item.kind)
-                                    (set vim-item.kind (. shared.codicons vim-item.kind))
+                                    (set vim-item.kind
+                                         (. shared.codicons vim-item.kind))
                                     vim-item)}})
 
 ;; Enable command-line completions
@@ -126,3 +127,4 @@
 ;; snippets
 
 ((. (autoload :luasnip.loaders.from_vscode) :lazy_load))
+

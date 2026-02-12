@@ -111,3 +111,4 @@
           +bindings
           +which-key
           +smartparens))
+

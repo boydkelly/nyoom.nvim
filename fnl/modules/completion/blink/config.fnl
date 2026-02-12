@@ -3,7 +3,7 @@
 
 (packadd! blink-cmp-spell)
 (packadd! lspkind.nvim)
-(packadd! cmp-conjure)
+; (packadd! cmp-conjure)
 (packadd! copilot.lua)
 (packadd! luasnip)
 
