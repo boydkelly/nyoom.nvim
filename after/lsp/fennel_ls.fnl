@@ -2,6 +2,5 @@
  :cmd [:fennel-ls]
  :filetypes [:fennel]
  :root_markers [:flsproject.fnl :.jj :.git]
- :settings {}
+ :settings {:fennel {:diagnostics {:globals [:vim]}}}
  :single_file_support true}
-
