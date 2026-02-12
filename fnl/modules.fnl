@@ -1,4 +1,4 @@
-(import-macros {: nyoom!} :macros)
+(import-macros {: nyoom! : nyoom-module-count!} :macros)
 
 ;; NOTE: TODO and FIXME modules still need work. WIP: modules work but may still be buggy
 
@@ -111,3 +111,4 @@
           +bindings
           +which-key
           +smartparens))
+;;(print (.. "DEBUG: Module count from modules.fnl is " (nyoom-module-count!)))

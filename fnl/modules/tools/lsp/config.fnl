@@ -6,7 +6,7 @@
 (nyoom-module-p! cc (table.insert lsp-servers :clangd))
 (nyoom-module-p! python (table.insert lsp-servers :pyright))
 (nyoom-module-p! lua (table.insert lsp-servers :lua_ls))
-(nyoom-module-p! fennel (table.insert lsp-servers :fennel-ls))
+(nyoom-module-p! fennel (table.insert lsp-servers :fennel_ls))
 (nyoom-module-p! csharp (table.insert lsp-servers :omnisharp))
 (nyoom-module-p! clojure (table.insert lsp-servers :clojure_lsp))
 (nyoom-module-p! web (do

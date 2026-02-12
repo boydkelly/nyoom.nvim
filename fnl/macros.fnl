@@ -1128,11 +1128,15 @@
   `(length (or _G.nyoom/pack [])))
 
 (lambda nyoom-module-count! []
-  "Returns code to calculate number of modules at runtime"
-  `(length (or _G.nyoom/modules [])))
+  "Counts keys in a hash-map by iterating"
+  (let [m (or _G.nyoom/modules {})]
+    (var count 0)
+    (each [_ _ (pairs m)]
+      (set count (+ count 1)))
+    count))
 
 (lambda nyoom-spec-count! []
-  "Returns code to calculate number of modules at runtime"
+  "Returns code to calculate number of specs at runtime"
   `(length (or _G.nyoom/specs [])))
 
 ; (tset _G :nyoom/servers [])

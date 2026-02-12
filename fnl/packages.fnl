@@ -8,6 +8,7 @@
                 : lz-load-specs!
                 : rock!
                 : colorscheme
+                : nyoom-module-count!
                 : nyoom-init-modules!
                 : nyoom-compile-modules!
                 : autocmd!} :macros)
@@ -18,13 +19,11 @@
 ;; could be added to a general dependencies layer; or just added to telescope etc.
 (vim-pack-spec! :nvim-lua/plenary.nvim)
 (vim-pack-spec! :MunifTanjim/nui.nvim)
-(vim-pack-spec! :nyoom-engineering/oxocarbon.nvim)
-(packadd! :oxocarbon.nvim)
-
-;(include :modules)
-(nyoom-init-modules!)
 ;; install the stuff
 (lz-unpack!)
+(include :modules)
+(print (.. "DEBUG: Module count from packages.fnl is " (nyoom-module-count!)));;
+(nyoom-init-modules!)
 ; (nyoom-compile-modules!) ;; precompiled in init.lua
 (lz-load-specs!)
 ;; oxocarbon could either be added to core install with tangerine and lz.n or as a regular module
