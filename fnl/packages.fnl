@@ -26,7 +26,7 @@
 ;(nyoom-init-modules!
 ;; install the stuff
 ;;
-(include :modules)
+; (include :modules)
 (lz-init-modules!)
 (lz-unpack!)
 ; (nyoom-compile-modules!) ;; precompiled in init.lua
