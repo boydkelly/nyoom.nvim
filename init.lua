@@ -6,6 +6,7 @@
 -- set dev true below to force compile on start
 local dev = true
 local data_path = vim.fn.stdpath("data")
+local config_path = vim.fn.stdpath("config")
 local tangerine_path = data_path .. "/site/pack/core/opt/tangerine.nvim"
 local lz_path = data_path .. "/site/pack/core/opt/lz.n"
 
@@ -143,7 +144,7 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 	}
 
 	local modules = {
-		{ fnl_dir .. "/after/lsp", lua_dir .. "/after/lsp" },
+		{ config_path .. "/after/lsp", config_path .. "/after/lsp" },
 		-- { fnl_dir .. "/modules", lua_dir .. "/modules" },
 	}
 

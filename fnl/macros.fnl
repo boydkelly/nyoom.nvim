@@ -1058,11 +1058,10 @@
     (expand-exprs inits)))
 
 (lambda lz-config-modules! []
-  "Statically inlines all config.fnl files from enabled modules."
+  "Statically inlines all config.fnl files. Hard-fails on missing/broken files."
   (fn config-module [_ module-def]
     (icollect [_ path (ipairs (or module-def.config-paths []))]
-      ;; Wrapped in pcall so one broken config doesn't tank the whole boot
-      `(pcall (fn [] (include ,path)))))
+      `(include ,path)))
 
   (let [registry (or _G.nyoom/modules {})
         configs (icollect [name def (pairs registry)]
