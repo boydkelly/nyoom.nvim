@@ -7,6 +7,7 @@
 (packadd! conjure)
 (packadd! cmp-conjure)
 (packadd! copilot.lua)
+(packadd! blink-cmp-copilot)
 (packadd! luasnip)
 
 (fn apply-blink-hl []
