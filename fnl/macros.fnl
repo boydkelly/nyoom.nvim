@@ -1057,33 +1057,64 @@
   (let [inits (init-modules _G.nyoom/modules)]
     (expand-exprs inits)))
 
+(lambda lz-config-modules! []
+  "Statically inlines all config.fnl files from enabled modules."
+  (fn config-module [_ module-def]
+    (icollect [_ path (ipairs (or module-def.config-paths []))]
+      ;; Wrapped in pcall so one broken config doesn't tank the whole boot
+      `(pcall (fn [] (include ,path)))))
+
+  (let [registry (or _G.nyoom/modules {})
+        configs (icollect [name def (pairs registry)]
+                  (config-module name def))]
+    (expand-exprs (collect [_ list (ipairs configs) &into []]
+                    (unpack list)))))
+
 (lambda lz-compile-modules! []
-  "Bakes config.fnl files by checking the filesystem with libuv (fast)."
-  (let [uv vim.loop ;; Get the base path once at the start of the macro
-        config-path (.. (vim.fn.stdpath :config) :/fnl/)]
-    (fn file-exists? [mod-path]
-      (let [;; Convert 'modules.lang.sh.config' to 'modules/lang/sh/config.fnl'
-            rel-path (.. (mod-path:gsub "%." "/") :.fnl)
-            full-path (.. config-path rel-path)]
-        (not= nil (uv.fs_stat full-path))))
+  "Bakes config.fnl files directly from the registry table.
+   No FS checks, no overhead—just static inclusion."
+  (fn compile-module [module-name module-decl]
+    (icollect [_ path (ipairs (or module-decl.config-paths []))]
+      `(pcall (fn [] (include ,path)))))
 
-    (fn compile-module [module-name module-decl]
-      (let [exprs []]
-        (each [_ path (ipairs (or module-decl.config-paths []))]
-          (if (file-exists? path)
-              (table.insert exprs `(pcall (fn [] (include ,path))))))
-        exprs))
+  (fn compile-modules [registry]
+    (let [source []]
+      (each [_ module-def (pairs registry)]
+        (let [configs (compile-module _ module-def)]
+          (each [_ expr (ipairs configs)]
+            (table.insert source expr))))
+      source))
 
-    (fn compile-modules [registry]
-      (let [source []]
-        (each [_ module-def (pairs registry)]
-          (let [configs (compile-module _ module-def)]
-            (each [_ expr (ipairs configs)]
-              (table.insert source expr))))
-        source))
+  (let [source (compile-modules (or _G.nyoom/modules {}))]
+    (expand-exprs source)))
 
-    (let [source (compile-modules _G.nyoom/modules)]
-      (expand-exprs source))))
+; (lambda lz-compile-modules-v1! []
+;   "Bakes config.fnl files by checking the filesystem with libuv (fast)."
+;   (let [uv vim.loop ;; Get the base path once at the start of the macro
+;         config-path (.. (vim.fn.stdpath :config) :/fnl/)]
+;     (fn file-exists? [mod-path]
+;       (let [;; Convert 'modules.lang.sh.config' to 'modules/lang/sh/config.fnl'
+;             rel-path (.. (mod-path:gsub "%." "/") :.fnl)
+;             full-path (.. config-path rel-path)]
+;         (not= nil (uv.fs_stat full-path))))
+;
+;     (fn compile-module [module-name module-decl]
+;       (let [exprs []]
+;         (each [_ path (ipairs (or module-decl.config-paths []))]
+;           (if (file-exists? path)
+;               (table.insert exprs `(pcall (fn [] (include ,path))))))
+;         exprs))
+;
+;     (fn compile-modules [registry]
+;       (let [source []]
+;         (each [_ module-def (pairs registry)]
+;           (let [configs (compile-module _ module-def)]
+;             (each [_ expr (ipairs configs)]
+;               (table.insert source expr))))
+;         source))
+;
+;     (let [source (compile-modules _G.nyoom/modules)]
+;       (expand-exprs source))))
 
 (lambda nyoom-module! [name]
   "By default modules should be loaded through use-package!. Of course, not every
@@ -1202,6 +1233,7 @@
  : lz-load-specs!
  : lz-init-modules!
  : lz-compile-modules!
+ : lz-config-modules!
  : fake-module!
  : nyoom!
  : nyoom-module!
@@ -1209,4 +1241,3 @@
  : nyoom-module-ensure!
  : nyoom-package-count!
  : nyoom-module-count!}
-

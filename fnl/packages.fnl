@@ -10,6 +10,7 @@
                 : colorscheme
                 : lz-init-modules!
                 : lz-compile-modules!
+                : lz-config-modules!
                 : autocmd!} :macros)
 
 ; (print "NYOOM: packages.fnl - START")
@@ -25,10 +26,12 @@
 ;(nyoom-init-modules!
 ;; install the stuff
 ;;
-(include :modules)
+; (include :modules)
+;(lz-compile-modules!)
+(lz-unpack!)
+(lz-config-modules!)
 (lz-init-modules!)
 ; (lz-compile-modules!)
-(lz-unpack!)
 ; (nyoom-compile-modules!) ;; precompiled in init.lua
+;; precompiled in init.lua
 (lz-load-specs!)
-

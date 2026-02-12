@@ -16,7 +16,7 @@
         dashboard            ; a nifty splash screen for neovim
         ;;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit.
         hydra                ; Discount modality for mythological beast hunters
-        indent-guides      ; highlighted indent columns
+        ;indent-guides      ; highlighted indent columns
         modeline             ; snazzy, nano-emacs-inspired modeline
         ;nvimtree           ; a project drawer, like NERDTree for vim
         ;neotree              ; tree-like structures for neovim

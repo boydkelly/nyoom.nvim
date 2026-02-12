@@ -144,7 +144,7 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 
 	local modules = {
 		{ fnl_dir .. "/after/lsp", lua_dir .. "/after/lsp" },
-		{ fnl_dir .. "/modules", lua_dir .. "/modules" },
+		-- { fnl_dir .. "/modules", lua_dir .. "/modules" },
 	}
 
 	-- Execute batch compilation
