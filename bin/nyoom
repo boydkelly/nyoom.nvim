@@ -51,8 +51,9 @@ function install_nyoom() {
     printf "\n\033[1m\033[32mSuccessfully Linked Nyoom Configs\033[0m\n\n"
   fi
   printf "Installing Core Dependencies..."
-  rm -rfv "${DATA_PATH}/site/pack"
-  nvim --headless -c 'lua vim.pack.add({"https://github.com/udayvir-singh/tangerine.nvim","https://github.com/nvim-neorocks/lz.n" })' +qa
+  nvim --headless -c 'lua vim.pack.add({"https://github.com/udayvir-singh/tangerine.nvim", \
+	"https://github.com/nyoom-engineering/oxocarbon.nvim", \
+  "https://github.com/nvim-neorocks/lz.n" })' +qa
 
   printf "\n\033[1m\033[32mSuccessfully Installed Core Dependencies\033[0m\n\n"
 }

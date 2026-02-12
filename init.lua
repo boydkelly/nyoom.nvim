@@ -19,6 +19,7 @@ if not bootstrap_ok then
 	-- either install or make user run install script.
 	vim.pack.add({
 		{ src = "https://github.com/nvim-neorocks/lz.n" },
+		{ src = "https://github.com/nyoom-engineering/oxocarbon.nvim" },
 		{ src = "https://github.com/udayvir-singh/tangerine.nvim" },
 	})
 	dev = true -- to force package install below
