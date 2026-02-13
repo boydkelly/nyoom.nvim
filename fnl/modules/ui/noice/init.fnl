@@ -6,3 +6,4 @@
              {:nyoom-module ui.noice
               :event :CmdlineEnter
               :requires [(lz-trigger-load! :rcarriga/nvim-notify {:opt true})]})
+

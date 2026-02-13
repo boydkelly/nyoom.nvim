@@ -611,9 +611,10 @@
                         `(fn [] ,(unpack before-parts)))
         after-parts (let [p []]
                       ;; 1. Handle Nyoom Module Include (nyoom-module/after)
+                      ;; Instead of requiring a module that might loop, we 'bake' the config in.
                       (when module-name
                         (table.insert p
-                                      `(require ,(.. :modules. module-name
+                                      `(include ,(.. :fnl.modules. module-name
                                                      :.config))))
                       ;; 2. Handle setup-plugin
                       (when setup-plugin
@@ -621,16 +622,19 @@
                                       `(let [al# (require :core.lib.autoload)
                                              setup-lib# (al#.autoload :core.lib.setup)]
                                          (setup-lib#.setup ,setup-plugin {}))))
-                      ;; 3. Handle :config (Always force modules. prefix)
+                      ;; 3. Handle :config
+                      ;; We use include here as well to ensure the config is self-contained.
                       (when options.config
                         (let [cfg (->str options.config)]
-                          (table.insert p `(require ,(.. :modules. cfg)))))
-                      ;; 4. Handle :after (Always force modules. prefix)
+                          (table.insert p `(include ,(.. :modules. cfg)))))
+                      ;; 4. Handle :after
                       (when (and options.after
                                  (not= (->str options.after) module-name))
                         (let [aft (->str options.after)]
-                          (table.insert p `(require ,(.. :modules. aft)))))
-                      p) ;; The wrapper function logic
+                          ;; Note: if 'after' refers to a full module with its own config,
+                          ;; include is safer for memory-only.
+                          (table.insert p `(include ,(.. :modules. aft)))))
+                      p)
         after-hook (if (> (length after-parts) 0)
                        `(fn []
                           (do
@@ -653,8 +657,8 @@
     (if before-hook (tset spec-kv :before before-hook))
     (if after-hook (tset spec-kv :after after-hook))
     ;; 7. Final Code Generation (Now inside the main let block)
-    (let [final-code `(do
-                        )]
+    (let [final-code `(do)]
+
       (each [_ reg (ipairs req-registrations)] (table.insert final-code reg)) ; (when module-name ;   (table.insert final-code ;                 `(let [m-def# {:config-paths [,(.. :modules. module-name
       ;                                                    :.config)]}] ;                    (tset _G.nyoom/modules ,module-name m-def#) ;                    (table.insert _G.nyoom/modules m-def#))))
       ;; Re-insert the version/branch for the installer call
@@ -794,12 +798,12 @@
         loadname (string.sub (string.match package "/.+") 2)
         augroup (.. :nyoom-pact- loadname)
         host :github
-        autocmds `(do
-                    )
-        callback `(do
-                    )
-        result `(do
-                  )
+        autocmds `(do)
+
+        callback `(do)
+
+        result `(do)
+
         options (or ?options {})
         options (collect [k v (pairs options)]
                   (match k
@@ -1069,6 +1073,43 @@
     (expand-exprs (collect [_ list (ipairs configs) &into []]
                     (unpack list)))))
 
+(lambda lz-bake-configs! []
+  "The 'Original Nyoom' approach: Pasts the compiled code into a preload function."
+  (let [registry (or _G.nyoom/modules {})
+        exprs []
+        seen {}]
+    (each [_ def (pairs registry)]
+      (each [_ path (ipairs (or def.config-paths []))]
+        (let [clean-path (path:gsub "%.fnl$" "")]
+          (when (not (. seen clean-path))
+            (tset seen clean-path true)
+            (table.insert exprs
+                          `(tset package.preload ,clean-path
+                                 (fn []
+                                   ;; Instead of 'require', we use 'include'
+                                   ;; This 'pastes' the compiled Lua here
+                                   ;; so no require is needed at runtime.
+                                   (include ,path))))))))
+    (expand-exprs exprs)))
+
+(lambda lz-virtual-disk! []
+  "Stashes the COMPILED Lua code of all configs into package.preload at build-time."
+  (let [registry (or _G.nyoom/modules {})
+        exprs []
+        seen {}]
+    (each [_ def (pairs registry)]
+      (each [_ path (ipairs (or def.config-paths []))]
+        (let [clean-path (path:gsub "%.fnl$" "")]
+          (when (not (. seen clean-path))
+            (tset seen clean-path true)
+            (table.insert exprs
+                          `(tset package.preload ,clean-path
+                                 (fn []
+                                   ;; 'include' pastes the COMPILED LUA here during compilation
+                                   (let [m# (include ,path)]
+                                     (if (= nil m#) true m#)))))))))
+    (expand-exprs exprs)))
+
 (lambda lz-compile-modules! []
   "Bakes config.fnl files directly from the registry table.
    No FS checks, no overhead—just static inclusion."
@@ -1233,6 +1274,8 @@
  : lz-init-modules!
  : lz-compile-modules!
  : lz-config-modules!
+ : lz-bake-configs!
+ : lz-virtual-disk!
  : fake-module!
  : nyoom!
  : nyoom-module!

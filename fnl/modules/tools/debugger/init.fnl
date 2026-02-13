@@ -1,9 +1,11 @@
 (import-macros {: lz-package! : vim-pack-spec! : pack} :macros)
 
 (lz-package! :rcarriga/nvim-dap
-              {:after tools.debugger
-               :opt true
-               :defer nvim-dap
-               :requires [(pack :rcarriga/nvim-dap-ui {:opt true})
-                          (pack :mfussenegger/nvim-dap-python {:opt true})
-                          (pack :jbyuki/one-small-step-for-vimkind {:opt true})]})
+             {:nyoom-module tools.debugger
+              :opt true
+              :defer nvim-dap
+              :requires [(lz-trigger-load! :rcarriga/nvim-dap-ui {:opt true})
+                         (lz-trigger-load! :mfussenegger/nvim-dap-python
+                                           {:opt true})
+                         (lz-trigger-load! :jbyuki/one-small-step-for-vimkind
+                                           {:opt true})]})

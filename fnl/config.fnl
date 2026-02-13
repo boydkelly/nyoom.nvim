@@ -6,6 +6,8 @@
 
 ; (print "CONFIG: colorscheme")
 (set! background :dark)
+(packadd! oxocarbon.nvim)
+(colorscheme oxocarbon)
 ;; (colorscheme oxocarbon)
 
 ;; The set! macro sets vim.opt options. By default it sets the option to true
@@ -35,3 +37,4 @@
 ; new cmd line; noice config disables this after startup...   Best of both.
 ((. (require :vim._core.ui2) :enable) {:enable true
                                        :msg {:target :msg :timeout 4000}})
+

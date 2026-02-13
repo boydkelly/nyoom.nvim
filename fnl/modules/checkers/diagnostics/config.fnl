@@ -5,7 +5,7 @@
 (local none-ls (require :null-ls))
 (local none-ls-sources [])
 
-(nyoom-module-ensure! lsp)
+;(nyoom-module-ensure! lsp)
 
 ; moved to tools.lsp
 ; (vim.diagnostic.config {:underline {:severity {:min vim.diagnostic.severity.INFO}}
@@ -19,14 +19,17 @@
 (fn on-attach [client buf]
   ;; This only runs if none-ls attaches to a buffer
   (nyoom-module-p! config.+bindings
-    (do
-      (local {:open_float open-line-diag-float!
-              :goto_prev goto-diag-prev!
-              :goto_next goto-diag-next!}
-            vim.diagnostic)
-      (map! [n] :<leader>d open-line-diag-float! {:buffer buf :desc "Open diagnostics"})
-      (map! [n] "[d" goto-diag-prev! {:buffer buf :desc "Prev diagnostic"})
-      (map! [n] "]d" goto-diag-next! {:buffer buf :desc "Next diagnostic"}))))
+                   (do
+                     (local {:open_float open-line-diag-float!
+                             :goto_prev goto-diag-prev!
+                             :goto_next goto-diag-next!}
+                            vim.diagnostic)
+                     (map! [n] :<leader>d open-line-diag-float!
+                           {:buffer buf :desc "Open diagnostics"})
+                     (map! [n] "[d" goto-diag-prev!
+                           {:buffer buf :desc "Prev diagnostic"})
+                     (map! [n] "]d" goto-diag-next!
+                           {:buffer buf :desc "Next diagnostic"}))))
 
 (nyoom-module-p! format
                  (do
@@ -57,20 +60,20 @@
                                       (table.insert none-ls-sources
                                                     none-ls.builtins.formatting.black)
                                       (table.insert none-ls-sources
-                                                    none-ls.builtins.formatting.isort)))
-                   ; now handled by lsp
-                   ; (nyoom-module-p! rust
-                   ;                  (table.insert none-ls-sources
-                   ;                                none-ls.builtins.formatting.rustfmt))
-                   ; handled by lsp natively that calls shfmt
-                   ; (nyoom-module-p! sh
-                   ;                  (table.insert none-ls-sources
-                   ;                                none-ls.builtins.formatting.shfmt))
-                   ; handled by zls
-                   ; (nyoom-module-p! zig
-                   ;                  (table.insert none-ls-sources
-                   ;                                none-ls.builtins.formatting.zigfmt))
-                   ))
+                                                    none-ls.builtins.formatting.isort)))))
+
+; now handled by lsp
+; (nyoom-module-p! rust
+;                  (table.insert none-ls-sources
+;                                none-ls.builtins.formatting.rustfmt))
+; handled by lsp natively that calls shfmt
+; (nyoom-module-p! sh
+;                  (table.insert none-ls-sources
+;                                none-ls.builtins.formatting.shfmt))
+; handled by zls
+; (nyoom-module-p! zig
+;                  (table.insert none-ls-sources
+;                                none-ls.builtins.formatting.zigfmt))
 
 ; handeled by diagnostics virtual_lines setting
 ; (nyoom-module-p! diagnostics

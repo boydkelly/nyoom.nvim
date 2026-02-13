@@ -138,7 +138,6 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 		{ fnl_dir .. "/core/repl.fnl", lua_dir .. "/core/repl.lua" },
 		{ fnl_dir .. "/core/doctor.fnl", lua_dir .. "/health.lua" },
 		{ fnl_dir .. "/nyoom.fnl", lua_dir .. "/nyoom.lua" },
-		{ fnl_dir .. "/modules.fnl", lua_dir .. "/modules.lua" },
 		{ fnl_dir .. "/config.fnl", lua_dir .. "/config.lua" },
 		{ fnl_dir .. "/packages.fnl", lua_dir .. "/packages.lua" },
 	}

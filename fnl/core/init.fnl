@@ -28,7 +28,6 @@
 ;; and package management
 (if (not cli)
     (do
-      ; (print "set options")
       ;; set opinionated defaults. TODO this should be in a module?
       (import-macros {: command! : let! : set!} :macros)
       (set! cmdheight 0)
@@ -102,3 +101,4 @@
 (require :packages)
 
 ;; (require :pacttesting)
+

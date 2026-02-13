@@ -4,4 +4,3 @@
              {:nyoom-module ui.indent-guides
               :opt true
               :defer indent-blankline.nvim})
-

@@ -1,4 +1,4 @@
-(import-macros {: nyoom!} :macros)
+(import-macros {: nyoom! : nyoom-module-count!} :macros)
 
 ;; NOTE: TODO and FIXME modules still need work. WIP: modules work but may still be buggy
 
@@ -16,7 +16,7 @@
         dashboard            ; a nifty splash screen for neovim
         ;;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit.
         hydra                ; Discount modality for mythological beast hunters
-        ;indent-guides      ; highlighted indent columns
+        indent-guides      ; highlighted indent columns
         modeline             ; snazzy, nano-emacs-inspired modeline
         ;nvimtree           ; a project drawer, like NERDTree for vim
         ;neotree              ; tree-like structures for neovim
@@ -33,7 +33,7 @@
         ;fold                 ; (nigh) universal code folding
         (format +onsave)     ; automated prettiness
         ;;multiple-cursors   ; learn macros you dingus
-        ;parinfer             ; turn lisp into python, sort of
+        ; parinfer             ; turn lisp into python, sort of
         ;; (hotpot +reflect)    ; lets get cooking. NOTE: essential module (for now), don't disable
         scratch              ; emacs-like scratch buffer functionality
         word-wrap            ; language-aware smart soft and hard wrapping
@@ -52,7 +52,7 @@
         docker               ; row row row your boat TODO +netman?
         editorconfig       ; let someone else argue about tabs vs spaces
         ;magma              ; tame Jupyter notebooks
-        ;mason                ; setting your tools in stone
+        mason                ; setting your tools in stone
         eval                 ; run code, run (also, repls)
         antifennel           ; for all the fennel haters out there. this ones for you
         pastebin             ; interacting with pastebin platforms
@@ -112,3 +112,4 @@
           +which-key
           +smartparens))
 
+;;(print (.. "DEBUG: Module count from modules.fnl is " (nyoom-module-count!)))
