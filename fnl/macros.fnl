@@ -1139,6 +1139,9 @@
   "Returns code to calculate number of specs at runtime"
   `(length (or _G.nyoom/specs [])))
 
+(fn nyoom-module-count-runtime! []
+  (length (or _G.nyoom/modules [])))
+
 ; (tset _G :nyoom/servers [])
 ; (tset _G :nyoom/lintesr [])
 ; (tset _G :nyoom/formatters [])
@@ -1200,4 +1203,6 @@
  : nyoom-module-p!
  : nyoom-module-ensure!
  : nyoom-package-count!
+ : nyoom-module-count-runtime!
  : nyoom-module-count!}
+

@@ -111,4 +111,3 @@
           +bindings
           +which-key
           +smartparens))
-;;(print (.. "DEBUG: Module count from modules.fnl is " (nyoom-module-count!)))

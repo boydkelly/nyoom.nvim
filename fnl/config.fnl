@@ -37,3 +37,16 @@
 ; new cmd line; noice config disables this after startup...   Best of both.
 ((. (require :vim._core.ui2) :enable) {:enable true
                                        :msg {:target :msg :timeout 4000}})
+
+(set _G.notify_mods
+     (fn []
+       (let [m (or (. _G :nyoom/modules) {})
+             names {}]
+         (each [name _ (pairs m)]
+           (table.insert names name))
+         (table.sort names)
+         (local output (table.concat names "\n"))
+         (if (= (length names) 0)
+             (vim.notify "No modules found in _G['nyoom/modules']"
+                         vim.log.levels.WARN)
+             (vim.notify (.. "Active Modules:\n" output) vim.log.levels.INFO)))))
