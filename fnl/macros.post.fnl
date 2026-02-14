@@ -644,7 +644,7 @@
     ;; Fill lz.n spec while filtering out internal/installer keys
     (each [k v (pairs options)]
       (let [k-str (tostring k)]
-        (when (and (not= k-str :nyoom-module) (not= k-str :after)
+        (when (and (not= k-str :nyoom-modules) (not= k-str :after)
                    (not= k-str :setup) (not= k-str :requires)
                    (not= k-str :config) (not= k-str :call-setup)
                    (not= k-str :run) (not= k-str :module) (not= k-str :branch)
@@ -657,8 +657,8 @@
     (if before-hook (tset spec-kv :before before-hook))
     (if after-hook (tset spec-kv :after after-hook))
     ;; 7. Final Code Generation (Now inside the main let block)
-    (let [final-code `(do
-                        )]
+    (let [final-code `(do)]
+
       (each [_ reg (ipairs req-registrations)] (table.insert final-code reg)) ; (when module-name ;   (table.insert final-code ;                 `(let [m-def# {:config-paths [,(.. :modules. module-name
       ;                                                    :.config)]}] ;                    (tset _G.nyoom/modules ,module-name m-def#) ;                    (table.insert _G.nyoom/modules m-def#))))
       ;; Re-insert the version/branch for the installer call
@@ -798,12 +798,12 @@
         loadname (string.sub (string.match package "/.+") 2)
         augroup (.. :nyoom-pact- loadname)
         host :github
-        autocmds `(do
-                    )
-        callback `(do
-                    )
-        result `(do
-                  )
+        autocmds `(do)
+
+        callback `(do)
+
+        result `(do)
+
         options (or ?options {})
         options (collect [k v (pairs options)]
                   (match k
@@ -1061,37 +1061,100 @@
   (let [inits (init-modules _G.nyoom/modules)]
     (expand-exprs inits)))
 
-(lambda nyoom-init-modules! []
-  "Initializes nyoom's module system.
-  ```fennel
-  (nyoom-init-modules!)
-  ```"
-  (fn init-module [module-name module-def]
-    (icollect [_ include-path (ipairs (or module-def.include-paths []))]
-      `(include ,include-path)))
+(lambda lz-config-modules! []
+  "Statically inlines all config.fnl files. Hard-fails on missing/broken files."
+  (fn config-module [_ module-def]
+    (icollect [_ path (ipairs (or module-def.config-paths []))]
+      `(include ,path)))
 
-  (fn init-modules [registry]
-    (icollect [module-name module-def (pairs registry)]
-      (init-module module-name module-def)))
+  (let [registry (or _G.nyoom/modules {})
+        configs (icollect [name def (pairs registry)]
+                  (config-module name def))]
+    (expand-exprs (collect [_ list (ipairs configs) &into []]
+                    (unpack list)))))
 
-  (let [inits (init-modules _G.nyoom/modules)]
-    (expand-exprs inits)))
+(lambda lz-bake-configs! []
+  "The 'Original Nyoom' approach: Pasts the compiled code into a preload function."
+  (let [registry (or _G.nyoom/modules {})
+        exprs []
+        seen {}]
+    (each [_ def (pairs registry)]
+      (each [_ path (ipairs (or def.config-paths []))]
+        (let [clean-path (path:gsub "%.fnl$" "")]
+          (when (not (. seen clean-path))
+            (tset seen clean-path true)
+            (table.insert exprs
+                          `(tset package.preload ,clean-path
+                                 (fn []
+                                   ;; Instead of 'require', we use 'include'
+                                   ;; This 'pastes' the compiled Lua here
+                                   ;; so no require is needed at runtime.
+                                   (include ,path))))))))
+    (expand-exprs exprs)))
 
-(lambda nyoom-compile-modules! []
-  "Compiles and caches module files.
-  ```fennel
-  (nyoom-compile-modules!)
-  ```"
+(lambda lz-virtual-disk! []
+  "Stashes the COMPILED Lua code of all configs into package.preload at build-time."
+  (let [registry (or _G.nyoom/modules {})
+        exprs []
+        seen {}]
+    (each [_ def (pairs registry)]
+      (each [_ path (ipairs (or def.config-paths []))]
+        (let [clean-path (path:gsub "%.fnl$" "")]
+          (when (not (. seen clean-path))
+            (tset seen clean-path true)
+            (table.insert exprs
+                          `(tset package.preload ,clean-path
+                                 (fn []
+                                   ;; 'include' pastes the COMPILED LUA here during compilation
+                                   (let [m# (include ,path)]
+                                     (if (= nil m#) true m#)))))))))
+    (expand-exprs exprs)))
+
+(lambda lz-compile-modules! []
+  "Bakes config.fnl files directly from the registry table.
+   No FS checks, no overhead—just static inclusion."
   (fn compile-module [module-name module-decl]
-    (icollect [_ config-path (ipairs (or module-decl.config-paths []))]
-      `,(pcall require config-path)))
+    (icollect [_ path (ipairs (or module-decl.config-paths []))]
+      `(pcall (fn [] (include ,path)))))
 
   (fn compile-modules [registry]
-    (icollect [module-name module-def (pairs registry)]
-      (compile-module module-name module-def)))
+    (let [source []]
+      (each [_ module-def (pairs registry)]
+        (let [configs (compile-module _ module-def)]
+          (each [_ expr (ipairs configs)]
+            (table.insert source expr))))
+      source))
 
-  (let [source (compile-modules _G.nyoom/modules)]
-    (expand-exprs [(unpack source)])))
+  (let [source (compile-modules (or _G.nyoom/modules {}))]
+    (expand-exprs source)))
+
+; (lambda lz-compile-modules-v1! []
+;   "Bakes config.fnl files by checking the filesystem with libuv (fast)."
+;   (let [uv vim.loop ;; Get the base path once at the start of the macro
+;         config-path (.. (vim.fn.stdpath :config) :/fnl/)]
+;     (fn file-exists? [mod-path]
+;       (let [;; Convert 'modules.lang.sh.config' to 'modules/lang/sh/config.fnl'
+;             rel-path (.. (mod-path:gsub "%." "/") :.fnl)
+;             full-path (.. config-path rel-path)]
+;         (not= nil (uv.fs_stat full-path))))
+;
+;     (fn compile-module [module-name module-decl]
+;       (let [exprs []]
+;         (each [_ path (ipairs (or module-decl.config-paths []))]
+;           (if (file-exists? path)
+;               (table.insert exprs `(pcall (fn [] (include ,path))))))
+;         exprs))
+;
+;     (fn compile-modules [registry]
+;       (let [source []]
+;         (each [_ module-def (pairs registry)]
+;           (let [configs (compile-module _ module-def)]
+;             (each [_ expr (ipairs configs)]
+;               (table.insert source expr))))
+;         source))
+;
+;     (let [source (compile-modules _G.nyoom/modules)]
+;       (expand-exprs source))))
 
 (lambda nyoom-module! [name]
   "By default modules should be loaded through use-package!. Of course, not every
@@ -1149,19 +1212,12 @@
   `(length (or _G.nyoom/pack [])))
 
 (lambda nyoom-module-count! []
-  "Counts keys in a hash-map by iterating"
-  (let [m (or _G.nyoom/modules {})]
-    (var count 0)
-    (each [_ _ (pairs m)]
-      (set count (+ count 1)))
-    count))
+  "Returns code to calculate number of modules at runtime"
+  `(length (or _G.nyoom/modules [])))
 
 (lambda nyoom-spec-count! []
-  "Returns code to calculate number of specs at runtime"
+  "Returns code to calculate number of modules at runtime"
   `(length (or _G.nyoom/specs [])))
-
-(fn nyoom-module-count-runtime! []
-  (length (or _G.nyoom/modules [])))
 
 ; (tset _G :nyoom/servers [])
 ; (tset _G :nyoom/lintesr [])
@@ -1205,7 +1261,6 @@
  : clear!
  : pack
  : rock
- ; : use-package!
  : rock!
  : unpack!
  : packadd!
@@ -1216,14 +1271,15 @@
  : lz-unpack!
  : lz-trigger-load!
  : lz-load-specs!
+ : lz-init-modules!
+ : lz-compile-modules!
+ : lz-config-modules!
+ : lz-bake-configs!
+ : lz-virtual-disk!
  : fake-module!
  : nyoom!
- : nyoom-init-modules!
- : lz-init-modules!
- : nyoom-compile-modules!
  : nyoom-module!
  : nyoom-module-p!
  : nyoom-module-ensure!
  : nyoom-package-count!
- : nyoom-module-count-runtime!
  : nyoom-module-count!}

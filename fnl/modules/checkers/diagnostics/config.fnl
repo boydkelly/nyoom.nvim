@@ -5,16 +5,19 @@
 (local none-ls (require :null-ls))
 (local none-ls-sources [])
 
-;(nyoom-module-ensure! lsp)
+(nyoom-module-ensure! lsp)
 
-; moved to tools.lsp
-; (vim.diagnostic.config {:underline {:severity {:min vim.diagnostic.severity.INFO}}
-;                         :signs {:severity {:min vim.diagnostic.severity.HINT}}
-;                         :virtual_text false
-;                         :float {:show_header false
-;                                 :source true}
-;                         :update_in_insert false
-;                         :severity_sort true})
+moved
+
+to
+
+tools.lsp
+(vim.diagnostic.config {:underline {:severity {:min vim.diagnostic.severity.INFO}}
+                        :signs {:severity {:min vim.diagnostic.severity.HINT}}
+                        :virtual_text false
+                        :float {:show_header false :source true}
+                        :update_in_insert false
+                        :severity_sort true})
 
 (fn on-attach [client buf]
   ;; This only runs if none-ls attaches to a buffer
@@ -75,12 +78,11 @@
 ;                  (table.insert none-ls-sources
 ;                                none-ls.builtins.formatting.zigfmt))
 
-; handeled by diagnostics virtual_lines setting
-; (nyoom-module-p! diagnostics
-;                  (do
-;                    (nyoom-module-p! lua
-;                                     (table.insert none-ls-sources
-;                                                   none-ls.builtins.diagnostics.selene))))
+(nyoom-module-p! diagnostics
+                 (do
+                   (nyoom-module-p! lua
+                                    (table.insert none-ls-sources
+                                                  none-ls.builtins.diagnostics.selene))))
 
 (nyoom-module-p! vc-gutter
                  (table.insert none-ls-sources

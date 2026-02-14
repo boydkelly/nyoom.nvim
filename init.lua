@@ -4,7 +4,7 @@
 
 --  just testing a few install scenarios with nyoom install/sync
 -- set dev true below to force compile on start
-local dev = true
+local dev = false
 local data_path = vim.fn.stdpath("data")
 local config_path = vim.fn.stdpath("config")
 local tangerine_path = data_path .. "/site/pack/core/opt/tangerine.nvim"
@@ -19,6 +19,7 @@ if not bootstrap_ok then
 	-- either install or make user run install script.
 	vim.pack.add({
 		{ src = "https://github.com/nvim-neorocks/lz.n" },
+		{ src = "https://github.com/nyoom-engineering/oxocarbon.nvim" },
 		{ src = "https://github.com/udayvir-singh/tangerine.nvim" },
 	})
 	dev = true -- to force package install below
@@ -27,6 +28,7 @@ if not bootstrap_ok then
 	--
 	--     return vim.cmd("qall!")
 end
+vim.cmd.packadd("lz.n") -- for now
 -- ========================================t
 -- 2. Tangerine & Fennel Configuration
 -- ========================================
@@ -159,7 +161,6 @@ end
 -- ========================================
 -- 6. Handoff to Main Entrypoint
 -- ========================================
-vim.cmd.packadd("lz.n") -- for now
 local ok, err = pcall(require, "nyoom")
 if not ok then
 	print("NYOOM: Fennel handoff failed!")

@@ -2,7 +2,7 @@
 (local {: setup} (require :core.lib.setup))
 (import-macros {: packadd! : nyoom-module-p!} :macros)
 
-((. (require :vim._core.ui2) :enable) {:enable false})
+; ((. (require :vim._core.ui2) :enable) {:enable true})
 
 (setup :noice {:health {:checker false}
                :cmdline {:format {:cmdline {:pattern "^:"
@@ -45,3 +45,4 @@
                         (do
                           (local {: load_extension} (autoload :telescope))
                           (load_extension :notify)))))
+

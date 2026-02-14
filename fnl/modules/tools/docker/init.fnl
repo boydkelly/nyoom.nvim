@@ -1,7 +1,7 @@
 (import-macros {: lz-package! : vim-pack-spec!} :macros)
 
 (lz-package! "https://codeberg.org/esensar/nvim-dev-container"
-              {:after tools.docker
+              {:nyoom-module tools.docker
                :cmd [:DevcontainerBuild
                      :DevcontainerImageRun
                      :DevcontainerBuildAndRun

@@ -2,8 +2,6 @@
 
 ; replacement for vim.notify
 
-(lz-package! :folke/noice.nvim
-             {:nyoom-module ui.noice
-              :event :CmdlineEnter
-              :requires [(lz-trigger-load! :rcarriga/nvim-notify {:opt true})]})
-
+(lz-package! :folke/noice.nvim {:nyoom-module :ui.noice
+                                :event :CmdlineEnter
+                                :requires [(lz-trigger-load! :rcarriga/nvim-notify {:opt true})]})
