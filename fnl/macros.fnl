@@ -537,17 +537,14 @@
     ;; Ensure we have a trigger for testing
     (when (= processed.event nil)
        (tset processed :event (wrap :UIEnter)))
-
-    ;; 3. Handle call-setup -> after hook merge
+     ;; 3. Handle call-setup -> after hook merge
     (when processed._call_setup_name
-      (let [setup-call `(let [(ok# val#) (pcall (fn []
-                                                (let [al# (require :core.lib.autoload)
-                                                      setup-lib# (al#.autoload :core.lib.setup)]
-                                                  (setup-lib#.setup ,processed._call_setup_name {}))))]
-                          (if ok#
-                             (vim.schedule (fn [] (print (.. "NYOOM: Successfully loaded " ,name))))
-                             (vim.notify (.. "NYOOM: Setup failed for " ,name ": " val#)
-                                         vim.log.levels.ERROR)))
+      (let [setup-name processed._call_setup_name
+            ;; We run pcall but do nothing with the result to keep it silent
+            setup-call `(pcall (fn []
+                                 (let [al# (require :core.lib.autoload)
+                                       setup-lib# (al#.autoload :core.lib.setup)]
+                                   (setup-lib#.setup ,setup-name {}))))
             existing-after processed.after]
         (tset processed :after
               (if (= existing-after nil)
