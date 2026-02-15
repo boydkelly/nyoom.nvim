@@ -10,6 +10,7 @@
                 : colorscheme
                 : nyoom-module-count!
                 : nyoom-package-count!
+                : nyoom-init-modules!
                 : lz-init-modules!
                 : autocmd!} :macros)
 
@@ -21,6 +22,8 @@
 (vim-pack-spec! :MunifTanjim/nui.nvim)
 
 (include :modules)
-(lz-init-modules!)
+(nyoom-init-modules!)
+(packadd! :lz.n)
 (lz-unpack!)
 (lz-load-specs!)
+

@@ -34,25 +34,18 @@
 (each [_ provider (ipairs default-providers)]
   (tset vim.g (.. :loaded_ provider :_provider) 0))
 
-;; If NYOOM_PROFILE is set, enable profiling
 (when (os.getenv :NYOOM_PROFILE) ; (vim.notify "NYOOM: Enabling profiler" vim.log.levels.WARN)
   ((. (require :core.lib.profile) :toggle)))
 
-; (vim.notify "NYOOM: Loading core.lib" vim.log.levels.INFO)
-
-;; Load Nyoom standard library and expose globals
 (let [stdlib (require :core.lib)] ; (vim.notify "NYOOM: core.lib loaded, injecting globals" vim.log.levels.INFO)
   (each [k v (pairs stdlib)]
     (rawset _G k v)))
 
-; (vim.notify "NYOOM: Requiring core" vim.log.levels.INFO)
 (set _G.nyoom/pack [])
 (set _G.nyoom/specs [])
-; (set _G.nyoom/modules [])
+(set _G.nyoom/modules [])
 
-;; Finally load Nyoom core
 (require :core)
-; (print "CORE: END")
 
 ; (vim.notify "NYOOM: core loaded successfully" vim.log.levels.INFO)
 

@@ -28,7 +28,10 @@ if not bootstrap_ok then
     --
     --     return vim.cmd("qall!")
 end
-vim.cmd.packadd("lz.n") -- for now
+
+-- vim.cmd.packadd("lz.n") -- for now
+vim.cmd.packadd("tangerine.nvim")
+
 -- ========================================t
 -- 2. Tangerine & Fennel Configuration
 -- ========================================
@@ -37,17 +40,11 @@ vim.cmd.packadd("lz.n") -- for now
 -- vim.cmd.cd(vim.fn.stdpath("config"))
 local fnl_dir = vim.fn.stdpath("config") .. "/fnl"
 local lua_dir = vim.fn.stdpath("config") .. "/.nyoom"
---  the lua_dir can go into the .cache like hotpot, but i have it in ~.config/nvim-nyoom for easy access
--- 1. Check native Lua first (Fastest)
 
 local core_exists = vim.uv.fs_stat(lua_dir .. "/core/init.lua")
 
--- 2. Only check environment variables if we aren't sure yet
-vim.cmd.packadd("tangerine.nvim")
-
 local api = require("tangerine.api")
 local fennel = require("tangerine.fennel")
--- fennel["allowed-globals"] = nyoom_globals
 
 fennel.path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. (fennel.path or "")
 package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path

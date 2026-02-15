@@ -634,7 +634,6 @@
                         `(fn [] ,(unpack before-parts)))
         after-parts (let [p []]
                       ;; 1. Handle Nyoom Module Include (nyoom-module/after)
-                      ;; Instead of requiring a module that might loop, we 'bake' the config in.
                       (when module-name
                         (table.insert p
                                       `(include ,(.. :fnl.modules. module-name
@@ -1252,3 +1251,4 @@
  : nyoom-package-count!
  : nyoom-module-count-runtime!
  : nyoom-module-count!}
+
