@@ -1,4 +1,4 @@
--- :fennel:1771176034
+-- :fennel:1771176783
 local blink_ok, blink = pcall(require, "blink.cmp")
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 if blink_ok then

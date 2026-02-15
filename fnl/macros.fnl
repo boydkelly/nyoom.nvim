@@ -504,46 +504,72 @@
     ;; Return a table that lz-package! can destructure
     {: name :reg (vim-pack-spec! identifier options)}))
 
-(lambda lz-pack [identifier ?options]
-  "Identical to legacy pack, but returns a table structured for lz-package! destructuring.
-  Processes :nyoom-module, :call-setup, and :defer before passing to vim-pack-spec!"
-  (assert-compile (str? identifier) "expected string for identifier" identifier)
-  (if (not (nil? ?options))
-      (assert-compile (table? ?options) "expected table for options" ?options))
+(lambda lz-pack! [identifier ?options]
   (let [options (or ?options {})
-        ;; Calculate the name (same logic as lz-trigger-load!)
-        raw-name (or options.as (identifier:match ".*/(.*)") identifier)
+        id-str (->str identifier)
+        raw-name (or options.as (id-str:match ".*/(.*)") id-str)
         name (raw-name:lower)
-        ;; Transform the options exactly like the original pack macro
-        processed-options (collect [k v (pairs options)]
-                            (match k
-                              :call-setup (values :config
-                                                  (string.format "require(\"core.lib.autoload\")[\"autoload\"](\"core.lib.setup\")[\"setup\"](\"%s\", {})"
-                                                                 (->str v)))
-                              :nyoom-module (values :config
-                                                    (string.format "require(\"modules.%s.config\")"
-                                                                   (->str v)))
-                              :defer (values :setup
-                                             (let [package (->str v)]
-                                               `(lambda []
-                                                  (vim.api.nvim_create_autocmd [:BufRead
-                                                                                :BufWinEnter
-                                                                                :BufNewFile]
-                                                                               {:group (vim.api.nvim_create_augroup ,package
-                                                                                                                    {})
-                                                                                :callback (fn []
-                                                                                            (if (not= (vim.fn.expand "%")
-                                                                                                      "")
-                                                                                                (vim.defer_fn (fn []
-                                                                                                                ((. (require :packer)
-                                                                                                                    :loader) ,package)
-                                                                                                                (if (= ,package
-                                                                                                                       :nvim-lspconfig)
-                                                                                                                    (vim.cmd "silent! do FileType")))
-                                                                                                  0)))}))))
-                              _ (values k v)))]
-    ;; Return the lz-style table
-    {: name :reg (vim-pack-spec! identifier processed-options)}))
+        install-version (or options.version options.branch)
+
+        ;; 1. Helper to ensure triggers are tables (fixes the lz.n error)
+        wrap (fn [val] (if (= (type val) :table) val [val]))
+
+        ;; 2. Transform options
+        processed (collect [k v (pairs options)]
+          (match k
+            ;; Force UIEnter for testing, but wrap it in a table
+            :defer (values :event (wrap :UIEnter))
+
+            ;; Wrap ft if it exists
+            :ft (values :ft (wrap v))
+
+            ;; Wrap other common triggers just in case
+            :event (values :event (wrap v))
+            :cmd (values :cmd (wrap v))
+            :keys (values :keys (wrap v))
+
+            :call-setup (values :_call_setup_name (->str v))
+            :as (values nil)
+            :version (values nil)
+            :branch (values nil)
+            _ (values k v)))]
+
+    ;; Ensure we have a trigger for testing
+    (when (= processed.event nil)
+       (tset processed :event (wrap :UIEnter)))
+
+    ;; 3. Handle call-setup -> after hook merge
+    (when processed._call_setup_name
+      (let [setup-call `(let [(ok# val#) (pcall (fn []
+                                                (let [al# (require :core.lib.autoload)
+                                                      setup-lib# (al#.autoload :core.lib.setup)]
+                                                  (setup-lib#.setup ,processed._call_setup_name {}))))]
+                          (if ok#
+                             (vim.schedule (fn [] (print (.. "NYOOM: Successfully loaded " ,name))))
+                             (vim.notify (.. "NYOOM: Setup failed for " ,name ": " val#)
+                                         vim.log.levels.ERROR)))
+            existing-after processed.after]
+        (tset processed :after
+              (if (= existing-after nil)
+                  `(fn [] ,setup-call)
+                  `(fn []
+                     (let [aft# ,existing-after]
+                       (if (= (type aft#) :function) (aft#)))
+                     ,setup-call))))
+      (tset processed :_call_setup_name nil))
+
+    ;; 4. Set the name as the first element
+    (tset processed 1 name)
+
+    `(do
+       ,(let [inst-opts (if install-version
+                            (let [t# {}]
+                              (each [k# v# (pairs options)] (tset t# k# v#))
+                              (tset t# :version install-version)
+                              t#)
+                            options)]
+          (vim-pack-spec! identifier inst-opts))
+       (table.insert _G.nyoom/specs ,processed))))
 
 (lambda lz-package! [identifier ?options]
   (let [options (or ?options {})
@@ -672,7 +698,8 @@
         (table.insert final-code (vim-pack-spec! identifier installer-options)))
       ;; nyoom spces for lz.n to process
       (table.insert final-code `(table.insert _G.nyoom/specs ,spec-kv))
-      final-code)))
+      final-code)
+    ))
 
 ;
 ;; Macro: unpack!
@@ -1212,6 +1239,7 @@
  : pact-use-package!
  : verify-dependencies!
  : lz-package!
+ : lz-pack!
  : vim-pack-spec!
  : lz-unpack!
  : lz-trigger-load!

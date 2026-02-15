@@ -8,9 +8,6 @@
 
 (local package-counter (nyoom-package-count!))
 (local module-counter (nyoom-module-count!))
-(print (.. "DEBUG: Module count from packages.fnl is " (nyoom-module-count!)))
-
-;;
 
 (local startup-file :/tmp/nvim-startuptime)
 (local startup-time-pattern "([%d.]+)  [%d.]+: [-]+ NVIM STARTED [-]+")
@@ -119,4 +116,3 @@
                         sections.footer
                         {:type :padding :val 1}
                         sections.icon]})
-
