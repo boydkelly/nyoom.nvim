@@ -2,7 +2,7 @@
 (local {: setup} (require :core.lib.setup))
 (import-macros {: packadd! : nyoom-module-p!} :macros)
 
-; ((. (require :vim._core.ui2) :enable) {:enable true})
+((. (require :vim._core.ui2) :enable) {:enable false})
 
 (setup :noice {:health {:checker false}
                :cmdline {:format {:cmdline {:pattern "^:"

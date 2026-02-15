@@ -1,2 +1,2 @@
--- :fennel:1771151511
+-- :fennel:1771157456
 return {capabilities = {offsetEncoding = {"utf-8", "utf-16"}}, cmd = {"fennel-ls"}, filetypes = {"fennel"}, root_markers = {"flsproject.fnl", ".jj", ".git"}, settings = {}, single_file_support = true}
