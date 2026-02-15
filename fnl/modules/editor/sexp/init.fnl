@@ -1,9 +1,7 @@
 (import-macros {: lz-package! : vim-pack-spec!} :macros)
-
+;; hack work around; nyoom-modul requires a config
+(vim-pack-spec! :guns/vim-sexp)
 (lz-package! :guns/vim-sexp
-             {:ft [:fennel :clojure :lisp :racket :scheme :janet :guile]
-              :config (tset vim.g :sexp_filetypes
-                            "clojure,scheme,lisp,timl,fennel,janet,hy")
+             {:module: :sexp :ft [:fennel :clojure :lisp :racket :scheme :janet :guile]
               :requires [(lz-trigger-load :tpope/vim-sexp-mappings-for-regular-people
                                           {:after :vim-sexp})]})
-

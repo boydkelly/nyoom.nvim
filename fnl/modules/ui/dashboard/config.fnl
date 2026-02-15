@@ -1,10 +1,16 @@
 (local {: setup} (require :core.lib.setup))
 (local {: truncate} (require :core.lib))
 
-(import-macros {: nyoom-package-count! : nyoom-module-count! : nyoom-module-p! : map!} :macros)
+(import-macros {: nyoom-package-count!
+                : nyoom-module-count!
+                : nyoom-module-p!
+                : map!} :macros)
 
 (local package-counter (nyoom-package-count!))
 (local module-counter (nyoom-module-count!))
+(print (.. "DEBUG: Module count from packages.fnl is " (nyoom-module-count!)))
+
+;;
 
 (local startup-file :/tmp/nvim-startuptime)
 (local startup-time-pattern "([%d.]+)  [%d.]+: [-]+ NVIM STARTED [-]+")
@@ -17,7 +23,7 @@
                         nil))
 
 (fn open-project []
-(nyoom-module-p! telescope)
+  (nyoom-module-p! telescope)
   (if (nyoom-module-p! project)
       (vim.cmd :ProjectRecents)
       (vim.cmd "Telescope project")))
@@ -80,7 +86,6 @@
                        "\\   _-'                                                                                    `-_   /"
                        " `''                                                                                          ``' "]
                  :opts {:position :center :hl :Comment}}
-
         :buttons {:type :group
                   :val [(button "SPC q l" "  Reload last session"
                                 ":Telescope find_files <CR>")
@@ -88,7 +93,8 @@
                                 ":Telescope oldfiles<CR>")
                         (button "SPC f r" "  Recently opened files"
                                 ":Telescope oldfiles<CR>")
-                        (button "SPC p p" "  Open project" (fn [] (open-project)))
+                        (button "SPC p p" "  Open project"
+                                (fn [] (open-project)))
                         (button "SPC RET" "  Jump to bookmark"
                                 ":Telescope marks<CR>")
                         (button "SPC f P" "  Open private configuration"
@@ -113,3 +119,4 @@
                         sections.footer
                         {:type :padding :val 1}
                         sections.icon]})
+

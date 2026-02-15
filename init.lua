@@ -4,8 +4,9 @@
 
 --  just testing a few install scenarios with nyoom install/sync
 -- set dev true below to force compile on start
-local dev = true
+local dev = false
 local data_path = vim.fn.stdpath("data")
+local config_path = vim.fn.stdpath("config")
 local tangerine_path = data_path .. "/site/pack/core/opt/tangerine.nvim"
 local lz_path = data_path .. "/site/pack/core/opt/lz.n"
 
@@ -18,6 +19,7 @@ if not bootstrap_ok then
 	-- either install or make user run install script.
 	vim.pack.add({
 		{ src = "https://github.com/nvim-neorocks/lz.n" },
+		{ src = "https://github.com/nyoom-engineering/oxocarbon.nvim" },
 		{ src = "https://github.com/udayvir-singh/tangerine.nvim" },
 	})
 	dev = true -- to force package install below
@@ -26,6 +28,10 @@ if not bootstrap_ok then
 	--
 	--     return vim.cmd("qall!")
 end
+
+-- vim.cmd.packadd("lz.n") -- for now
+vim.cmd.packadd("tangerine.nvim")
+
 -- ========================================t
 -- 2. Tangerine & Fennel Configuration
 -- ========================================
@@ -34,17 +40,11 @@ end
 -- vim.cmd.cd(vim.fn.stdpath("config"))
 local fnl_dir = vim.fn.stdpath("config") .. "/fnl"
 local lua_dir = vim.fn.stdpath("config") .. "/.nyoom"
---  the lua_dir can go into the .cache like hotpot, but i have it in ~.config/nvim-nyoom for easy access
--- 1. Check native Lua first (Fastest)
 
 local core_exists = vim.uv.fs_stat(lua_dir .. "/core/init.lua")
 
--- 2. Only check environment variables if we aren't sure yet
-vim.cmd.packadd("tangerine.nvim")
-
 local api = require("tangerine.api")
 local fennel = require("tangerine.fennel")
--- fennel["allowed-globals"] = nyoom_globals
 
 fennel.path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. (fennel.path or "")
 package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
@@ -137,13 +137,12 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 		{ fnl_dir .. "/core/repl.fnl", lua_dir .. "/core/repl.lua" },
 		{ fnl_dir .. "/core/doctor.fnl", lua_dir .. "/health.lua" },
 		{ fnl_dir .. "/nyoom.fnl", lua_dir .. "/nyoom.lua" },
-		{ fnl_dir .. "/modules.fnl", lua_dir .. "/modules.lua" },
 		{ fnl_dir .. "/config.fnl", lua_dir .. "/config.lua" },
 		{ fnl_dir .. "/packages.fnl", lua_dir .. "/packages.lua" },
 	}
 
 	local modules = {
-		{ fnl_dir .. "/after/lsp", lua_dir .. "/after/lsp" },
+		{ config_path .. "/after/lsp", config_path .. "/after/lsp" },
 		{ fnl_dir .. "/modules", lua_dir .. "/modules" },
 	}
 
@@ -156,10 +155,10 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 		safe_compile_dir(pair[1], pair[2])
 	end
 end
+
 -- ========================================
 -- 6. Handoff to Main Entrypoint
 -- ========================================
-vim.cmd.packadd("lz.n") -- for now
 local ok, err = pcall(require, "nyoom")
 if not ok then
 	print("NYOOM: Fennel handoff failed!")

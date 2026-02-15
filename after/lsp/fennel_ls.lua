@@ -1,2 +1,2 @@
--- :fennel:1770288904
-return {capabilities = {offsetEncoding = {"utf-8", "utf-16"}}, cmd = {"fennel-ls"}, filetypes = {"fennel"}, root_markers = {"flsproject.fnl", ".jj", ".git"}, settings = {}, single_file_support = true}
+-- :fennel:1771070005
+return {capabilities = {offsetEncoding = {"utf-8", "utf-16"}}, cmd = {"fennel-ls"}, filetypes = {"fennel"}, root_markers = {"flsproject.fnl", ".jj", ".git"}, settings = {fennel = {diagnostics = {globals = {"vim"}}}}, single_file_support = true}
