@@ -155,6 +155,7 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
         safe_compile_dir(pair[1], pair[2])
     end
 end
+
 -- ========================================
 -- 6. Handoff to Main Entrypoint
 -- ========================================
