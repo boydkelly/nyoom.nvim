@@ -109,7 +109,7 @@
                                (os.execute "xdg-open https://github.com/nyoom-engineering/nyoom.nvim")))}})
 
 (setup :alpha {:layout [{:type :padding :val 4}
-                        sections.header
+                        ; sections.header
                         {:type :padding :val 2}
                         sections.buttons
                         {:type :padding :val 2}
