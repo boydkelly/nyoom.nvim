@@ -44,3 +44,5 @@ inserts lz.n triggerload command into 'after' function.  This does a packadd, bu
 if you need some kind of setup a workaround is put this in the config of the requiring module.
 
 a lot of keys are ignored, wants etc.
+
+last version with separate pack and specs tables
