@@ -20,7 +20,7 @@
         modeline             ; snazzy, nano-emacs-inspired modeline
         ;nvimtree           ; a project drawer, like NERDTree for vim
         ;neotree              ; tree-like structures for neovim
-         oil
+        oil
         quickfix             ; enhancements to vim's builtin quickfix functionality
         trouble              ; view your diagnostics, now with icons! (i knew u were trouble when you walked iiiinnn)
         ;tabs                 ; keep tabs on your buffers, literally
@@ -93,9 +93,9 @@
         rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
         sql
         (sh
-           +nu
+           +nu)
           ; +fish
-          )           ; she sells {ba,z,fi}sh shells on the C xor
+                     ; she sells {ba,z,fi}sh shells on the C xor
         toml                ; extend my language
         xml                ; extend my language
         yaml               ; yet another markup language to enable
@@ -111,4 +111,5 @@
           +which-key
           +smartparens))
 
- ;;(print (.. "DEBUG: Module count from modules.fnl is " (nyoom-module-count!)))
+;;(print (.. "DEBUG: Module count from modules.fnl is " (nyoom-module-count!)))
+

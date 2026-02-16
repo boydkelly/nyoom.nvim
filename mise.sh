@@ -15,7 +15,7 @@ echo "Checking for tool updates and installing missing dependencies..."
 # 'upgrade' updates existing tools to the latest version allowed by mise.toml
 mise upgrade --yes
 # 'install' ensures anything missing from mise.toml is downloaded
-mise install
+mise install --yes
 
 # 3. Finalize the session path
 # This makes the shims for the (potentially new) versions available immediately
