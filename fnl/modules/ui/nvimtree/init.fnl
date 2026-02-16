@@ -11,4 +11,3 @@
                      [:<leader>oP
                       :<cmd>NvimTreeFindFile<CR>
                       {:desc "Find file in project sidebar"}]]})
-

@@ -505,67 +505,45 @@
     {: name :reg (vim-pack-spec! identifier options)}))
 
 (lambda lz-pack! [identifier ?options]
-  (let [options (or ?options {})
+  (let [options (if (= (type ?options) :table) ?options {}) ;; <--- Safety Check
         id-str (->str identifier)
         raw-name (or options.as (id-str:match ".*/(.*)") id-str)
         name (raw-name:lower)
         install-version (or options.version options.branch)
-
-        ;; 1. Helper to ensure triggers are tables (fixes the lz.n error)
         wrap (fn [val] (if (= (type val) :table) val [val]))
 
-        ;; 2. Transform options
         processed (collect [k v (pairs options)]
           (match k
-            ;; Force UIEnter for testing, but wrap it in a table
-            :defer (values :event (wrap :UIEnter))
-
-            ;; Wrap ft if it exists
-            :ft (values :ft (wrap v))
-
-            ;; Wrap other common triggers just in case
+            :defer (values :event (wrap :DeferredUIEnter))
+            :ft    (values :ft (wrap v))
             :event (values :event (wrap v))
-            :cmd (values :cmd (wrap v))
-            :keys (values :keys (wrap v))
-
+            :cmd   (values :cmd (wrap v))
+            :keys  (values :keys (wrap v))
             :call-setup (values :_call_setup_name (->str v))
             :as (values nil)
             :version (values nil)
             :branch (values nil)
             _ (values k v)))]
 
-    ;; Ensure we have a trigger for testing
-    (when (= processed.event nil)
-       (tset processed :event (wrap :UIEnter)))
-     ;; 3. Handle call-setup -> after hook merge
+    ;; Fallback to UIEnter if no triggers are present
+    ; (when (and (= processed.ft nil)
+    ;            (= processed.event nil)
+    ;            (= processed.cmd nil)
+    ;            (= processed.keys nil))
+    ;   (tset processed :event (wrap :UIEnter)))
+
     (when processed._call_setup_name
       (let [setup-name processed._call_setup_name
-            ;; We run pcall but do nothing with the result to keep it silent
             setup-call `(pcall (fn []
                                  (let [al# (require :core.lib.autoload)
                                        setup-lib# (al#.autoload :core.lib.setup)]
-                                   (setup-lib#.setup ,setup-name {}))))
-            existing-after processed.after]
-        (tset processed :after
-              (if (= existing-after nil)
-                  `(fn [] ,setup-call)
-                  `(fn []
-                     (let [aft# ,existing-after]
-                       (if (= (type aft#) :function) (aft#)))
-                     ,setup-call))))
-      (tset processed :_call_setup_name nil))
+                                   (setup-lib#.setup ,setup-name {}))))]
+        (tset processed :after `(fn [] ,setup-call))))
 
-    ;; 4. Set the name as the first element
     (tset processed 1 name)
 
     `(do
-       ,(let [inst-opts (if install-version
-                            (let [t# {}]
-                              (each [k# v# (pairs options)] (tset t# k# v#))
-                              (tset t# :version install-version)
-                              t#)
-                            options)]
-          (vim-pack-spec! identifier inst-opts))
+       ,(vim-pack-spec! identifier options)
        (table.insert _G.nyoom/specs ,processed))))
 
 (lambda lz-package! [identifier ?options]

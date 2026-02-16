@@ -11,5 +11,5 @@
 (lz-package! :harrygallagher4/nvim-parinfer-rust
              {:nyoom-module editor.parinfer
               :enabled true
+              :cmd :ParinferToggle
               :ft [:fennel :clojure :lisp :racket :scheme :janet :guile]})
-

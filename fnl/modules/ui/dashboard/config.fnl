@@ -116,4 +116,3 @@
                         sections.footer
                         {:type :padding :val 1}
                         sections.icon]})
-
