@@ -50,7 +50,7 @@
     mode-color))
 
 (fn get-fileinfo []
-  (var filename (or (and (= (vim.fn.expand "%") "") " nyoom-nvim v0.6.0-dev")
+  (var filename (or (and (= (vim.fn.expand "%") "") " nyoom-nvim v0.7.0-dev")
                     (vim.fn.expand "%:t")))
   (when (not= filename " nyoom-nvim ")
     (set filename (.. " " filename " ")))
@@ -117,3 +117,4 @@
 (set! laststatus 3)
 (set! cmdheight 0)
 (set! statusline (.. "%!" (vlua Statusline.statusline)))
+

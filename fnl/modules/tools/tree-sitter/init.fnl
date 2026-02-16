@@ -1,12 +1,10 @@
-(import-macros {: lz-package! : vim-pack-spec! : lz-trigger-load!} :macros)
+(import-macros {: lz-package! : build-pack-table : build-before-all-hook}
+               :macros)
 
 (lz-package! :nvim-treesitter/nvim-treesitter
              {:nyoom-module tools.tree-sitter
               :event [:BufReadPost :BufNewFile]
               :cmd :TSUpdateSync
-              :requires [(lz-trigger-load! :JoosepAlviste/nvim-ts-context-commentstring
-                                           {:opt true})
-                         (lz-trigger-load! :nvim-treesitter/nvim-treesitter-context)
-                         (lz-trigger-load! :nvim-treesitter/nvim-treesitter-textobjects
-                                           {:opt true})]})
-
+              :requires [:JoosepAlviste/nvim-ts-context-commentstring
+                         :nvim-treesitter/nvim-treesitter-context
+                         :nvim-treesitter/nvim-treesitter-textobjects]})

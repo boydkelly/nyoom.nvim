@@ -1,4 +1,4 @@
-(import-macros {: lz-package! : vim-pack-spec!} :macros)
+(import-macros {: lz-package! : build-pack-table : build-before-all-hook} :macros)
 
 ; off-spec language server support for java
 (lz-package! :mfussenegger/nvim-jdtls {:nyoom-module lang.java :ft :java})

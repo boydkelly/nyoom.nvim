@@ -1,5 +1,5 @@
-(import-macros {: lz-package! : vim-pack-spec!} :macros)
+(import-macros {: lz-package! : build-pack-table : build-before-all-hook} :macros)
 
 ;; standard completion for neovim
 (lz-package! :zbirenbaum/copilot.lua
-              {:nyoom-module completion.copilot :event :InsertEnter})
+             {:nyoom-module completion.copilot :event :InsertEnter})

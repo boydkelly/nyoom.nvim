@@ -1,4 +1,4 @@
-(import-macros {: lz-package! : vim-pack-spec! : lz-trigger-load!} :macros)
+(import-macros {: lz-package! : build-pack-table : build-before-all-hook } :macros)
 
 (lz-package! :nvim-neorg/neorg
   {:nyoom-module lang.neorg

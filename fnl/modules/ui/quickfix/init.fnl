@@ -1,4 +1,5 @@
-(import-macros {: lz-package! : vim-pack-spec! : lz-pack!} :macros)
+(import-macros {: lz-package! : build-pack-table : build-before-all-hook}
+               :macros)
 
 ; view diagnostics ala vscode
-(lz-pack! :yorickpeterse/nvim-pqf {:call-setup nvim-pqf :ft :qf})
+(lz-package! :yorickpeterse/nvim-pqf {:call-setup nvim-pqf :ft :qf})

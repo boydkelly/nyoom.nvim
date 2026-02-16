@@ -1,9 +1,9 @@
-(import-macros {: lz-package! : vim-pack-spec! : lz-trigger-load!} :macros)
+(import-macros {: lz-package! : build-pack-table : build-before-all-hook}
+               :macros)
 
 ;; view bindings
-
 (lz-package! "https://codeberg.org/andyg/leap.nvim"
              {:lazy false
               :nyoom-module config.default.+bindings
-              :requires [(lz-trigger-load! :tpope/vim-repeat)
-                         (lz-trigger-load! :ggandor/leap-ast.nvim {:opt true})]})
+              :requires [:tpope/vim-repeat [:ggandor/leap-ast.nvim :packadd]]})
+

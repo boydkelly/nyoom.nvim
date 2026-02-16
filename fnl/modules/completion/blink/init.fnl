@@ -1,25 +1,20 @@
-(import-macros {: lz-package! : vim-pack-spec! : lz-trigger-load!} :macros)
+(import-macros {: lz-package! : build-pack-table : build-before-all-hook}
+               :macros)
 
-(lz-package! :L3MON4D3/LuaSnip
-       {:event [:UIEnter :InsertEnter :CmdLineEnter]}
-       :nyoom-module completion.luasnip
-       :requires [(lz-trigger-load! :rafamadriz/friendly-snippets)])
+(lz-package! :L3MON4D3/LuaSnip {:event [:UIEnter :InsertEnter :CmdLineEnter]}
+             :nyoom-module completion.luasnip :requires
+             [:rafamadriz/friendly-snippets])
 
 (lz-package! :saghen/blink.cmp
-              {:nyoom-module completion.blink
-               :version :v1.8.0
-               :module :blink
-               :lazy false
-               :event [:InsertEnter :CmdLineEnter]
-               :requires [(lz-trigger-load! :onsails/lspkind.nvim)
-                          (lz-trigger-load! :saghen/blink.compat)
-                          (lz-trigger-load! :zbirenbaum/copilot.lua)
-                          (lz-trigger-load! :giuxtaposition/blink-cmp-copilot)
-                          (lz-trigger-load! :PaterJason/cmp-conjure)
-                          (lz-trigger-load! :kirasok/cmp-hledger)
-                          (lz-trigger-load! :ribru17/blink-cmp-spell)
-                          ]}
-               )
-
-
-
+             {:nyoom-module completion.blink
+              :version :v1.8.0
+              :module :blink
+              :lazy false
+              :event [:InsertEnter :CmdLineEnter]
+              :requires [:onsails/lspkind.nvim
+                         :saghen/blink.compat
+                         :zbirenbaum/copilot.lua
+                         :giuxtaposition/blink-cmp-copilot
+                         :PaterJason/cmp-conjure
+                         :kirasok/cmp-hledger
+                         :ribru17/blink-cmp-spell]})

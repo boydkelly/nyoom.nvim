@@ -1,3 +1,3 @@
-(import-macros {: fake-module!} :macros)
+(import-macros {: nyoom-module!} :macros)
 
-(fake-module! checkers.spell)
+(nyoom-module! checkers.spell)

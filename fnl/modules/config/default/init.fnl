@@ -1,3 +1,3 @@
-(import-macros {: fake-module!} :macros)
+(import-macros {: nyoom-module!} :macros)
 
-(fake-module! config.default)
+(nyoom-module! config.default)

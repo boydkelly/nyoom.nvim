@@ -1,3 +1,3 @@
-(import-macros {: lz-package! : vim-pack-spec! : fake-module!} :macros)
+(import-macros {: lz-package! : build-pack-table : build-before-all-hook : nyoom-module!} :macros)
 
-(fake-module! ui.modeline)
+(nyoom-module! ui.modeline)

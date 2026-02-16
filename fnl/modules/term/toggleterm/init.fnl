@@ -1,4 +1,3 @@
-(import-macros {: lz-package! : vim-pack-spec!} :macros)
+(import-macros {: lz-package!} :macros)
 
-(lz-package! :akinsho/toggleterm.nvim {:cmd :ToggleTerm
-                                       :call-setup toggleterm})
+(lz-package! :akinsho/toggleterm.nvim {:cmd :ToggleTerm :call-setup toggleterm})

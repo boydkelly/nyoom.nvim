@@ -1,6 +1,6 @@
-(import-macros {: fake-module! } :macros)
+(import-macros {: nyoom-module! } :macros)
 
-(fake-module! editor.fold)
+(nyoom-module! editor.fold)
 
 ; (lz-package! :kevinhwang91/nvim-ufo
 ;               {:after editor.fold

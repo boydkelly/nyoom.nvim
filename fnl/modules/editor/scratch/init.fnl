@@ -1,6 +1,6 @@
-(import-macros {: fake-module! : vim-pack-spec!} :macros)
+(import-macros {: nyoom-module! : build-pack-table : build-before-all-hook} :macros)
 
-(fake-module! editor.scratch)
+(nyoom-module! editor.scratch)
 ; (ab)using lz-package! for lazy-loading
 ;; (lz-package! :editor.scratch {:after editor.scratch
                                ; :cmd :Scratch)

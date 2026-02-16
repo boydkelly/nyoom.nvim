@@ -1,4 +1,4 @@
-(import-macros {: lz-package! : vim-pack-spec!} :macros)
+(import-macros {: lz-package! : build-pack-table : build-before-all-hook} :macros)
 
 ;; interactive lisp evaluation
 (lz-package! :Olical/conjure {:nyoom-module tools.eval

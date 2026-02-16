@@ -1,4 +1,4 @@
-(import-macros {: fake-module!} :macros)
+(import-macros {: nyoom-module!} :macros)
 
-(fake-module! term.fshell)
+(nyoom-module! term.fshell)
 

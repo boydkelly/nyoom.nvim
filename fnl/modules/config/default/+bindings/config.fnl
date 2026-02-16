@@ -1,5 +1,12 @@
 (local {: autoload} (require :core.lib.autoload))
-(import-macros {: nyoom-module-p! : map! : buf-map! : let! : augroup! : clear! : autocmd!} :macros)
+(import-macros {: nyoom-module-p!
+                : map!
+                : buf-map!
+                : let!
+                : augroup!
+                : clear!
+                : autocmd!} :macros)
+
 (local {: nightly?} (autoload :core.lib))
 (local leap (autoload :leap))
 (local profile (require :core.lib.profile))
@@ -89,12 +96,12 @@
 (map! [n] :<leader><tab>n :<cmd>tabnew<CR> {:desc "New tab"})
 
 (fn open-project []
-(nyoom-module-p! telescope)
+  (nyoom-module-p! telescope)
   (if (nyoom-module-p! project)
-      (vim.cmd "ProjectRecents")
+      (vim.cmd :ProjectRecents)
       (vim.cmd "Telescope project")))
 
-(map! [n] "<leader>pp" open-project {:desc "List projects"})
+(map! [n] :<leader>pp open-project {:desc "List projects"})
 
 (nyoom-module-p! telescope
                  (do
@@ -209,18 +216,28 @@
       {:desc "Delete trailing newlines"})
 
 (nyoom-module-p! quickfix
-  (do
-    (map! [n] :<leader>cc :<cmd>make<CR> {:desc "Compile with quickfix list"})
-    (map! [n] :<leader>cC :<cmd>lmake<CR {:desc "Compile with location list"})
-    (map! [n] "<leader>cq" "<cmd>copen<cr>" {:desc "Open quickfix list"})
-    (map! [n] "<leader>cQ" "<cmd>cclose<cr>" {:desc "Close quickfix list"})
-    (augroup! quickfix-mappings
-      (clear!)
-      (autocmd! FileType qf #(buf-map! [n] "<leader>cq" "<cmd>cclose<cr>" {:desc "Close quickfix list"}))
-      (autocmd! FileType qf #(buf-map! [n] "dd" #(let [current-item (vim.fn.line ".")
-                                                       current-list (vim.fn.getqflist)
-                                                       new-list (doto current-list (table.remove current-item))]
-                                                   (vim.fn.setqflist new-list "r")))))))
+                 (do
+                   (map! [n] :<leader>cc :<cmd>make<CR>
+                         {:desc "Compile with quickfix list"})
+                   (map! [n] :<leader>cC :<cmd>lmake<CR
+                         {:desc "Compile with location list"})
+                   (map! [n] :<leader>cq :<cmd>copen<cr>
+                         {:desc "Open quickfix list"})
+                   (map! [n] :<leader>cQ :<cmd>cclose<cr>
+                         {:desc "Close quickfix list"})
+                   (augroup! quickfix-mappings (clear!)
+                             (autocmd! FileType qf
+                                       #(buf-map! [n] :<leader>cq
+                                                  :<cmd>cclose<cr>
+                                                  {:desc "Close quickfix list"}))
+                             (autocmd! FileType qf
+                                       #(buf-map! [n] :dd
+                                                  #(let [current-item (vim.fn.line ".")
+                                                         current-list (vim.fn.getqflist)
+                                                         new-list (doto current-list
+                                                                    (table.remove current-item))]
+                                                     (vim.fn.setqflist new-list
+                                                                       :r)))))))
 
 ;; x Local diagnostics (telescope)
 ;; x Project diagnostics (telescope)
@@ -424,3 +441,4 @@
 ;;; -- m +filetype (hydra
 
 ;; non-doom
+

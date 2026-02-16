@@ -1,7 +1,8 @@
-(import-macros {: lz-package! : vim-pack-spec!} :macros)
+(import-macros {: lz-package! : build-pack-table : build-before-all-hook}
+               :macros)
 
 (lz-package! :nvim-telescope/telescope-fzf-native.nvim
-             {:fake-module completion.telescope.+native
-              :opt true
+             {:nyoom-module completion.telescope.+native
               :run :make
               :build-file :build/libfzf.so})
+

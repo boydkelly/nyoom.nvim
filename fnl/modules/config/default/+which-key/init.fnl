@@ -1,7 +1,8 @@
-(import-macros {: lz-package! : vim-pack-spec!} :macros)
+(import-macros {: lz-package! : build-pack-table : build-before-all-hook}
+               :macros)
 
 (lz-package! :folke/which-key.nvim
-              {:nyoom-module config.default.+which-key
-               :module :which-key
-               ; :keys [:<leader> "\"" "'" "`"]
-               :event :UIEnter})
+             {:nyoom-module config.default.+which-key
+              :module :which-key
+              :event :UIEnter})
+
