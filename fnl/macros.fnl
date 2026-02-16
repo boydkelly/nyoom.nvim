@@ -570,9 +570,12 @@
 
 (lambda lz-package! [identifier ?options]
   (let [options (or ?options {})
-        ;; 1. Preserve version/branch for the installer before filtering
+        ;; 1. Setup and Helpers
         install-version (or options.version options.branch)
-        id-str (->str identifier) ;; 2. Extract Requirements and Registrations
+        id-str (->str identifier)
+        wrap (fn [val] (if (= (type val) :table) val [val]))
+
+        ;; 2. Extract Requirements
         req-list (or options.requires [])
         req-names []
         req-registrations []
@@ -583,87 +586,68 @@
                     (table.insert req-names expanded-req.name)
                     (table.insert req-registrations expanded-req.reg))
                   (table.insert req-names expanded-req))))
-        ;; 3. Module & Setup Logic
+
+        ;; 3. Module & Setup Names
         module-name (let [m (or options.nyoom-module options.after)]
-                      (if m
-                          (if (sym? m) (tostring m) (->str m))
-                          nil))
+                      (if m (if (sym? m) (tostring m) (->str m)) nil))
         setup-plugin (if options.call-setup
                          (let [s options.call-setup]
                            (if (sym? s) (tostring s) (->str s)))
-                         nil) ;; 4. Name normalization
+                         nil)
+
+        ;; 4. Name normalization
         raw-name (or options.as (id-str:match ".*/(.*)") id-str)
-        name (raw-name:lower) ;; 5. Hook Construction
+        name (raw-name:lower)
         run-cmd (if (sym? options.run) (->str options.run) options.run)
-        build-file (if (sym? options.build-file) (->str options.build-file)
-                       options.build-file)
+        build-file (if (sym? options.build-file) (->str options.build-file) options.build-file)
+
         ;; 5. Hook Construction
         before-all-hook (when run-cmd
-                          (let [plugin-path (.. (vim.fn.stdpath :data)
-                                                :/site/pack/core/opt/ raw-name)]
+                          (let [plugin-path (.. (vim.fn.stdpath :data) :/site/pack/core/opt/ raw-name)]
                             `(fn []
                                (let [uv# (or vim.loop vim.uv)
                                      marker# (if ,build-file
-                                                 (.. ,plugin-path "/"
-                                                     ,build-file)
-                                                 (.. ,plugin-path
-                                                     :/.nyoom_built))]
+                                                 (.. ,plugin-path "/" ,build-file)
+                                                 (.. ,plugin-path :/.nyoom_built))]
                                  (when (not (uv#.fs_stat marker#))
-                                   (vim.notify ,(.. "Building " raw-name "...")
-                                               vim.log.levels.INFO)
-                                   (let [cmd# (.. "sh -c 'cd " ,plugin-path
-                                                  " && " (tostring ,run-cmd) "'")
+                                   (vim.notify ,(.. "Building " raw-name "...") vim.log.levels.INFO)
+                                   (let [cmd# (.. "sh -c 'cd " ,plugin-path " && " (tostring ,run-cmd) "'")
                                          res# (vim.fn.system cmd#)]
                                      (if (not= vim.v.shell_error 0)
-                                         (error (.. "Build failed for "
-                                                    ,raw-name ": " res#))
+                                         (error (.. "Build failed for " ,raw-name ": " res#))
                                          (do
-                                           (vim.notify (.. "Successfully built "
-                                                           ,raw-name)
-                                                       vim.log.levels.INFO)
+                                           (vim.notify (.. "Successfully built " ,raw-name) vim.log.levels.INFO)
                                            (when (not ,build-file)
                                              (let [f# (io.open marker# :w)]
                                                (f#:write (os.date))
                                                (f#:close)))))))))))
+
         before-parts (let [p []]
                        (each [_ r-name (ipairs req-names)]
-                         (table.insert p
-                                       `((. (require :lz.n) :trigger_load) ,r-name)))
+                         (table.insert p `((. (require :lz.n) :trigger_load) ,r-name)))
                        p)
-        before-hook (if (> (length before-parts) 0)
-                        `(fn [] ,(unpack before-parts)))
+        before-hook (if (> (length before-parts) 0) `(fn [] ,(unpack before-parts)))
+
         after-parts (let [p []]
-                      ;; 1. Handle Nyoom Module Include (nyoom-module/after)
                       (when module-name
-                        (table.insert p
-                                      `(include ,(.. :fnl.modules. module-name
-                                                     :.config))))
-                      ;; 2. Handle setup-plugin
+                        (table.insert p `(include ,(.. :fnl.modules. module-name :.config))))
                       (when setup-plugin
-                        (table.insert p
-                                      `(let [al# (require :core.lib.autoload)
-                                             setup-lib# (al#.autoload :core.lib.setup)]
-                                         (setup-lib#.setup ,setup-plugin {}))))
-                      ;; 3. Handle :config
-                      ;; We use include here as well to ensure the config is self-contained.
+                        (table.insert p `(let [al# (require :core.lib.autoload)
+                                               setup-lib# (al#.autoload :core.lib.setup)]
+                                           (setup-lib#.setup ,setup-plugin {}))))
                       (when options.config
                         (let [cfg (->str options.config)]
-                          (table.insert p `(include ,(.. :modules. cfg)))))
-                      ;; 4. Handle :after
-                      (when (and options.after
-                                 (not= (->str options.after) module-name))
+                          (table.insert p `(include ,(.. :fnl.modules. cfg)))))
+                      (when (and options.after (not= (->str options.after) module-name))
                         (let [aft (->str options.after)]
-                          ;; Note: if 'after' refers to a full module with its own config,
-                          ;; include is safer for memory-only.
-                          (table.insert p `(include ,(.. :modules. aft)))))
+                          (table.insert p `(include ,(.. :fnl.modules. aft)))))
                       p)
-        after-hook (if (> (length after-parts) 0)
-                       `(fn []
-                          (do
-                            ,(unpack after-parts))
-                          nil))
+        after-hook (if (> (length after-parts) 0) `(fn [] (do ,(unpack after-parts) nil)))
+
+        ;; 6. Spec Table Construction
         spec-kv {1 name}]
-    ;; Fill lz.n spec while filtering out internal/installer keys
+
+    ;; Filter and wrap triggers
     (each [k v (pairs options)]
       (let [k-str (tostring k)]
         (when (and (not= k-str :nyoom-module) (not= k-str :after)
@@ -672,31 +656,29 @@
                    (not= k-str :run) (not= k-str :module) (not= k-str :branch)
                    (not= k-str :version) (not= k-str :opt)
                    (not= k-str :build-file) (not= k-str :defer) (not= k-str :as))
-          (let [v-safe (if (sym? v) (->str v) v)]
-            (tset spec-kv k v-safe)))))
-    (when options.defer (tset spec-kv :event :DeferredUIEnter))
+          (let [v-safe (if (sym? v) (->str v) v)
+                final-v (if (or (= k-str :ft) (= k-str :event) (= k-str :cmd) (= k-str :keys))
+                            (wrap v-safe)
+                            v-safe)]
+            (tset spec-kv k final-v)))))
+
+    (when options.defer (tset spec-kv :event (wrap :DeferredUIEnter)))
     (if before-all-hook (tset spec-kv :beforeAll before-all-hook))
     (if before-hook (tset spec-kv :before before-hook))
     (if after-hook (tset spec-kv :after after-hook))
-    ;; 7. Final Code Generation (Now inside the main let block)
-    (let [final-code `(do
-                        )]
-      (each [_ reg (ipairs req-registrations)] (table.insert final-code reg)) ; (when module-name ;   (table.insert final-code ;                 `(let [m-def# {:config-paths [,(.. :modules. module-name
-      ;                                                    :.config)]}] ;                    (tset _G.nyoom/modules ,module-name m-def#) ;                    (table.insert _G.nyoom/modules m-def#))))
-      ;; Re-insert the version/branch for the installer call
+
+    ;; 7. Final Code Generation
+    (let [final-code `(do)]
+      (each [_ reg (ipairs req-registrations)] (table.insert final-code reg))
       (let [installer-options (if install-version
                                   (let [t# {}]
-                                    (each [k# v# (pairs options)]
-                                      (tset t# k# v#))
+                                    (each [k# v# (pairs options)] (tset t# k# v#))
                                     (tset t# :version install-version)
                                     t#)
                                   options)]
         (table.insert final-code (vim-pack-spec! identifier installer-options)))
-      ;; nyoom spces for lz.n to process
       (table.insert final-code `(table.insert _G.nyoom/specs ,spec-kv))
-      final-code)
-    ))
-
+      final-code)))
 ;
 ;; Macro: unpack!
 (lambda lz-unpack! []
@@ -1067,23 +1049,6 @@
   (let [modules (register-modules ...)]
     (tset _G :nyoom/modules modules)))
 
-(lambda lz-init-modules! []
-  "Bakes the init.fnl files for all enabled modules."
-  (fn init-module [module-name module-def]
-    (icollect [_ include-path (ipairs (or module-def.include-paths []))]
-      `(include ,include-path)))
-
-  (fn init-modules [registry]
-    (let [inits []]
-      (each [_ module-def (pairs registry)]
-        (let [items (init-module _ module-def)]
-          (each [_ expr (ipairs items)]
-            (table.insert inits expr))))
-      inits))
-
-  (let [inits (init-modules _G.nyoom/modules)]
-    (expand-exprs inits)))
-
 (lambda nyoom-init-modules! []
   "Initializes nyoom's module system.
   ```fennel
@@ -1243,7 +1208,6 @@
  : fake-module!
  : nyoom!
  : nyoom-init-modules!
- : lz-init-modules!
  : nyoom-compile-modules!
  : nyoom-module!
  : nyoom-module-p!
@@ -1251,4 +1215,3 @@
  : nyoom-package-count!
  : nyoom-module-count-runtime!
  : nyoom-module-count!}
-

@@ -48,4 +48,3 @@
 (require :core)
 
 ; (vim.notify "NYOOM: core loaded successfully" vim.log.levels.INFO)
-

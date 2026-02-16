@@ -1,0 +1,10 @@
+@document.meta
+title: lsp readme
+description:
+categories: docs
+created: 2022-12-09
+version: 0.1.0
+@end
+
+= lsp readme
+Put your lsp config files here.  They will be compiled into after/lsp/lua

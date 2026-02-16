@@ -1,4 +1,5 @@
 nvim-pack-lock.json
+after/lsp
 # neovim
 .nyoom
 .compiled
