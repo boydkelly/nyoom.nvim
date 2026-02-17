@@ -36,11 +36,9 @@ vim.cmd.packadd("tangerine.nvim")
 -- 2. Tangerine & Fennel Configuration
 -- ========================================
 
--- Set up paths and move to config root for 'include' resolution
 -- vim.cmd.cd(vim.fn.stdpath("config"))
 local fnl_dir = vim.fn.stdpath("config") .. "/fnl"
 local lua_dir = vim.fn.stdpath("config") .. "/.nyoom"
---  the lua_dir can go into the .cache like hotpot, but i have it in ~.config/nvim-nyoom for easy access
 -- 1. Check native Lua first (Fastest)
 
 local core_exists = vim.uv.fs_stat(lua_dir .. "/core/init.lua")
@@ -54,7 +52,7 @@ local fennel = require("tangerine.fennel")
 
 fennel.path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. (fennel.path or "")
 package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
-
+fennel.macro_path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. (fennel.macro_path or "")
 if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 	--
 	--
