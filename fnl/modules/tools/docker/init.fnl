@@ -1,4 +1,4 @@
-(import-macros {: lz-package! : build-pack-table : build-before-all-hook} :macros)
+(import-macros {: lz-package! : build-pack-table} :macros)
 
 (lz-package! "https://codeberg.org/esensar/nvim-dev-container"
               {:nyoom-module tools.docker

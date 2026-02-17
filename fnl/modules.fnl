@@ -7,11 +7,11 @@
         (blink +luasnip)     ; completion so fast you’ll think you imagined it
         ;;copilot            ; the code completion of the future
         ;;fzf-lua            ; TODO a search engine for love and life
-        (telescope +native)  ; the search engine of the future
+        ;(telescope +native)  ; the search engine of the future
 
         :ui
         (nyoom +modes +icons); what makes Nyoom look the way it does
-        dashboard            ; a nifty splash screen for neovim
+        ;dashboard            ; a nifty splash screen for neovim
         ;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit.
         ;hydra                ; Discount modality for mythological beast hunters
         indent-guides      ; highlighted indent columns
@@ -51,11 +51,12 @@
         ; docker               ; row row row your boat TODO +netman?
         ;editorconfig       ; let someone else argue about tabs vs spaces
          ;;magma              ; tame Jupyter notebooks
-        mason                ; setting your tools in stone
-        eval                 ; run code, run (also, repls)
+        ;mason                ; setting your tools in stone
+        ;eval                 ; run code, run (also, repls)
         antifennel           ; for all the fennel haters out there. this ones for you
         ;pastebin             ; interacting with pastebin platforms
         lsp                  ; :vscode
+        (mini-pick +extra)
         (jj +diffview)       ; rewrite history like it never happened
         project
         ;(neogit              ; a git porclain for neovim
@@ -81,7 +82,7 @@
         ;ledger             ; be audit you can be
         lua                  ; one-based indices? one-based indices
         markdown             ; writing docs for people to ignore
-        nim                  ; python + lisp at the speed of c
+        ;nim                  ; python + lisp at the speed of c
         ;(neorg               ; organize your plain life in plain text, the neovim way
         ;  +pretty
         ;  +present
