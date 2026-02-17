@@ -2,6 +2,5 @@
 
 ; Install language servers and such
 (lz-package! :williamboman/mason.nvim {:nyoom-module tools.mason
-                                        :enabled true 
-                                        :cmd [:Mason
-                                              :MasonLog]})
+                                        :enabled true
+                                        :cmd [:Mason]})

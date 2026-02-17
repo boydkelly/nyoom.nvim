@@ -50,12 +50,28 @@ function install_nyoom() {
     [ ! -f "${NYOOM_CONFIG}/packages.fnl" ] && ln -s "${CONFIG_PATH}/fnl/packages.fnl" "${NYOOM_CONFIG}/packages.fnl"
     printf "\n\033[1m\033[32mSuccessfully Linked Nyoom Configs\033[0m\n\n"
   fi
+
   printf "Installing Core Dependencies..."
-  nvim --headless -c 'lua vim.pack.add({"https://github.com/udayvir-singh/tangerine.nvim", \
-	"https://github.com/nyoom-engineering/oxocarbon.nvim", \
-  "https://github.com/nvim-neorocks/lz.n" })' +qa
+  #  nvim --headless -c 'lua vim.pack.add({"https://github.com/udayvir-singh/tangerine.nvim", \
+  # "https://github.com/nyoom-engineering/oxocarbon.nvim", \
+  #  "https://github.com/nvim-neorocks/lz.n" })' +qa
+
+  nvim --headless -u NONE -c 'lua vim.pack.add({
+      "https://github.com/udayvir-singh/tangerine.nvim",
+      "https://github.com/nyoom-engineering/oxocarbon.nvim",
+      "https://github.com/nvim-neorocks/lz.n"
+    })
+    vim.cmd("sleep 2")
+    vim.cmd("qa")'
 
   printf "\n\033[1m\033[32mSuccessfully Installed Core Dependencies\033[0m\n\n"
+  sleep 3
+
+  nvim --headless -c 'lua
+    vim.cmd("sleep 2")
+    vim.cmd("qa")'
+
+  printf "\n\033[1m\033[32mSuccessfully Installed Nyoom\033[0m\n\n"
 }
 
 function help() {

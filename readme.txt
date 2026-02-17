@@ -1,21 +1,9 @@
-@document.meta
-title: Nyoom hack readme
-description: 2026 update of the Nyoom Fennel configuration
-author: Boyd Kelly
-categories: docs
-created: 2026-02-17
-version: 0.1.0
-@end
-
-* TOC
-
 * Install
   To install the configuration, run:
-  @code bash
+
   git clone https://github.com/boydkelly/nyoom.nvim ~/.config/nvim-nyoom
   export NVIM_APPNAME="nvim-nyoom"
   nvim
-  @end
 
   Running `bin/nyoom install` also works and forces `NVIM_APPNAME` to `nvim-nyoom`.
   Running `bin/nyoom sync` will also preinstall treesitter parsers and lsp tools.
