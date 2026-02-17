@@ -42,8 +42,10 @@
     (rawset _G k v)))
 
 (set _G.nyoom/pack [])
-(set _G.nyoom/specs [])
 (set _G.nyoom/modules [])
+
+;; And if you can, check the LSP log
+;; :LspLog
 
 (require :core)
 

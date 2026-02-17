@@ -441,4 +441,3 @@
 ;;; -- m +filetype (hydra
 
 ;; non-doom
-

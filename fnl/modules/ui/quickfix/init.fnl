@@ -2,4 +2,4 @@
                :macros)
 
 ; view diagnostics ala vscode
-(lz-package! :yorickpeterse/nvim-pqf {:call-setup nvim-pqf :ft :qf})
+(lz-package! :yorickpeterse/nvim-pqf {:call-setup pqf :ft :qf})

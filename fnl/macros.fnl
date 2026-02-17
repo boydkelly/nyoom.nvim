@@ -1,3 +1,4 @@
+;; fennel-ls: macro-file
 (local {: nil?
         : str?
         : bool?

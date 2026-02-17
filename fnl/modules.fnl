@@ -25,7 +25,7 @@
         trouble              ; view your diagnostics, now with icons! (i knew u were trouble when you walked iiiinnn)
         ;tabs                 ; keep tabs on your buffers, literally
         vc-gutter            ; Get your diff out of the gutter
-        window-select        ; Visually switch windows
+        ;window-select        ; Visually switch windows
         ;zen                  ; distraction-free coding or writing TODO +twilight
         noice                ; noice ui
 
@@ -90,11 +90,12 @@
         ;  +nabla)
         ;nix                  ; I hereby declare "nix geht mehr!"
         ;python               ; beautiful is better than ugly
-        rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+        ;rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
         sql
         (sh
-           +nu)
           ; +fish
+           +nu
+        )
                      ; she sells {ba,z,fi}sh shells on the C xor
         toml                ; extend my language
         xml                ; extend my language
@@ -112,4 +113,3 @@
           +smartparens))
 
 ;;(print (.. "DEBUG: Module count from modules.fnl is " (nyoom-module-count!)))
-
