@@ -63,6 +63,15 @@
   (each [_ server (ipairs lsp-servers)]
     (pcall vim.lsp.enable server)))
 
+  (vim.api.nvim_create_user_command :LspInfo
+                                    (fn []
+                                      (vim.cmd "checkhealth vim.lsp"))
+                                    {})
+  (vim.api.nvim_create_user_command :LspStop
+                                    (fn []
+                                      (each [_ client (pairs (vim.lsp.get_active_clients {:bufnr 0}))]
+                                        (client.stop)))
+                                    {})
 ;; The "Just-In-Time" Loader
 (let [loader (let [loaded {:status false}]
                (fn []
