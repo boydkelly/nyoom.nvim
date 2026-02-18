@@ -98,9 +98,12 @@
                         :lazy
                         :priority
                         :load]]
+
       (each [_ k (ipairs lz-whitelist)]
         (let [val (. options k)]
-          (when (not= val nil)
+          ;; Use if instead of when to ensure the compiler handles the
+          ;; boolean value of 'val' purely as a presence check against nil
+          (if (not= nil val)
             (tset lz-data k (if (. table-keys k) (ensure-table val) val)))))
       (when (> (length before-parts) 0)
         (tset lz-data :before
