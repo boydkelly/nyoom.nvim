@@ -1,10 +1,7 @@
-(import-macros {: lz-package! : build-pack-table : build-before-all-hook} :macros)
+(import-macros {: lz-package! : build-pack-table : build-before-all-hook : vim-pack! } :macros)
 
-; (lz-package! :eraserhd/parinfer-rust
-;              {:nyoom-module :editor.parinfer
-;               :run ("cargo build --release")
-;               :event :UIEnter
-;               :enabled true})
+(vim-pack! :eraserhd/parinfer-rust)
+
 ;; not sue how to deal with this;; not a nyoom-module
 ; (lz-package! :eraserhd/parinfer-rust {:nyoom-module :editor.parinfer :run "cargo build --release"})
 

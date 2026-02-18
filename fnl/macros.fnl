@@ -33,17 +33,17 @@
   (let [spec (build-pack-table identifier ?options)]
     `(table.insert _G.nyoom/pack ,spec)))
 
-(lambda build-before-all-hook [name run-cmd build-file]
-  "Generates code to build binaries once on the filesystem."
-  (let [plugin-path (.. (vim.fn.stdpath :data) :/site/pack/core/opt/ name)]
-    ;; No (fn []) here! Just the logic.
+(lambda build-before-all-hook [name run-cmd & build-file]
+  (let [build-file (if build-file (unpack build-file) nil)
+        plugin-path (.. (vim.fn.stdpath :data) :/site/pack/core/opt/ name)]
     `(let [uv# (or vim.loop vim.uv)
-           marker# (if ,build-file (.. ,plugin-path "/" ,build-file)
+           marker# (if ,build-file
+                       (.. ,plugin-path "/" ,build-file)
                        (.. ,plugin-path :/.nyoom_built))]
        (when (not (uv#.fs_stat marker#))
          (vim.notify ,(.. "Building " name "...") vim.log.levels.INFO)
-         (let [cmd# (.. "sh -c 'cd " ,plugin-path " && " (tostring ,run-cmd)
-                        "'")
+         (let [cmd# (.. "sh -c 'cd " ,plugin-path " && "
+                        (tostring ,run-cmd) "'")
                res# (vim.fn.system cmd#)]
            (if (not= vim.v.shell_error 0)
                (error (.. "Build failed: " res#))
