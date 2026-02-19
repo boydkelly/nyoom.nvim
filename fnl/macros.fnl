@@ -35,20 +35,33 @@
 
 (lambda build-before-all-hook [name run-cmd & build-file]
   (let [build-file (if build-file (unpack build-file) nil)
-        plugin-path (.. (vim.fn.stdpath :data) :/site/pack/core/opt/ name)]
+        plugin-path (.. (vim.fn.stdpath :data)
+                        :/site/pack/core/opt/
+                        name)]
     `(let [uv# (or vim.loop vim.uv)
            marker# (if ,build-file
                        (.. ,plugin-path "/" ,build-file)
-                       (.. ,plugin-path :/.nyoom_built))]
+                       (.. ,plugin-path "/.nyoom_built"))]
+
        (when (not (uv#.fs_stat marker#))
          (vim.notify ,(.. "Building " name "...") vim.log.levels.INFO)
-         (let [cmd# (.. "sh -c 'cd " ,plugin-path " && "
-                        (tostring ,run-cmd) "'")
-               res# (vim.fn.system cmd#)]
-           (if (not= vim.v.shell_error 0)
-               (error (.. "Build failed: " res#))
+
+         ;; ensure run-cmd is a list
+         (when (not (vim.islist ,run-cmd))
+           (error "run must be a list of arguments"))
+
+         ;; call vim.system correctly
+         (let [sys# (vim.system ,run-cmd {:cwd ,plugin-path})]
+           ;; call :wait outside the let vector to satisfy Fennel parser
+           (local result# (sys# :wait))
+           (local code# result#.code)
+
+           (if (not= code# 0)
+               (error (.. "Build failed:\n" result#.stderr))
                (do
-                 (vim.notify (.. "Built " ,name) vim.log.levels.INFO)
+                 (vim.notify ,(.. "Built " name)
+                             vim.log.levels.INFO)
+
                  (when (not ,build-file)
                    (with-open [f# (io.open marker# :w)]
                      (f#:write (os.date)))))))))))
