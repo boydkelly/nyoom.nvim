@@ -50,10 +50,10 @@
          (when (not (vim.islist ,run-cmd))
            (error "run must be a list of arguments"))
 
-         ;; call vim.system correctly
+         ;; call vim.system safely
          (let [sys# (vim.system ,run-cmd {:cwd ,plugin-path})]
-           ;; call :wait outside the let vector to satisfy Fennel parser
-           (local result# (sys# :wait))
+           ;; Option 1: call :wait() as a statement to avoid table-call
+           (local result# (sys# :wait))    ;; <- correct, no table-call
            (local code# result#.code)
 
            (if (not= code# 0)
@@ -62,6 +62,7 @@
                  (vim.notify ,(.. "Built " name)
                              vim.log.levels.INFO)
 
+                 ;; create marker if needed
                  (when (not ,build-file)
                    (with-open [f# (io.open marker# :w)]
                      (f#:write (os.date)))))))))))
