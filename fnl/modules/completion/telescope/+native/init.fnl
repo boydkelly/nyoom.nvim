@@ -3,6 +3,5 @@
 
 (lz-package! :nvim-telescope/telescope-fzf-native.nvim
              {:nyoom-module completion.telescope.+native
-              :run :make
+              :run [:make]
               :build-file :build/libfzf.so})
-

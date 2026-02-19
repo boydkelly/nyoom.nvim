@@ -21,18 +21,20 @@ version: 0.1.0
   Running `bin/nyoom sync` will also preinstall treesitter parsers and lsp tools.
 
   Mason works too but for whatever reason it wants to reinstall every time you open it.
+  Included a mise.toml that will install a bunch of lsp servers.
 
 * Notes
   ** New Layers
-  Updated/added: cmp, blink, none-ls, conform (format), javascript, ts, svelte, oil.
+  Updated/added: cmp, blink, none-ls, conform (format), lint, web, javascript, ts, svelte, oil.
   Updated to 2026 configs: tree-sitter, lsp, etc.
+  But a lot of stuff is just updated to the bare minimum to get it going.
 
   ** Engine Changes
   - Replaced packer with `vim.pack` and {https://github.com/lumen-oss/lz.n}[lz.n]
   - Replaced hotpot with {https://github.com/udayvir-singh/tangerine.nvim}[tangerine.nvim]
 
   The `use-package!` macro has been replaced with `lz-package!`.
-  It follows the same spirit but requires minor syntax changes in `init.fnl` files.
+  It follows hopefully the same spirit but requires minor syntax changes in `init.fnl` files.
 
 * lz.n spec properties
   - `after`
@@ -46,14 +48,15 @@ version: 0.1.0
   - `cmd`
   - `colorscheme`
   - `keys`
-  > {https://github.com/neovim/neovim/issues/35550}[Issue #35550] currently breaks `keys` for lazy loading.
-  > I've moved keymaps into `config` and used `event` triggers as a workaround.
+  - {https://github.com/neovim/neovim/issues/35550}[Issue #35550] currently breaks `keys` for lazy loading.
+  - I've moved keymaps into `config` and used `event` triggers as a workaround.
 
 * Nyoom keys
-  - `nyoom-module`: Requires config; inserts to `lz.n` `after` function.
+  - `nyoom-module`: Requires the parallel config; inserts this to the `lz.n` `after` function.
   - `run` / `build-file`: Creates `beforeAll` function for binaries (fzf, blink, etc).
-  - `call-setup`: Runs naked setup (kinda like legacy Nyoom).
-  - `requires`: Adds to `vim.pack` for installation and adds `trigger_load` to `after`.
+  - `call-setup`: Hijacked but runs naked setup (kinda like legacy Nyoom).
+  - `requires`: Adds to plugin to `vim.pack` for installation and adds `trigger_load` to the `after` function.
   - `defer`: Maps to `:event :DeferredUIEnter`.
+  - other stuff may simply be ignored
 
-_I'm just a self-taught hacker. Proceed with caution! This is nowhere near cooked._
+_I'm just a self-taught hacker. Proceed with caution! This is nowhere near cooked. It seems pretty fast._

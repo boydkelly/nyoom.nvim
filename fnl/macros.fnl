@@ -46,26 +46,25 @@
        (when (not (uv#.fs_stat marker#))
          (vim.notify ,(.. "Building " name "...") vim.log.levels.INFO)
 
-         ;; ensure run-cmd is a list
-         (when (not (vim.islist ,run-cmd))
-           (error "run must be a list of arguments"))
+         ;; Normalize run-cmd: if it's a string/keyword, wrap it in a list for vim.system
+         (let [cmd# (if (vim.islist ,run-cmd)
+                        ,run-cmd
+                        [ ,run-cmd ])]
+           (let [sys# (vim.system cmd# {:cwd ,plugin-path})]
+             ;; Preserving your wait logic: call :wait() to avoid table-call errors
+             (local result# (sys#:wait))
+             (local code# result#.code)
 
-         ;; call vim.system safely
-         (let [sys# (vim.system ,run-cmd {:cwd ,plugin-path})]
-           ;; Option 1: call :wait() as a statement to avoid table-call
-           (local result# (sys# :wait))    ;; <- correct, no table-call
-           (local code# result#.code)
+             (if (not= code# 0)
+                 (error (.. "Build failed for " ,name ":\n" result#.stderr))
+                 (do
+                   (vim.notify ,(.. "Built " name)
+                               vim.log.levels.INFO)
 
-           (if (not= code# 0)
-               (error (.. "Build failed:\n" result#.stderr))
-               (do
-                 (vim.notify ,(.. "Built " name)
-                             vim.log.levels.INFO)
-
-                 ;; create marker if needed
-                 (when (not ,build-file)
-                   (with-open [f# (io.open marker# :w)]
-                     (f#:write (os.date)))))))))))
+                   ;; Create the marker so we don't rebuild every time
+                   (when (not ,build-file)
+                     (with-open [f# (io.open marker# :w)]
+                       (f#:write (os.date))))))))))))
 
 (lambda lz-package! [identifier ?options]
   (let [options (or ?options {})
