@@ -18,19 +18,19 @@
         modeline             ; snazzy, nano-emacs-inspired modeline
         ;nvimtree           ; a project drawer, like NERDTree for vim
         ;neotree              ; tree-like structures for neovim
-        oil
+        oil                   ; editing the file sytem like a salad
         quickfix             ; enhancements to vim's builtin quickfix functionality
         trouble              ; view your diagnostics, now with icons! (i knew u were trouble when you walked iiiinnn)
         ;tabs                 ; keep tabs on your buffers, literally
         vc-gutter            ; Get your diff out of the gutter
         ;window-select        ; Visually switch windows
         ;zen                  ; distraction-free coding or writing TODO +twilight
-        noice                ; noice ui
+        noice                ; ui so nice they named it twice (and added 50 more dependencies)
 
         :editor
         fold                 ; (nigh) universal code folding
         (format +onsave)     ; automated prettiness
-        lint
+        lint                 ; jugement for your code in real time
         ;;multiple-cursors   ; learn macros you dingus
         parinfer             ; turn lisp into python, sort of
         ;; (hotpot +reflect)    ; lets get cooking. NOTE: essential module (for now), don't disable
@@ -58,7 +58,7 @@
         lsp                  ; :vscode
         (mini-pick +extra)
         (jj +diffview)       ; rewrite history like it never happened
-        project
+        project              ;finding your work in the dark
         ;(neogit              ; a git porclain for neovim
         ;  +forge             ; Wield git like a wizard
         ;  +diffview)         ; a git diff view for neovim
@@ -70,7 +70,7 @@
         ;clojure              ; java with a lisp
         common-lisp          ; if you've seen one lisp, you've seen them all
         ;csharp               ; java but with linq
-        fennel               ;
+        fennel               ;the reason you’re here, and the reason your parens are everywhere
         java                 ; the poster child for carpal tunnel syndrome
         (javascript
           +ts
