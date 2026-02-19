@@ -1,7 +1,7 @@
 (import-macros {: lz-package! : build-pack-table : build-before-all-hook}
                :macros)
 
-(lz-package! :L3MON4D3/LuaSnip {:event [:UIEnter :InsertEnter :CmdLineEnter]}
+(lz-package! :L3MON4D3/LuaSnip {:event [:InsertEnter :CmdLineEnter]}
              :nyoom-module completion.luasnip :requires
              [:rafamadriz/friendly-snippets])
 
@@ -9,10 +9,10 @@
              {:nyoom-module completion.blink
               :version :v1.8.0
               :module :blink
-              :lazy false
               :event [:InsertEnter :CmdLineEnter]
               :requires [:onsails/lspkind.nvim
                          :saghen/blink.compat
+                         :Olical/conjure
                          :zbirenbaum/copilot.lua
                          :giuxtaposition/blink-cmp-copilot
                          :PaterJason/cmp-conjure

@@ -2,6 +2,5 @@
 ; add keys here
 (lz-package! :DrKJeff16/project.nvim
              {:nyoom-module tools.project
-             ; :cmd [:Project :ProjectRecents]
-              :module :project
+              :cmd [:Project :ProjectRecents]
               :event :UIEnter})
