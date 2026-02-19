@@ -32,6 +32,7 @@
         :editor
         ;fold                 ; (nigh) universal code folding
         (format +onsave)     ; automated prettiness
+        lint
         ;;multiple-cursors   ; learn macros you dingus
         parinfer             ; turn lisp into python, sort of
         ;; (hotpot +reflect)    ; lets get cooking. NOTE: essential module (for now), don't disable

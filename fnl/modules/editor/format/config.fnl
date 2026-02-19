@@ -1,5 +1,32 @@
+(import-macros {: nyoom-module-p! : command! : autocmd! : map!} :macros)
 (local {: setup} (require :core.lib.setup))
-(import-macros {: nyoom-module-p! : map! : let! : command! : autocmd!} :macros)
+(local conform (require :conform))
+
+; unlayered formatters
+(local formatters {:asciidoc [:trim_whitespace]
+                   :nu [:trim_whitespace]})
+
+(fn register-fmt [ft names]
+  (tset formatters ft names))
+
+(nyoom-module-p! cc (register-fmt :c [:clang-format]))
+(nyoom-module-p! fennel (register-fmt :fennel [:fnlfmt]))
+(nyoom-module-p! lua (register-fmt :lua [:stylua]))
+(nyoom-module-p! python (register-fmt :python [:isort :black]))
+(nyoom-module-p! rust (register-fmt :rust [:rustfmt]))
+(nyoom-module-p! sh (register-fmt :sh [:shfmt :trim_whitespace]))
+(nyoom-module-p! toml (register-fmt :toml [:taplo]))
+
+(nyoom-module-p! javascript
+  (do (register-fmt :css [:prettier])
+      (register-fmt :html [:prettier])
+      (register-fmt :javascript [:prettier])
+      (register-fmt :json [:prettier])
+      (register-fmt :markdown [:prettier])
+      (register-fmt :svelte [:prettier])
+      (register-fmt :typescript [:prettier])
+      (register-fmt :typescriptreact [:prettier])
+      (register-fmt :yaml [:yamlfmt])))
 
 (local opts {:format_on_save (fn [bufnr]
                                (let [ft (. (. vim.bo bufnr) :filetype)
@@ -17,23 +44,10 @@
              :formatters {:shfmt {:prepend_args [:-i :2]}
                           :yamlfix {:env {:YAMLFIX_LINE_LENGTH :210
                                           :YAMLFIX_SEQUENCE_STYLE :block_style}}}
-             :formatters_by_ft {:asciidoc [:trim_whitespace]
-                                :css [:prettier]
-                                :fennel [:fnlfmt]
-                                :html [:prettier]
-                                :javascript [:prettier]
-                                :json [:prettier]
-                                :lua [:stylua]
-                                :markdown [:prettier]
-                                :nu [:trim_whitespace]
-                                :python [:isort :black]
-                                :sh [:shfmt :trim_whitespace]
-                                :svelte [:prettier]
-                                :toml [:taplo]
-                                :typescript [:prettier]
-                                :typescriptreact [:prettier]
-                                :yaml [:yamlfmt]}
+             :formatters_by_ft formatters
              :notify_on_error false})
+
+(setup :conform opts)
 
 (autocmd! FileType [lua
                     python
@@ -72,5 +86,3 @@
       {:desc "Format with Conform"})
 
 (map! [n] :<leader>cfi :<cmd>ConformInfo<cr> {:desc "Format Info"})
-
-(setup :conform opts)
