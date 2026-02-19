@@ -55,3 +55,5 @@
          {1 :<leader>m :group :localleader}
          {1 :<leader>d :group :debug}
          {1 :<leader>v :group :visual}])
+
+(include :modules.config.default.+which-key.custom)
