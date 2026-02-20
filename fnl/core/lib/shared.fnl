@@ -2,11 +2,11 @@
 
 (local databases-folder (.. (vim.fn.stdpath "data") "/databases"))
 
-(local icons {:error " "
-              :warn  " "
-              :info  " "
-              :hint  " "
-              :ok    " "})
+(local icons {:error ""
+              :warn  ""
+              :info  ""
+              :hint  ""
+              :ok    ""})
 
 (local codicons {:Text "  "
                  :Method "  "

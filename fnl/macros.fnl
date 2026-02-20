@@ -941,10 +941,6 @@
       (set count (+ count 1)))
     count))
 
-(lambda nyoom-spec-count! []
-  "Returns code to calculate number of specs at runtime"
-  `(length (or _G.nyoom/specs [])))
-
 (fn nyoom-module-count-runtime! []
   (length (or _G.nyoom/modules [])))
 
@@ -990,7 +986,6 @@
  : clear!
  : pack
  : rock
- ; : use-package!
  : rock!
  : unpack!
  : packadd!
