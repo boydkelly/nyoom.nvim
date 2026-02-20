@@ -1,6 +1,6 @@
 (local userconfigs {})
 
-(local databases-folder (.. (vim.fn.stdpath "data") "/databases"))
+(socal databases-folder (.. (vim.fn.stdpath "data") "/databases"))
 
 (local icons {:error ""
               :warn  ""

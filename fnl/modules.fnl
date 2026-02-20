@@ -42,7 +42,7 @@
         toggleterm           ; persistant/floating terminal wrapper for :term
 
         :checkers
-        ;diagnostics          ; tasing you for every semicolon you forget
+        ;diagnostics          ; tasing you with none-ls for every semicolon you forget
         ;grammar              ; tasing grammar mistake every you make
         spell              ; tasing you for misspelling mispelling
 
@@ -52,7 +52,7 @@
         ;editorconfig       ; let someone else argue about tabs vs spaces
          ;;magma              ; tame Jupyter notebooks
         ;mason                ; setting your tools in stone
-        ;eval                 ; run code, run (also, repls)
+        eval                 ; run code, run (also, repls)
         antifennel           ; for all the fennel haters out there. this ones for you
         ;pastebin             ; interacting with pastebin platforms
         lsp                  ; :vscode
@@ -64,6 +64,7 @@
         ;  +diffview)         ; a git diff view for neovim
         rgb                  ; creating color strings
         tree-sitter          ; syntax and parsing, sitting in a tree...
+        ;television
 
         :lang
         ;;cc                   ; C > C++ == 1
@@ -91,7 +92,7 @@
         ;nix                  ; I hereby declare "nix geht mehr!"
         ;python               ; beautiful is better than ugly
         ;rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-        sql
+        ;sql
         (sh
           ; +fish
            +nu)

@@ -1,7 +1,7 @@
 (local {: autoload} (require :core.lib.autoload))
 (local shared (require :core.lib.shared))
 (import-macros {: nyoom-module-p! : nyoom-module-ensure! : packadd!} :macros)
-(packadd! :none-ls)
+;(packadd! :none-ls)
 (local none-ls (require :null-ls))
 (local none-ls-sources [])
 
