@@ -5,5 +5,5 @@
 (lz-package! :lewis6991/gitsigns.nvim
              {:nyoom-module ui.vc-gutter
               :ft :gitcommit
-              :event :UIEnter
+              :event  :UIEnter
               :module :gitsigns})

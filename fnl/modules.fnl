@@ -64,7 +64,7 @@
         ;  +diffview)         ; a git diff view for neovim
         rgb                  ; creating color strings
         tree-sitter          ; syntax and parsing, sitting in a tree...
-        ;television
+        television
 
         :lang
         ;;cc                   ; C > C++ == 1

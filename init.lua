@@ -54,6 +54,7 @@ local fennel = require("tangerine.fennel")
 fennel.path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. (fennel.path or "")
 package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
 fennel.macro_path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. (fennel.macro_path or "")
+
 if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 	--
 	local function safe_compile_file(src, dest)

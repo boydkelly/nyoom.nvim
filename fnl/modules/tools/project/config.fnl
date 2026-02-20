@@ -20,5 +20,3 @@
              :telescope {:disable_file_picker false}})
 
 (setup :project opts)
-
-; ((. (require :project) :setup) opts)
