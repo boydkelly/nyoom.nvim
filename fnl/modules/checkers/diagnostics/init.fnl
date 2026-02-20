@@ -2,5 +2,4 @@
 
  (lz-package! :nvimtools/none-ls.nvim
       {:nyoom-module checkers.diagnostics
-              :event UIEnter
-              :priority 1000 })
+              :event UIEnter})

@@ -1,4 +1,6 @@
+(import-macros {: set!} :macros)
 (local {: setup} (require :core.lib.setup))
+
 (setup :gitsigns
        {:signs {:add {:hl :diffAdded
                       :text "│"
@@ -9,7 +11,7 @@
                          :numhl :GitSignsChangeNr
                          :linehl :GitSignsChangeLn}
                 :delete {:hl :diffRemoved
-                         :text ""
+                         :text "┅"
                          :numhl :GitSignsDeleteNr
                          :linehl :GitSignsDeleteLn}
                 :changedelete {:hl :diffChanged

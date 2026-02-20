@@ -81,8 +81,8 @@
                        :vert " "
                        :horiz " "
                        :diff "╱"
-                       :foldclose ""
-                       :foldopen ""
+                       :foldclose "▶"
+                       :foldopen "▼"
                        :fold " "
                        :msgsep "─"})
       (set! listchars {:tab " ──"
@@ -96,7 +96,7 @@
       (let! neovide_padding_left 38)
       (let! neovide_padding_right 38)
       (let! neovide_padding_bottom 20)
-      ;; load userconfig
+
       (require :config)))
 
 (require :packages)

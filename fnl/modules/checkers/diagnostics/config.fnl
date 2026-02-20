@@ -7,11 +7,6 @@
 
 (nyoom-module-ensure! lsp)
 
-moved
-
-to
-
-tools.lsp
 (vim.diagnostic.config {:underline {:severity {:min vim.diagnostic.severity.INFO}}
                         :signs {:severity {:min vim.diagnostic.severity.HINT}}
                         :virtual_text false

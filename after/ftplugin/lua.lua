@@ -1,0 +1,17 @@
+-- print("---- FOLD DIAGNOSTICS ----")
+--
+-- print("foldmethod:  ", vim.wo.foldmethod)
+-- print("foldexpr:    ", vim.wo.foldexpr)
+-- print("foldlevel:   ", vim.wo.foldlevel)
+-- print("foldenable:  ", vim.wo.foldenable)
+-- print("foldcolumn:  ", vim.wo.foldcolumn)
+-- print("statuscolumn:", vim.wo.statuscolumn)
+--
+-- print(
+-- 	"TS foldexpr at cursor:",
+-- 	pcall(function()
+-- 		return vim.treesitter.foldexpr()
+-- 	end)
+-- )
+--
+-- print("--------------------------")

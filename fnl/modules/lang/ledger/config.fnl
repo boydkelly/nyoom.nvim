@@ -2,7 +2,7 @@
 ;; {:packadd! vim-ledger}
 
 ;; set options to your liking...
-(set! foldmethod :syntax)
+; (set! foldmethod :syntax)
 (set! foldenable true)
 (tset vim.g :ledger_fillstring "........")
 (tset vim.g :ledger_extra_options "")

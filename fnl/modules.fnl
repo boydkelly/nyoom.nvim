@@ -2,11 +2,9 @@
 
 ;; NOTE: TODO and FIXME modules still need work. WIP: modules work but may still be buggy
 
-;; fnlfmt: skip
 (nyoom! :completion
         ;cmp                  ; the ultimate code completion backend
         (blink +luasnip)     ; completion so fast you’ll think you imagined it
-
         ;;copilot            ; the code completion of the future
         ;;fzf-lua            ; TODO a search engine for love and life
         (telescope +native)  ; the search engine of the future
@@ -30,7 +28,7 @@
         noice                ; noice ui
 
         :editor
-        ;fold                 ; (nigh) universal code folding
+        fold                 ; (nigh) universal code folding
         (format +onsave)     ; automated prettiness
         lint
         ;;multiple-cursors   ; learn macros you dingus
@@ -80,7 +78,7 @@
         ;; kotlin             ; FIXME: a better, slicker Java(Script)
         json               ; { "dʒeɪsən":  "Javascript Object Notation" }
         latex                ; writing papers in Neovim has never been so fun
-        ledger             ; be audit you can be
+        ;ledger             ; be audit you can be
         lua                  ; one-based indices? one-based indices
         markdown             ; writing docs for people to ignore
         nim                  ; python + lisp at the speed of c
@@ -95,8 +93,7 @@
         sql
         (sh
           ; +fish
-           +nu
-        )
+           +nu)
                      ; she sells {ba,z,fi}sh shells on the C xor
         toml                ; extend my language
         xml                ; extend my language
