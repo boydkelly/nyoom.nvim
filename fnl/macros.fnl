@@ -31,7 +31,7 @@
     spec))
 
 (lambda vim-pack! [identifier ?options]
-  "Stand-alone registration for libraries that don't need lz.n logic."
+  "Enter a spec to be processsed by vim.pack."
   (let [spec (build-pack-table identifier ?options)]
     `(table.insert _G.nyoom/pack ,spec)))
 
@@ -51,7 +51,7 @@
          ;; Normalize run-cmd: if it's a string/keyword, wrap it in a list for vim.system
          (let [cmd# (if (vim.islist ,run-cmd)
                         ,run-cmd
-                        [ ,run-cmd ])]
+                        [ ,run-cmd])]
            (let [sys# (vim.system cmd# {:cwd ,plugin-path})]
              ;; Preserving your wait logic: call :wait() to avoid table-call errors
              (local result# (sys#:wait))
@@ -102,45 +102,44 @@
       (table.insert after-parts
                     `(include ,(.. :modules. (->str options.nyoom-module)
                                    :.config))))
-    ;; --- C. Assemble lz.n Data ---
+;; --- C. Assemble lz.n Data ---
     (let [lz-data {}
           table-keys {:event true :cmd true :ft true :colorscheme true}
-          lz-whitelist [:enabled
-                        :event
-                        :cmd
-                        :ft
-                        :colorscheme
-                        :lazy
-                        :priority
-                        :load]]
+          lz-whitelist [:enabled :event :cmd :ft :colorscheme :lazy :priority :load]]
 
+      ;; 1. Handle direct :before key (e.g. keybinds)
+      (when options.before
+        (if (= :string (type options.before))
+            (table.insert before-parts `(include ,options.before))
+            (table.insert before-parts options.before)))
+
+      ;; 2. NEW: Handle direct :beforeAll key (e.g. system checks or early setup)
+      (when options.beforeAll
+        (if (= :string (type options.beforeAll))
+            (table.insert before-all-parts `(include ,options.beforeAll))
+            (table.insert before-all-parts options.beforeAll)))
+
+      ;; 3. Standard whitelist loop
       (each [_ k (ipairs lz-whitelist)]
         (let [val (. options k)]
-          ;; Use if instead of when to ensure the compiler handles the
-          ;; boolean value of 'val' purely as a presence check against nil
           (if (not= nil val)
-            (tset lz-data k (if (. table-keys k) (ensure-table val) val)))))
+              (tset lz-data k (if (. table-keys k) (ensure-table val) val)))))
+
+      ;; 4. Assemble Hooks
       (when (> (length before-parts) 0)
-        (tset lz-data :before
-              `(fn []
-                 (do
-                   ,(unpack before-parts)))))
-      ;; Attach the build hook to beforeAll
+        (tset lz-data :before `(fn [] (do ,(unpack before-parts)))))
+
       (when (> (length before-all-parts) 0)
-        (tset lz-data :beforeAll
-              `(fn []
-                 (do
-                   ,(unpack before-all-parts)))))
+        (tset lz-data :beforeAll `(fn [] (do ,(unpack before-all-parts)))))
+
       (when (> (length after-parts) 0)
-        (tset lz-data :after `(fn []
-                                (do
-                                  ,(unpack after-parts))
-                                nil)))
+        (tset lz-data :after `(fn [] (do ,(unpack after-parts) nil))))
+
+      ;; --- Finalize ---
       (tset spec :data lz-data)
       (let [final-body install-parts]
         (table.insert final-body `(table.insert _G.nyoom/pack ,spec))
-        `(do
-           ,(unpack final-body))))))
+        `(do ,(unpack final-body))))));;
 
 (lambda nyoom-module! [name]
   "Directly includes a module's config file at compile-time.
