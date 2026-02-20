@@ -4,7 +4,7 @@
 (lz-package! :stevearc/oil.nvim
              {:nyoom-module ui.oil
               :enabled true
-              :event :DefferedUIEnter
+              :event :DeferredUIEnter
               :keys [{1 "-"
                       2 (fn []
                           (_G.toggle_oil_split))
@@ -13,4 +13,3 @@
                       2 (fn []
                           (_G.toggle_oil_split))
                       :desc "Toggle Oil"}]})
-

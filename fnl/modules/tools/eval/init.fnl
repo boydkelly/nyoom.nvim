@@ -3,7 +3,8 @@
 ;; interactive lisp evaluation
 (lz-package! :Olical/conjure {:nyoom-module tools.eval
                                :branch :develop
-                               :enabled true
+                               :lazy false
+                               :event [:UIEnter]
                                :ft [:fennel
                                     :clojure
                                     :lisp

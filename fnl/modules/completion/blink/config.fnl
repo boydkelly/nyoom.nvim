@@ -1,14 +1,15 @@
 (import-macros {: set! : nyoom-module-p! : packadd! : autocmd!} :macros)
 (local {: setup} (require :core.lib.setup))
 
-(packadd! blink.compat)
-(packadd! blink-cmp-spell)
-(packadd! lspkind.nvim)
+; (packadd! luasnip)
+; (packadd! lspkind.nvim)
+; (packadd! blink.compat)
 (packadd! conjure)
 (packadd! cmp-conjure)
-(packadd! copilot.lua)
-(packadd! blink-cmp-copilot)
-(packadd! luasnip)
+; (packadd! copilot.lua)
+; (packadd! blink-cmp-copilot)
+; (packadd! blink-cmp-spell)
+;(setup :conjure)
 
 (fn apply-blink-hl []
   (let [blink-hl (vim.api.nvim_get_hl 0 {:link false :name :WarningMsg})]
