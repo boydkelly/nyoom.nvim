@@ -1,4 +1,4 @@
-(import-macros {: set! : nyoom-module-p! : packadd! : autocmd!} :macros)
+(import-macros {: set! : nyoom-module-p! : packadd! : autocmd! : custom-set-face! } :macros)
 (local {: setup} (require :core.lib.setup))
 
 ; (packadd! luasnip)
@@ -13,11 +13,37 @@
 
 (fn apply-blink-hl []
   (let [blink-hl (vim.api.nvim_get_hl 0 {:link false :name :WarningMsg})]
-    (vim.api.nvim_set_hl 0 :BlinkCmpMenu {:link :Pmenu})
-    (vim.api.nvim_set_hl 0 :BlinkCmpMenuSelection {:link :PmenuShadow})
-    (vim.api.nvim_set_hl 0 :BlinkCmpLabelMatch {:bold true :fg blink-hl.fg})
-    (vim.api.nvim_set_hl 0 :PmenuKind {:bg blink-hl.fg :fg :NvimDarkGrey1})
-    (vim.api.nvim_set_hl 0 :BlinkCmpKind {:bg blink-hl.fg :fg :NvimDarkGrey1})))
+
+    (custom-set-face! :BlinkCmpMenu [] {:link :NormalFloat})
+    (custom-set-face! :BlinkCmpMenuSelection [] {:link :FloatShadow})
+    (custom-set-face! :BlinkCmpLabelMatch [] {:bold true :fg blink-hl.fg})
+    (custom-set-face! :PmenuKind [] {:bg blink-hl.fg :fg :NvimDarkGrey1})
+    (custom-set-face! :BlinkCmpKind [] {:bg blink-hl.fg :fg :NvimDarkGrey1}))
+
+  (custom-set-face! :BlinkCmpKindText [] {:link :CmpItemKindText})
+  (custom-set-face! :BlinkCmpKindEnum [] {:link :CmpItemKindEnum})
+  (custom-set-face! :BlinkCmpKindKeyword [] {:link :CmpItemKindKeyword})
+  (custom-set-face! :BlinkCmpKindConstant [] {:link :CmpItemKindConstant})
+  (custom-set-face! :BlinkCmpKindConstructor [] {:link :CmpItemKindConstructor})
+  (custom-set-face! :BlinkCmpKindReference [] {:link :CmpItemKindReference})
+  (custom-set-face! :BlinkCmpKindFunction [] {:link :CmpItemKindFunction})
+  (custom-set-face! :BlinkCmpKindStruct [] {:link :CmpItemKindStruct})
+  (custom-set-face! :BlinkCmpKindClass [] {:link :CmpItemKindClass})
+  (custom-set-face! :BlinkCmpKindModule [] {:link :CmpItemKindModule})
+  (custom-set-face! :BlinkCmpKindOperator [] {:link :CmpItemKindOperator})
+  (custom-set-face! :BlinkCmpKindField [] {:link :CmpItemKindField}
+  (custom-set-face! :BlinkCmpKindProperty [] {:link :CmpItemKind}))
+  (custom-set-face! :BlinkCmpKindEvent [] {:link :CmpItemKindEvent})
+  (custom-set-face! :BlinkCmpKindUnit [] {:link :CmpItemKindUnit})
+  (custom-set-face! :BlinkCmpKindSnippet [] {:link :CmpItemKindSnippet})
+  (custom-set-face! :BlinkCmpKindFolder [] {:link :CmpItemKindFolder})
+  (custom-set-face! :BlinkCmpKindVariable [] {:link :CmpItemKindVariable})
+  (custom-set-face! :BlinkCmpKindFile [] {:link :CmpItemKindFile})
+  (custom-set-face! :BlinkCmpKindMethod [] {:link :CmpItemKindMethod})
+  (custom-set-face! :BlinkCmpKindValue [] {:link :CmpItemKindValue})
+  (custom-set-face! :BlinkCmpKindEnumMember [] {:link :CmpItemKindEnumMember}))
+ 
+
 
 (apply-blink-hl)
 
