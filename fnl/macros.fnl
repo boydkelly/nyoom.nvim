@@ -13,7 +13,9 @@
 (set _G.nyoom/pack (or _G.nyoom/pack []))
 
 (lambda build-pack-table [identifier ?options]
-  "Resolves identifiers to URLs and builds the base vim.pack table."
+  "Resolves identifiers to URLs and builds the base vim.pack table.
+  Call this directly if you need to vim pack a plugin without adding to
+  _G.nyoom/specs (and not processed by lz.n)"
   (let [options (or ?options {}) ;; 1. Determine the URL
         url (if (or (identifier:match :^http) (identifier:match "^git@"))
                 identifier
