@@ -1,12 +1,5 @@
-; (local opts {:icons {:rules false}
-;              :plugins {:presets {:g true :windows true :z true}
-;                        :spelling {:enabled false}}
-;              :win {:padding [1 0]}})
-;
 (local wk (require :which-key))
 ;
-; (wk.setup opts)
-
 (wk.add [{1 {1 :<leader>a :group :Admin}
           2 {1 :<leader>ap :group :Plugins}
           3 {1 :<leader>ak :group :Keyboard}
