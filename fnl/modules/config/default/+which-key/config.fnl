@@ -8,8 +8,8 @@
                      ; :separator "->"
                      :group "+"
                      :rules false}
-             :win {:border :solid :padding [1 0]}
-             :layout {:spacing 3 :align :center}
+             :win {:border :solid :padding [0 0]}
+             :layout {:spacing 0 :align :center}
              :filter (fn [mapping]
                        (let [mode mapping.mode
                              key mapping.lhs]
@@ -17,7 +17,7 @@
                                    (or (= key :j) (= key :k))))))
              :plugins {:presets {:g true :windows true :z true}
                        ;; Use the variable here
-                       :spelling {:enabled spelling}}
+                       :spelling {:enabled false}}
              :replace {:desc [[:<silent> ""]
                               [:<cmd> ""]
                               [:<Cmd> ""]
