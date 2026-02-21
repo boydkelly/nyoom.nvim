@@ -1,5 +1,7 @@
 (import-macros {: set!} :macros)
 
 (set! spell)
-(set! spelllang [:en :fr])
+(set! spelllang :en)
 (set! spelloptions [:camel :noplainbuffer])
+(set vim.g.set_quotes false)
+

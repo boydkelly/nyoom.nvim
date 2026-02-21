@@ -33,8 +33,7 @@
   (local has-mini (or (. package.loaded :mini.pairs)
                       (pcall require :mini.pairs)))
   (when has-mini
-    ((. (require :setup) :mini_pairs) :quotes))
-  (vim.notify "Standard quote input restored" vim.log.levels.INFO))
+    ((. (require :setup) :mini_pairs) :quotes)))
 
 (fn M.set_guillemets []
   (clear-quote-map)

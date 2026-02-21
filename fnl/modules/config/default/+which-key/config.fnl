@@ -1,5 +1,5 @@
 (local {: setup} (require :core.lib.setup))
-(import-macros {: nyoom-module-p! } :macros)
+(import-macros {: nyoom-module-p!} :macros)
 
 (local spelling (nyoom-module-p! spell))
 
@@ -46,7 +46,7 @@
          {1 :<leader>o :group :open}
          {1 :<leader>oa :group :agenda}
          {1 :<leader>ot :group :terminal}
-         {1 :<leader>p :group :project}
+         ; {1 :<leader>p :group :project}
          {1 :<leader>q :group :quit/session}
          {1 :<leader>r :group :remote}
          {1 :<leader>s :group :search}
@@ -57,3 +57,4 @@
          {1 :<leader>v :group :visual}])
 
 (include :modules.config.default.+which-key.custom)
+

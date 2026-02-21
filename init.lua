@@ -157,6 +157,7 @@ end
 -- ========================================
 -- 6. Handoff to Main Entrypoint
 -- ========================================
+-- vim.deprecate = function() end
 local ok, err = pcall(require, "nyoom")
 if not ok then
 	print("NYOOM: Fennel handoff failed!")

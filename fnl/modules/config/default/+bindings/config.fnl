@@ -101,7 +101,7 @@
       (vim.cmd :ProjectRecents)
       (vim.cmd "Telescope project")))
 
-(map! [n] :<leader>pp open-project {:desc "List projects"})
+(map! [n] :<leader>p open-project {:desc "List projects"})
 
 (nyoom-module-p! telescope
                  (do
@@ -426,3 +426,4 @@
                        {:desc "Open term split"}))
 
 (include :modules.config.default.+bindings.keybinds)
+
