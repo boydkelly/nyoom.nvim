@@ -1,9 +1,3 @@
--- ========================================
--- 1. Plugin Management (Bootstrap)
--- ========================================
-
---  just testing a few install scenarios with nyoom install/sync
--- set dev true below to force compile on start
 vim.deprecate = function() end
 local dev = true
 local data_path = vim.fn.stdpath("data")
@@ -12,11 +6,8 @@ local tangerine_path = data_path .. "/site/pack/core/opt/tangerine.nvim"
 local oxocarbon_path = data_path .. "/site/pack/core/opt/oxocarbon.nvim"
 local lz_path = data_path .. "/site/pack/core/opt/lz.n"
 
--- 1. Check if core dependencies are missing on disk
 local bootstrap_ok = vim.uv.fs_stat(tangerine_path) and vim.uv.fs_stat(lz_path) and vim.uv.fs_stat(oxocarbon_path)
 --
--- 3. The Guard Logic
--- If missing AND not in CLI mode, block execution
 if not bootstrap_ok then
 	-- either install or make user run install script.
 	vim.pack.add({
@@ -33,27 +24,23 @@ end
 vim.cmd.packadd("lz.n")
 vim.cmd.packadd("tangerine.nvim")
 
--- ========================================t
--- 2. Tangerine & Fennel Configuration
--- ========================================
-
 -- vim.cmd.cd(vim.fn.stdpath("config"))
 local fnl_dir = vim.fn.stdpath("config") .. "/fnl"
 local lua_dir = vim.fn.stdpath("config") .. "/.nyoom"
--- 1. Check native Lua first (Fastest)
 
 local core_exists = vim.uv.fs_stat(lua_dir .. "/core/init.lua")
 
--- 2. Only check environment variables if we aren't sure yet
 vim.cmd.packadd("tangerine.nvim")
 
 local api = require("tangerine.api")
 local fennel = require("tangerine.fennel")
--- fennel["allowed-globals"] = nyoom_globals
 
 fennel.path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. (fennel.path or "")
 package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
 fennel.macro_path = fnl_dir .. "/?.fnl;" .. fnl_dir .. "/?/init.fnl;" .. (fennel.macro_path or "")
+fennel["allowed-globals"] = nil
+fennel["compiler-env"] = _G
+
 if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 	--
 	local function safe_compile_file(src, dest)
@@ -74,22 +61,13 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 		end
 	end
 
-	-- ========================================
-	-- 4. Core Library Bootstrapping
-	-- ========================================
-
-	-- Compiles and requires libraries immediately for use in the bootstrap phase
-
 	local function bootstrap_corelib(name)
 		-- print(name)
 		local src = fnl_dir .. "/core/lib/" .. name .. ".fnl"
 		local dest = lua_dir .. "/core/lib/" .. name .. ".lua"
 
-		-- 1. Compile SILENTLY. Verbosity is a startup killer.
 		api.compile.file(src, dest, { force = false, verbose = false })
 
-		-- 2. Only nil out if we are actually in a RESTART/RELOAD flow.
-		-- For standard startup, let the Lua cache do its job.
 		local ok, module = pcall(require, "core.lib." .. name)
 		if not ok then
 			error("Failed: " .. tostring(module))
@@ -114,7 +92,6 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 		{ "init", "init" },
 	}
 
-	-- Only these specific keys will be injected into _G
 	local runtime_globals = { shared = true }
 
 	local loaded_libs = {}
@@ -129,9 +106,11 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 		end
 	end
 
-	-- ========================================
-	-- 5. Main Logic Compilation
-	-- ========================================
+	local stdlib = require("core.lib")
+	for k, v in pairs(stdlib) do
+		rawset(_G, k, v)
+	end
+
 	local core_base = {
 		{ fnl_dir .. "/core/init.fnl", lua_dir .. "/core/init.lua" },
 		{ fnl_dir .. "/core/repl.fnl", lua_dir .. "/core/repl.lua" },
@@ -141,16 +120,13 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 		{ fnl_dir .. "/packages.fnl", lua_dir .. "/packages.lua" },
 	}
 
-	-- Execute batch compilation
 	for _, pair in ipairs(core_base) do
 		safe_compile_file(pair[1], pair[2])
 	end
 
 	safe_compile_dir(fnl_dir .. "/lsp", config_path .. "/after/lsp")
 end
--- ========================================
--- 6. Handoff to Main Entrypoint
--- ========================================
+
 local ok, err = pcall(require, "nyoom")
 if not ok then
 	print("NYOOM: Fennel handoff failed!")
