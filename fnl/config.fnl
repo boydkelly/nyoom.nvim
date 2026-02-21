@@ -36,8 +36,9 @@
 ;
 ; new cmd line; noice config disables this after startup...   Best of both.
 ((. (require :vim._core.ui2) :enable) {:enable true
-                                       :msg {:target :msg :timeout 4000}})
+                                       :msg {:target :cmd :timeout 2000}})
 
+(require :utils.unicode)
 ; (set _G.notify_mods
 ;      (fn []
 ;        (let [m (or (. _G :nyoom/modules) {})

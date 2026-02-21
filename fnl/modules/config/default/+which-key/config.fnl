@@ -1,5 +1,5 @@
 (local {: setup} (require :core.lib.setup))
-(import-macros {: nyoom-module-p! } :macros)
+(import-macros {: nyoom-module-p!} :macros)
 
 (local spelling (nyoom-module-p! spell))
 
@@ -8,8 +8,8 @@
                      ; :separator "->"
                      :group "+"
                      :rules false}
-             :win {:border :solid :padding [1 0]}
-             :layout {:spacing 3 :align :center}
+             :win {:border :solid :padding [0 0]}
+             :layout {:spacing 0 :align :center}
              :filter (fn [mapping]
                        (let [mode mapping.mode
                              key mapping.lhs]
@@ -17,7 +17,7 @@
                                    (or (= key :j) (= key :k))))))
              :plugins {:presets {:g true :windows true :z true}
                        ;; Use the variable here
-                       :spelling {:enabled spelling}}
+                       :spelling {:enabled false}}
              :replace {:desc [[:<silent> ""]
                               [:<cmd> ""]
                               [:<Cmd> ""]
@@ -46,7 +46,7 @@
          {1 :<leader>o :group :open}
          {1 :<leader>oa :group :agenda}
          {1 :<leader>ot :group :terminal}
-         {1 :<leader>p :group :project}
+         ; {1 :<leader>p :group :project}
          {1 :<leader>q :group :quit/session}
          {1 :<leader>r :group :remote}
          {1 :<leader>s :group :search}
@@ -55,3 +55,6 @@
          {1 :<leader>m :group :localleader}
          {1 :<leader>d :group :debug}
          {1 :<leader>v :group :visual}])
+
+(include :modules.config.default.+which-key.custom)
+

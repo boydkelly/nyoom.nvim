@@ -11,7 +11,7 @@
                          :numhl :GitSignsChangeNr
                          :linehl :GitSignsChangeLn}
                 :delete {:hl :diffRemoved
-                         :text "┅"
+                         :text "▁"
                          :numhl :GitSignsDeleteNr
                          :linehl :GitSignsDeleteLn}
                 :changedelete {:hl :diffChanged
@@ -22,6 +22,7 @@
                             :text "~"
                             :numhl :GitSignsDeleteNr
                             :linehl :GitSignsDeleteLn}}})
+
 
 ; (fn []
 ;                         (autocmd! BufRead *

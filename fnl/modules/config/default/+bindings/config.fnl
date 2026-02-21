@@ -101,7 +101,7 @@
       (vim.cmd :ProjectRecents)
       (vim.cmd "Telescope project")))
 
-(map! [n] :<leader>pp open-project {:desc "List projects"})
+(map! [n] :<leader>p open-project {:desc "List projects"})
 
 (nyoom-module-p! telescope
                  (do
@@ -339,8 +339,8 @@
 (map! [n] :<leader>ff "<cmd>r! echo %<CR>" {:desc "Current file name"})
 (map! [n] :<leader>fF "<cmd>r! echo %:p<CR>" {:desc "Current file path"})
 (map! [n] :<leader>fp :<cmd>R!echo<CR> {:desc "Vi ex path"})
-(map! [n] :<leader>fr "<C-R><C-O> " {:desc "From register"})
-(map! [n] :<leader>fy "<C-R><C-O>+ " {:desc "From clipboard"})
+; (map! [n] :<leader>fr "<C-R><C-O> " {:desc "From register"})
+; (map! [n] :<leader>fy "<C-R><C-O>+ " {:desc "From clipboard"})
 ;;; n +notes
 
 ;; * search notes for symbol
@@ -425,19 +425,5 @@
                  (map! [n] :<leader>ots :<cmd>ToggleTerm<CR>
                        {:desc "Open term split"}))
 
-(map! [n] :<leader>otb :<cmd>term<CR> {:desc "Open term buffer"})
-;;; p +project
+(include :modules.config.default.+bindings.keybinds)
 
-;;; q +quit/session
-
-;;; r +remote
-
-;;; s +search
-
-;;; t +toggle
-
-;;; w +window
-
-;;; -- m +filetype (hydra
-
-;; non-doom

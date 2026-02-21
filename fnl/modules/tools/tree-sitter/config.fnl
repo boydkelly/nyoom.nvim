@@ -10,7 +10,6 @@
                 : command!
                 : clear!} :macros)
 
-;; Conditionally enable leap-ast
 (nyoom-module-p! bindings
                  (do
                    (packadd! leap-ast.nvim)
@@ -20,7 +19,6 @@
 (packadd! nvim-treesitter-textobjects)
 (packadd! nvim-ts-context-commentstring)
 
-;; setup hl groups for ts-rainbow
 
 (custom-set-face! :TSRainbowRed [] {:fg "#878d96" :bg :NONE})
 (custom-set-face! :TSRainbowYellow [] {:fg "#a8a8a8" :bg :NONE})
@@ -31,8 +29,6 @@
 (custom-set-face! :TSRainbowCyan [] {:fg "#878d96" :bg :NONE})
 
 (local treesitter-filetypes [:vimdoc :fennel :vim :regex :query])
-
-;; conditionally install parsers
 
 (nyoom-module-p! cc
                  (do
@@ -214,9 +210,7 @@
                             ft (vim.api.nvim_get_option_value :filetype {: buf})
                             lang (vim.treesitter.language.get_lang ft)]
                         (when lang
-                          ;; 1. Start Highlighting
                           (pcall vim.treesitter.start buf lang)
-                          ;; 2. Set Indentation (Now correctly scoped inside the 'when')
                           (local-set! indentexpr
                                       "v:lua.require'nvim-treesitter'.indentexpr()"))))
                     {:desc "Nyoom: Start treesitter highlighting and indentation"}))

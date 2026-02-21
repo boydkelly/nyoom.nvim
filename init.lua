@@ -118,6 +118,11 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 		{ fnl_dir .. "/nyoom.fnl", lua_dir .. "/nyoom.lua" },
 		{ fnl_dir .. "/config.fnl", lua_dir .. "/config.lua" },
 		{ fnl_dir .. "/packages.fnl", lua_dir .. "/packages.lua" },
+		{ fnl_dir .. "/utils/pluginspecs.fnl", lua_dir .. "/utils/pluginspecs.lua" },
+		{ fnl_dir .. "/utils/base.fnl", lua_dir .. "/utils/base.lua" },
+		{ fnl_dir .. "/utils/prose.fnl", lua_dir .. "/utils/prose.lua" },
+		{ fnl_dir .. "/utils/unicode.fnl", lua_dir .. "/utils/unicode.lua" },
+		-- { fnl_dir .. "/utils/pickers.fnl", lua_dir .. "/utils/pickers.lua" },
 	}
 
 	for _, pair in ipairs(core_base) do
