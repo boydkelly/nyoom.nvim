@@ -38,25 +38,25 @@
         word-wrap            ; language-aware smart soft and hard wrapping
 
         :term
-        ;fshell             ; WIP: the fennel shell that works everywhere
+        ;fshell              ; WIP: the fennel shell that works everywhere
         toggleterm           ; persistant/floating terminal wrapper for :term
 
         :checkers
-        ;diagnostics          ; tasing you for every semicolon you forget
+        ;diagnostics          ; tasing you for every semicolon you forget with none-ls
         ;grammar              ; tasing grammar mistake every you make
-        spell              ; tasing you for misspelling mispelling
+        spell                 ; tasing you for misspelling mispelling
 
         :tools
         ;debugger             ; stepping through code, to help you add bugs
-        ; docker               ; row row row your boat TODO +netman?
-        ;editorconfig       ; let someone else argue about tabs vs spaces
+        ; docker              ; row row row your boat TODO +netman?
+        ;editorconfig         ; let someone else argue about tabs vs spaces
          ;;magma              ; tame Jupyter notebooks
-        mason                ; setting your tools in stone
-        eval                 ; run code, run (also, repls)
-        antifennel           ; for all the fennel haters out there. this ones for you
+        mason                 ; setting your tools in stone
+        eval                  ; run code, run (also, repls)
+        antifennel            ; for all the fennel haters out there. this ones for you
         ;pastebin             ; interacting with pastebin platforms
-        lsp                  ; :vscode
-        (jj +diffview)       ; rewrite history like it never happened
+        lsp                   ; :vscode
+        (jj +diffview)        ; rewrite history like it never happened
         project
         ;(neogit              ; a git porclain for neovim
         ;  +forge             ; Wield git like a wizard
@@ -88,13 +88,14 @@
          +export
          +nabla)
         ;nix                  ; I hereby declare "nix geht mehr!"
+        (org +pretty)
         ;python               ; beautiful is better than ugly
         ;rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
         sql
-        (sh
+        (sh)
           ; +fish
           ; +nu
-           )
+
                      ; she sells {ba,z,fi}sh shells on the C xor
         toml                ; extend my language
         xml                ; extend my language

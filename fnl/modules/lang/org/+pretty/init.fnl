@@ -2,4 +2,4 @@
 
 (lz-package! :lukas-reineke/headlines.nvim {:nyoom-module lang.org.+pretty
                                              :ft :org
-                                             :requires [(lz-trigger-load! :akinsho/org-bullets.nvim)]})
+                                             :requires [:akinsho/org-bullets.nvim]})
