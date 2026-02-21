@@ -88,15 +88,104 @@
                    (table.insert treesitter-filetypes :gitattributes)
                    (table.insert treesitter-filetypes :gitcommit)))
 
-;; (table.insert treesitter-filetypes :gitignore)
+(table.insert treesitter-filetypes :gitignore)
 
-;   (nyoom-module-p! neorg
-;     (do
-;       (tset ts-parsers :norg
-;             {:install_info {:url "https://github.com/nvim-neorg/tree-sitter-norg"
-;                             :files [:src/parser.c :src/scanner.cc]
-;                             :branch :main}})
-;       (table.insert treesitter-filetypes :norg))))
+(nyoom-module-p! neorg
+  (do
+    ;; Build a parser from source
+    (fn build-parser [spec]
+      (let [data-dir (vim.fn.stdpath :data)
+            cache-dir (.. (vim.fn.stdpath :cache) :/tree-sitter)
+            parser-dir (.. data-dir :/site/parser)
+            queries-dir (.. data-dir :/site/queries)
+            repo-name (spec.url:match "([^/]+)$")
+            extract-dir (string.format "%s/%s-%s" cache-dir repo-name spec.rev)
+            old-shell vim.o.shell]
+
+        ;; Ensure cache dir exists
+        (vim.fn.mkdir cache-dir :p)
+        (vim.fn.mkdir parser-dir :p)
+        (vim.fn.mkdir queries-dir :p)
+
+        ;; --- Clone if missing ---
+        (when (= (vim.fn.isdirectory extract-dir) 0)
+          (vim.notify (string.format "Cloning %s..." spec.url))
+          (vim.fn.system
+            (string.format
+              "git clone --depth 1 --branch %s %s %s"
+              spec.rev spec.url extract-dir)))
+
+        ;; Determine source path
+        (var src-path extract-dir)
+        (when (= (vim.fn.isdirectory (.. extract-dir :/src)) 1)
+          (set src-path (.. extract-dir :/src)))
+
+        ;; --- Compile parser ---
+        (set vim.o.shell :bash)
+        (local cc "cc -O2 -fPIC -fvisibility=default -I.")
+        (var scanner-obj "")
+        (var linker :cc)
+        (local cmds [(string.format "cd %s" src-path) "rm -f *.o"])
+
+        (table.insert cmds (string.format "%s -c parser.c -o parser.o" cc))
+
+        ;; Scanner logic
+        (if (= (vim.fn.filereadable (.. src-path :/scanner.c)) 1)
+            (do
+              (table.insert cmds (string.format "%s -c scanner.c -o scanner.o" cc))
+              (set scanner-obj :scanner.o))
+
+            (= (vim.fn.filereadable (.. src-path :/scanner.cc)) 1)
+            (do
+              (table.insert cmds (string.format "c++ -O2 -fPIC -fvisibility=default -I. -c scanner.cc -o scanner.o"))
+              (set scanner-obj :scanner.o)
+              (set linker :c++))
+
+            nil)
+
+        ;; Make parser destination
+        (vim.fn.mkdir parser-dir :p)
+
+        ;; Link .so
+        (table.insert cmds (string.format "%s -shared parser.o %s -o %s/%s.so"
+                                         linker scanner-obj parser-dir spec.lang))
+
+        ;; Run compilation
+        (local output (vim.fn.system (table.concat cmds " && ")))
+        (set vim.o.shell old-shell)
+
+        ;; Copy queries folder
+        (let [queries-src (.. src-path :/queries)
+              queries-dest (.. queries-dir :/ spec.lang)]
+          (when (= (vim.fn.isdirectory queries-src) 1)
+            (vim.fn.mkdir queries-dest :p)
+            (vim.fn.system (string.format "cp -r %s/* %s/" queries-src queries-dest))))
+
+        ;; Notify result
+        (if (not= vim.v.shell_error 0)
+            (vim.notify (string.format "[!] Error: %s" output) vim.log.levels.ERROR)
+            (vim.notify (string.format "[+] %s installed." spec.lang) vim.log.levels.INFO))))
+
+    ;; Sync and build all required norg parsers
+    (fn norg-sync []
+      (let [targets [{:lang :norg
+                      :type :norg
+                      :rev :main
+                      :url "https://github.com/nvim-neorg/tree-sitter-norg"}
+                     {:lang :norg_meta
+                      :type :norg_meta
+                      :rev :main
+                      :url "https://github.com/nvim-neorg/tree-sitter-norg-meta"}]]
+        (each [_ spec (ipairs targets)]
+          (local (ok? metadata) (pcall vim.treesitter.language.inspect spec.lang))
+          ;; If parser not loaded, ensure it's downloaded and built
+          (if (not ok?)
+              (build-parser spec)))))
+              ; (vim.notify (string.format "Parser %s loaded (ABI %s)" spec.lang metadata.abi_version))))))
+
+    ;; Execution
+    (norg-sync)
+    (table.insert treesitter-filetypes :norg)))
 
 ;; the unusual
 ;; this is a noop if it already installed
@@ -133,4 +222,3 @@
                     {:desc "Nyoom: Start treesitter highlighting and indentation"}))
 
 ;; no need to run nvim-treesitter setup unless changing default options
-

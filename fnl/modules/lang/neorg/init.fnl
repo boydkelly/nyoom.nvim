@@ -3,6 +3,6 @@
 (lz-package! :nvim-neorg/neorg
   {:nyoom-module lang.neorg
    :ft :norg
-   :requires [(lz-trigger-load! :nvim-neorg/lua-utils.nvim {:opt true})
-              (lz-trigger-load! :pysan3/pathlib.nvim   {:opt true})
-              (lz-trigger-load! :nvim-neotest/nvim-nio      {:opt true})]})
+   :requires [:nvim-neorg/lua-utils.nvim
+              :pysan3/pathlib.nvim
+              :nvim-neotest/nvim-nio]})

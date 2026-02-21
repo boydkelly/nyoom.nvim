@@ -24,7 +24,7 @@
         ;tabs                 ; keep tabs on your buffers, literally
         vc-gutter            ; Get your diff out of the gutter
         ;window-select        ; Visually switch windows
-        ;zen                  ; distraction-free coding or writing TODO +twilight
+        zen                  ; distraction-free coding or writing TODO +twilight
         noice                ; noice ui
 
         :editor
@@ -82,18 +82,19 @@
         lua                  ; one-based indices? one-based indices
         markdown             ; writing docs for people to ignore
         nim                  ; python + lisp at the speed of c
-        ;(neorg               ; organize your plain life in plain text, the neovim way
-        ;  +pretty
-        ;  +present
-        ;  +export
-        ;  +nabla)
+        (neorg               ; organize your plain life in plain text, the neovim way
+         +pretty
+         ; +present
+         +export
+         +nabla)
         ;nix                  ; I hereby declare "nix geht mehr!"
         ;python               ; beautiful is better than ugly
         ;rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
         sql
         (sh
           ; +fish
-           +nu)
+          ; +nu
+           )
                      ; she sells {ba,z,fi}sh shells on the C xor
         toml                ; extend my language
         xml                ; extend my language
