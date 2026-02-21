@@ -9,6 +9,5 @@ profile.json
 result/
 target/
 packages.json
-
-# macOS
-.DS_Store
+spell/*.sug
+spell/*.spl

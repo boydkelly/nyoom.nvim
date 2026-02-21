@@ -30,7 +30,7 @@
 
 ;; sometimes you want to modify a plugin thats loaded from within a module. For
 ;; this you can use the `after` function
-(set vim.deprecate (fn []))
+
 ; (_G.after :neorg
 ;        {:load {:core.dirman {:config {:workspaces {:main "~/neorg"}}}}})
 ;
@@ -50,4 +50,3 @@
 ;              (vim.notify "No modules found in _G['nyoom/modules']"
 ;                          vim.log.levels.WARN)
 ;              (vim.notify (.. "Active Modules:\n" output) vim.log.levels.INFO)))))
-
