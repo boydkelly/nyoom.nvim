@@ -20,16 +20,16 @@
 ;                  (tset neorg-modules :core.concealer
 ;                        {:config {:icon_preset :varied}}))
 ;
-; (nyoom-module-p! neorg.+present
-;                  (do
-;                    (nyoom-module-ensure! zen)
-;                    (tset neorg-modules :core.presenter
-;                          {:config {:zen_mode :truezen}})))
+(nyoom-module-p! neorg.+present
+                 (do
+                   (nyoom-module-ensure! zen)
+                   (tset neorg-modules :core.presenter
+                         {:config {:zen_mode :truezen}})))
 ;
-; (nyoom-module-p! neorg.+export
-;                  (do
-;                    (tset neorg-modules :core.export {})
-;                    (tset neorg-modules :core.export.markdown
-;                          {:config {:extensions :all}})))
+(nyoom-module-p! neorg.+export
+                 (do
+                   (tset neorg-modules :core.export {})
+                   (tset neorg-modules :core.export.markdown
+                         {:config {:extensions :all}})))
 
 (setup :neorg {:load neorg-modules})
