@@ -92,7 +92,7 @@ if not core_exists or dev or os.getenv("NYOOM_CLI") == "true" then
 		{ "init", "init" },
 	}
 
-	local runtime_globals = { shared = true }
+	local runtime_globals = { shared = true, autoload = true, setup = true }
 
 	local loaded_libs = {}
 
