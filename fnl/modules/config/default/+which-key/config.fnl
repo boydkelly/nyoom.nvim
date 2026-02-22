@@ -8,7 +8,7 @@
                      ; :separator "->"
                      :group "+"
                      :rules false}
-             :win {:border :solid :padding [0 0]}
+             :win {:border :solid :padding [1 0]}
              :layout {:spacing 0 :align :center}
              :filter (fn [mapping]
                        (let [mode mapping.mode

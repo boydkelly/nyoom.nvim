@@ -1,7 +1,7 @@
 (import-macros {: lz-package! : build-pack-table : build-before-all-hook} :macros)
 
 (lz-package! :alexpasmantier/tv.nvim {:nyoom-module tools.television
-                                      :beforeAll :modules.tools.television.keybinds
+                                      :beforeAll :tools.television.keybinds
                                       :cmd [:Tv]
                                       :keys [{1 :<leader>sma 2 "<cmd>Tv mandenkan-all<cr>" :desc "Mandenkan all"}
                                              {1 :<leader>smc
