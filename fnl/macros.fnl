@@ -98,6 +98,7 @@
     (when options.run
       (table.insert before-all-parts
                     (build-before-all-hook name options.run options.build-file)))
+
     (when options.nyoom-module
       (table.insert after-parts
                     `(include ,(.. :modules. (->str options.nyoom-module)
@@ -110,13 +111,16 @@
       ;; 1. Handle direct :before key (e.g. keybinds)
       (when options.before
         (if (= :string (type options.before))
-            (table.insert before-parts `(include ,options.before))
+            ;; Prepend "modules." to the string/path
+            (let [path (.. :modules. options.before)]
+              (table.insert before-parts `(include ,path)))
+            ;; If it's already a function/quoted code, insert as-is
             (table.insert before-parts options.before)))
-
       ;; 2. NEW: Handle direct :beforeAll key (e.g. system checks or early setup)
       (when options.beforeAll
         (if (= :string (type options.beforeAll))
-            (table.insert before-all-parts `(include ,options.beforeAll))
+            (let [path (.. :modules. options.beforeAll)]
+              (table.insert before-all-parts `(include ,path)))
             (table.insert before-all-parts options.beforeAll)))
 
       ;; 3. Standard whitelist loop
