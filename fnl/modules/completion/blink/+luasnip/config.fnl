@@ -1,9 +1,18 @@
-(import-macros {: set! : nyoom-module-p! : packadd! : command! } :macros)
+(import-macros {: set!
+                : nyoom-module-p!
+                : packadd!
+                : command!
+                : build-before-all-hook} :macros)
+
 (local {: autoload} (require :core.lib.autoload))
 (local {: setup} (require :core.lib.setup))
-(local shared (require :core.lib.shared))
 (local luasnip (autoload :luasnip))
 ((. (autoload :luasnip.loaders.from_vscode) :lazy_load))
+
+; (build-before-all-hook :luasnip [:make :install]
+;                        :target/release/libparinfer_rust.so)
+
+(packadd! luasnip)
 
 (local types (require :luasnip.util.types))
 
@@ -39,6 +48,5 @@
 
 (command! LuaSnipEdit
           (fn []
-             ((. (require :luasnip.loaders)
-             :edit_snippet_files)))
-              {})
+            ((. (require :luasnip.loaders) :edit_snippet_files))) {})
+

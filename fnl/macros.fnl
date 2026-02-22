@@ -35,36 +35,32 @@
   (let [spec (build-pack-table identifier ?options)]
     `(table.insert _G.nyoom/pack ,spec)))
 
-(lambda build-before-all-hook [name run-cmd & build-file]
-  (let [build-file (if build-file (unpack build-file) nil)
-        plugin-path (.. (vim.fn.stdpath :data)
-                        :/site/pack/core/opt/
-                        name)]
+(lambda build-before-all-hook [name run-cmd ?build-file]
+  (let [plugin-path `(.. (vim.fn.stdpath :data) :/site/pack/core/opt/ ,name)]
     `(let [uv# (or vim.loop vim.uv)
-           marker# (if ,build-file
-                       (.. ,plugin-path "/" ,build-file)
-                       (.. ,plugin-path "/.nyoom_built"))]
-
+           plugin-path# ,plugin-path
+           marker# (if ,?build-file
+                       (.. plugin-path# "/" ,?build-file)
+                       (.. plugin-path# :/.nyoom_built))]
        (when (not (uv#.fs_stat marker#))
          (vim.notify ,(.. "Building " name "...") vim.log.levels.INFO)
-
-         ;; Normalize run-cmd: if it's a string/keyword, wrap it in a list for vim.system
-         (let [cmd# (if (vim.islist ,run-cmd)
-                        ,run-cmd
-                        [ ,run-cmd])]
-           (let [sys# (vim.system cmd# {:cwd ,plugin-path})]
-             ;; Preserving your wait logic: call :wait() to avoid table-call errors
-             (local result# (sys#:wait))
-             (local code# result#.code)
-
+         ;; normalize run-cmd at **macro-expansion time**
+         (let [cmd-list# (if (vim.islist ,run-cmd)
+                             ,run-cmd
+                             ;; wrap single string/keyword into list literal
+                             [(if (= (type ,run-cmd) :keyword)
+                                  (tostring ,run-cmd)
+                                  ,run-cmd)])]
+           ;; Run the command
+           (let [proc# (vim.system cmd-list# {:cwd plugin-path#})
+                 result# (proc#:wait)
+                 code# result#.code]
              (if (not= code# 0)
-                 (error (.. "Build failed for " ,name ":\n" result#.stderr))
+                 (error (.. "Build failed for " ,name ":\n"
+                            (or result#.stderr "")))
                  (do
-                   (vim.notify ,(.. "Built " name)
-                               vim.log.levels.INFO)
-
-                   ;; Create the marker so we don't rebuild every time
-                   (when (not ,build-file)
+                   (vim.notify ,(.. "Built " name) vim.log.levels.INFO)
+                   (when (not ,?build-file)
                      (with-open [f# (io.open marker# :w)]
                        (f#:write (os.date))))))))))))
 
@@ -98,16 +94,21 @@
     (when options.run
       (table.insert before-all-parts
                     (build-before-all-hook name options.run options.build-file)))
-
     (when options.nyoom-module
       (table.insert after-parts
                     `(include ,(.. :modules. (->str options.nyoom-module)
                                    :.config))))
-;; --- C. Assemble lz.n Data ---
+    ;; --- C. Assemble lz.n Data ---
     (let [lz-data {}
           table-keys {:event true :cmd true :ft true :colorscheme true}
-          lz-whitelist [:enabled :event :cmd :ft :colorscheme :lazy :priority :load]]
-
+          lz-whitelist [:enabled
+                        :event
+                        :cmd
+                        :ft
+                        :colorscheme
+                        :lazy
+                        :priority
+                        :load]]
       ;; 1. Handle direct :before key (e.g. keybinds)
       (when options.before
         (if (= :string (type options.before))
@@ -122,28 +123,35 @@
             (let [path (.. :modules. options.beforeAll)]
               (table.insert before-all-parts `(include ,path)))
             (table.insert before-all-parts options.beforeAll)))
-
       ;; 3. Standard whitelist loop
       (each [_ k (ipairs lz-whitelist)]
         (let [val (. options k)]
           (if (not= nil val)
               (tset lz-data k (if (. table-keys k) (ensure-table val) val)))))
-
       ;; 4. Assemble Hooks
       (when (> (length before-parts) 0)
-        (tset lz-data :before `(fn [] (do ,(unpack before-parts)))))
-
+        (tset lz-data :before
+              `(fn []
+                 (do
+                   ,(unpack before-parts)))))
       (when (> (length before-all-parts) 0)
-        (tset lz-data :beforeAll `(fn [] (do ,(unpack before-all-parts)))))
-
+        (tset lz-data :beforeAll
+              `(fn []
+                 (do
+                   ,(unpack before-all-parts)))))
       (when (> (length after-parts) 0)
-        (tset lz-data :after `(fn [] (do ,(unpack after-parts) nil))))
-
+        (tset lz-data :after `(fn []
+                                (do
+                                  ,(unpack after-parts)
+                                  nil))))
       ;; --- Finalize ---
       (tset spec :data lz-data)
       (let [final-body install-parts]
         (table.insert final-body `(table.insert _G.nyoom/pack ,spec))
-        `(do ,(unpack final-body))))));;
+        `(do
+           ,(unpack final-body))))))
+
+;;
 
 (lambda nyoom-module! [name]
   "Directly includes a module's config file at compile-time.
@@ -1007,3 +1015,4 @@
  : nyoom-package-count!
  : nyoom-module-count-runtime!
  : nyoom-module-count!}
+

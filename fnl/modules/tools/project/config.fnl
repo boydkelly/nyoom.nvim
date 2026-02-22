@@ -16,7 +16,8 @@
              :lsp {:enabled true}
              :manual_mode false
              :patterns [:.git :.jj :go.mod :=content :=translate :=search]
-             :silent_chdir false
+             :silent_chdir true
              :telescope {:disable_file_picker false}})
 
 (setup :project opts)
+
