@@ -13,21 +13,21 @@ version: 0.1.0
   To install the configuration, run:
   @code bash
   git clone https://github.com/boydkelly/nyoom.nvim ~/.config/nvim-nyoom
-  export NVIM_APPNAME="nvim-nyoom"
+  export NVIM_APPNAME="nvim-nyoom" (or whatever)
   nvim
   @end
 
   Running `bin/nyoom install` also works and forces `NVIM_APPNAME` to `nvim-nyoom`.
   Running `bin/nyoom sync` will also preinstall treesitter parsers and lsp tools.
-
-  Mason works too but for whatever reason it wants to reinstall every time you open it.
-  Included a mise.toml that will install a bunch of lsp servers.
+  Running `:TSUpdateSync` install parsers.
+  Running `:Mason` will install lsp tools, but note that for whatever reason it wants to reinstall every time you open it.
+  Included a mise.toml that will also pre install a bunch of lsp servers.
 
 * Notes
-  ** New Layers
+  ** New / Updated Layers
   Updated/added: cmp, blink, none-ls, conform (format), lint, web, javascript, ts, svelte, oil.
   Updated to 2026 configs: tree-sitter, lsp, etc.
-  But a lot of stuff is just updated to the bare minimum to get it going.
+  A lot of stuff is just updated to the bare minimum to get it going.
 
   ** Engine Changes
   - Replaced packer with `vim.pack` and {https://github.com/lumen-oss/lz.n}[lz.n]
@@ -60,3 +60,4 @@ version: 0.1.0
   - other stuff may simply be ignored
 
 _I'm just a self-taught hacker. Proceed with caution! This is nowhere near cooked. It seems pretty fast._
+The custom branch is becoming my day to day driver; Uses mini-pick and other stuff.
