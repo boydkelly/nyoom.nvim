@@ -8,7 +8,12 @@
         ;;copilot            ; the code completion of the future
         ;;fzf-lua            ; TODO a search engine for love and life
         (telescope +native) ; the search engine of the future
-        :ui (nyoom +modes +icons) ; what makes Nyoom look the way it does
+        ;;
+        :ui
+        (nyoom
+          +modes
+          +icons
+          +theme) ; what makes Nyoom look the way it does
         ;dashboard            ; a nifty splash screen for neovim
         ;nyoom-quit         ; WIP: buggy, terrible implementation of doom-quit.
         ;hydra                ; Discount modality for mythological beast hunters
@@ -25,7 +30,9 @@
         ;window-select        ; Visually switch windows
         zen ; distraction-free coding or writing TODO +twilight
         noice ; noice ui
-        :editor fold ; (nigh) universal code folding
+        ;;
+        :editor
+        fold ; (nigh) universal code folding
         (format +onsave) ; automated prettiness
         lint ; jugement for your code in real time
         ;;multiple-cursors   ; learn macros you dingus
@@ -34,12 +41,15 @@
         scratch ; emacs-like scratch buffer functionality
         autopairs ;
         word-wrap ; language-aware smart soft and hard wrapping
+        ;;
         :term ;fshell              ; WIP: the fennel shell that works everywhere
         toggleterm ; persistant/floating terminal wrapper for :term
+        ;;
         :checkers
         ;diagnostics          ; tasing you for every semicolon you forget with none-ls
         ;grammar              ; tasing grammar mistake every you make
         spell ; tasing you for misspelling mispelling
+        ;;
         :tools
         ;debugger             ; stepping through code, to help you add bugs
         ; docker              ; row row row your boat TODO +netman?
@@ -57,7 +67,9 @@
         ;  +diffview)         ; a git diff view for neovim
         rgb ; creating color strings
         tree-sitter ; syntax and parsing, sitting in a tree...
-        television :lang asciidoc ;;cc                   ; C > C++ == 1
+        television
+        ;;
+        :lang asciidoc ;;cc                   ; C > C++ == 1
         ;clojure              ; java with a lisp
         common-lisp ; if you've seen one lisp, you've seen them all
         ;csharp               ; java but with linq
@@ -73,8 +85,8 @@
         markdown ; writing docs for people to ignore
         nim ; python + lisp at the speed of c
         (neorg ; organize your plain life in plain text, the neovim way
-               +pretty ; +present
-               +export +nabla)
+             +pretty ; +present
+             +export +nabla)
         ;nix                  ; I hereby declare "nix geht mehr!"
         (org +pretty) ;python               ; beautiful is better than ugly
         ;rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
@@ -87,6 +99,7 @@
         yaml ; yet another markup language to enable
         ;zig                  ; C, but simpler
         :app ;;calendar           ; Watch your missed deadlines in real time
+        ;;
         :config
         ;literate           ; FIXME: Disguise your config as poor documentation
         (default ; Reasonable defaults for reasonable people
