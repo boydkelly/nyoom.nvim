@@ -1,3 +1,5 @@
+(import-macros {: nyoom-module-p! : set! : vlua : autocmd! : packadd!} :macros)
+
 (local M {})
 
 (local ENABLE_LSP_PROGRESS true)
@@ -142,22 +144,40 @@
       (lua "return \"\""))
     (hl :StatusLine (.. " " filename))))
 
-(fn get-lsp-diagnostic []
-  (when (not (next (vim.lsp.get_clients {:bufnr 0})))
-    (lua "return \"\""))
+(nyoom-module-p! lsp
+                 (fn get-lsp-diagnostic []
+                   (when (not (rawget vim :lsp))
+                     (lua "return \"\""))
 
-  (fn sev-count [s]
-    (length (vim.diagnostic.get 0 {:severity s})))
+                   (fn get-severity [s]
+                     (length (vim.diagnostic.get 0 {:severity s})))
 
-  (local result
-         {:errors (sev-count vim.diagnostic.severity.ERROR)
-          :warnings (sev-count vim.diagnostic.severity.WARN)})
-  (local parts {})
-  (when (> result.warnings 0)
-    (table.insert parts (hl :DiagnosticWarn (tostring result.warnings))))
-  (when (> result.errors 0)
-    (table.insert parts (hl :DiagnosticError (tostring result.errors))))
-  (or (and (> (length parts) 0) (.. " " (table.concat parts " ") " ")) ""))
+                   (local result
+                          {:errors (get-severity vim.diagnostic.severity.ERROR)
+                           :warnings (get-severity vim.diagnostic.severity.WARN)
+                           :info (get-severity vim.diagnostic.severity.INFO)
+                           :hints (get-severity vim.diagnostic.severity.HINT)})
+                   (string.format " %%#StatusLineDiagnosticWarn#%s %%#StatusLineDiagnosticError#%s "
+                                  (or (. result :warnings) 0)
+                                  (or (. result :errors) 0))))
+
+; (nyoom-module-p! lsp
+; (fn get-lsp-diagnostic []
+;   (when (not (next (vim.lsp.get_clients {:bufnr 0})))
+;     (lua "return \"\""))
+;
+;   (fn sev-count [s]
+;     (length (vim.diagnostic.get 0 {:severity s})))
+;
+;   (local result
+;          {:errors (sev-count vim.diagnostic.severity.ERROR)
+;           :warnings (sev-count vim.diagnostic.severity.WARN)})
+;   (local parts {})
+;   (when (> result.warnings 0)
+;     (table.insert parts (hl :DiagnosticWarn (tostring result.warnings))))
+;   (when (> result.errors 0)
+;     (table.insert parts (hl :DiagnosticError (tostring result.errors))))
+;   (or (and (> (length parts) 0) (.. " " (table.concat parts " ") " ")) "")))
 
 (fn get-location []
   (when (= vim.v.hlsearch 0)

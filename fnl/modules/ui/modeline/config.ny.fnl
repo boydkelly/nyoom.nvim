@@ -117,4 +117,3 @@
 (set! laststatus 3)
 (set! cmdheight 0)
 (set! statusline (.. "%!" (vlua Statusline.statusline)))
-
