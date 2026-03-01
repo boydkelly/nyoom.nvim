@@ -30,7 +30,6 @@
     (do
       ; (print "set options")
       ;; set opinionated defaults. TODO this should be in a module?
-      (import-macros {: command! : let! : set!} :macros)
       (set! cmdheight 0)
       ;; speedups
       (set! updatetime 250)
@@ -73,8 +72,8 @@
       ;; nightly only options
       (local {: nightly?} (_G.autoload :core.lib))
       (if (nightly?)
-          (do
-            ))
+          (do))
+
       ;; gui options
       (set! list)
       (set! fillchars {:eob " "
